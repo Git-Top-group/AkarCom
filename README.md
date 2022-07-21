@@ -24,7 +24,6 @@
 ### wireframe : 
 
 
-
 ### user sories : 
 
 1-visitor : 
@@ -77,7 +76,9 @@ Manageability : true
 
 ### Domain Modeling
 
-![](./assest/midDomain.PNG)
+![](./assets/midDomain.PNG)
 
 ### Using a Database? Make an Database Schema Diagram
+
+![](./assets/db.PNG)
 
