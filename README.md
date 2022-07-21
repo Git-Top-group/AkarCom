@@ -2,11 +2,15 @@
 
 ### GitTop Group :
 
-1- mohammad alshraideh (team leader)
-2- esam Ankir (team member)
-3- hadeel saleh (team member)
-4- mohammed aldahleh (team member)
-5- islam rwashdeh (team member)
+1- Mohammad Alshraideh (team leader)
+
+2- Esam Ankir (team member)
+
+3- Hadeel Saleh (team member)
+
+4- Mohammed Aldahleh (team member)
+
+5- Islam Rwashdeh (team member)
 
 
 ### project idea : 
@@ -73,7 +77,7 @@ Manageability : true
 
 ### Domain Modeling
 
-to be done later 
+![](./assest/midDomain.PNG)
 
 ### Using a Database? Make an Database Schema Diagram
 
