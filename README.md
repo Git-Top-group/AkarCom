@@ -22,7 +22,14 @@
 
 
 ### wireframe : 
+[wire frame link](https://rp.mockplus.com/run/cwwT2JOHig/VnziwrSIn1?cps=expand&rps=expand&nav=1&ha=0&la=0&fc=0&out=1&rt=1)
 
+![Home page](./assets/home.png)
+![pic](./assets/sinin.jpg)
+![pic](./assets/sinup.jpg)
+![pic](./assets/usrpage.jpg)
+![pic](./assets/userprof.jpg)
+![pic](./assets/createpage.jpg)
 
 ### user sories : 
 
