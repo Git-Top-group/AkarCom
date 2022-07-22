@@ -87,5 +87,8 @@ Manageability : true
 
 ### Using a Database? Make an Database Schema Diagram
 
+![dbSchema](./assets/dbSchema.PNG)
+
+
 ![](./assets/db.PNG)
 
