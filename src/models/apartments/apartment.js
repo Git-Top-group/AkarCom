@@ -11,6 +11,7 @@ sequelize.define('apartments', {
     },
     owner: {
         type: DataTypes.ENUM('Owner','Broker'),
+        defaultValue: 'Owner',
         required: true
     },
     price: {
@@ -23,21 +24,25 @@ sequelize.define('apartments', {
     },
     floorNum: {
         type: DataTypes.ENUM('Basement','Ground-Floor','First-Floor','Second-Floor','Third-Floor','Fourth-Floor','Fifth-Floor','Higher than 5'),
+        defaultValue: 'First-Floor',
         required: true
     },
     buildingAge: {
         type: DataTypes.ENUM('Under-Construction','0-11 months','1-5 years','6-9 years','10-19 years','+20 years'),
-        allowNull: false,
+        defaultValue: '1-5 years',
+        required: true
     },
     rooms: {
         type: DataTypes.ENUM('Studio','1-Bedroom', '2-Bedrooms','3-Bedrooms','4-Bedrooms','5-Bedrooms','+6-Bedrooms'),
-        allowNull: false,
+        defaultValue: '3-Bedrooms',
+        required: true
     },
     bathrooms: {
         type: DataTypes.ENUM('1-Bathroom','2-Bathrooms','3-Bathrooms','4-Bathrooms','+5-Bathrooms'),
-        allowNull: false,
+        defaultValue: '3-Bathrooms',
+        required: true
     },
-    avilability: {
+    availability : {
         type: DataTypes.BOOLEAN,
         allowNull: false,
     },
@@ -51,11 +56,13 @@ sequelize.define('apartments', {
     },
     rentDuration: {
         type: DataTypes.ENUM("Daily","Weekly","Monthly","Yearly"),
-        allowNull: false,
+        defaultValue: 'Monthly',
+        required: true
     },
     city: {
-        type: DataTypes.ENUM("Amman","Zarqa","Irbid","Aqaba","Mafraq","Jarash","Ma'an","Karak","AL-Salt","Ajloun","Tafilah","Al-Balqa"),
-        allowNull: false,
+        type: DataTypes.ENUM("Amman","Zarqa","Irbid","Aqaba","Mafraq","Jarash","Ma'an","Karak","Madaba","Ajloun","Tafilah","Al-Balqa"),
+        defaultValue: 'Amman',
+        required: true
     },
     address: {
         type: DataTypes.STRING,
@@ -63,7 +70,8 @@ sequelize.define('apartments', {
     },
     finishing: {
         type: DataTypes.ENUM("Unfinished","Semi-Finished","Fully-Finished","Lux","Super-Lux","Ultra-Lux","Deluxe"),
-        allowNull: false,
+        defaultValue: 'Fully-Finished',
+        required: true
     },
     moreInfo: {
         type: DataTypes.STRING,

@@ -6,11 +6,12 @@ sequelize.define('villas', {
         required: true
     },
     process: {
-        type: DataTypes.ENUM('sell','rent'),
+        type: DataTypes.ENUM('Sell','Rent'),
         required: true
     },
     owner: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM('Owner','Broker'),
+        defaultValue:'Owner',
         required: true
 
     },
@@ -32,6 +33,7 @@ sequelize.define('villas', {
     },
     buildingAge: {
         type: DataTypes.ENUM('Under-Construction','0-11 months','1-5 years','6-9 years','10-19 years','+20 years'),
+        defaultValue:'1-5 years',
         required: false
     },
     rooms: {
@@ -43,7 +45,7 @@ sequelize.define('villas', {
         required: false,
     },
 
-    avilability: {
+    availability: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
     },
@@ -55,11 +57,13 @@ sequelize.define('villas', {
 
     rentDuration: {
         type: DataTypes.ENUM("Daily","Weekly","Monthly","Yearly"),
+        defaultValue:'Monthly',
         allowNull: false,
     },
 
     city: {
-        type: DataTypes.ENUM("Amman","Zarqa","Irbid","Aqaba","Mafraq","Jarash","Ma'an","Karak","AL-Salt","Ajloun","Tafilah","al-Balqa"),
+        type: DataTypes.ENUM("Amman","Zarqa","Irbid","Aqaba","Mafraq","Jarash","Ma'an","Karak","Madaba","Ajloun","Tafilah","Al-Balqa"),
+        defaultValue:'Amman',
         allowNull: false,
     },
 

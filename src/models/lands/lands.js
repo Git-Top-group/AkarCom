@@ -1,21 +1,23 @@
 'use strict';
 const landsModel = (sequelize, DataTypes) => 
 sequelize.define('lands', {
-  
+
     userId: {
         type: DataTypes.INTEGER,
         required: true
     },
     process: {
-        type: DataTypes.ENUM('sell','rent'),
+        type: DataTypes.ENUM('Sell','Rent'),
         required: true
     },
     type: {
-        type: DataTypes.ENUM('industrial','commercial','agricultural'),
+        type: DataTypes.ENUM('Industrial','Commercial','Agricultural'),
+        defaultValue:'Commercial',
         required: true
     },
     owner: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM('Owner','Broker'),
+        defaultValue:'Owner',
         required: true
 
     },
@@ -28,18 +30,20 @@ sequelize.define('lands', {
         required: true
     },
 
-    Avilability: {
+    availability : {
         type: DataTypes.BOOLEAN,
         allowNull: false,
     },
 
     rentDuration: {
         type: DataTypes.ENUM("Daily","Weekly","Monthly","Yearly"),
+        defaultValue:'Yearly',
         allowNull: false,
     },
 
     city: {
-        type: DataTypes.ENUM("Amman","Zarqa","Irbid","Aqaba","Mafraq","Jarash","Ma'an","Karak","AL-Salt","Ajloun","Tafilah","al-Balqa"),
+        type: DataTypes.ENUM("Amman","Zarqa","Irbid","Aqaba","Mafraq","Jarash","Ma'an","Karak","Madaba","Ajloun","Tafilah","Al-Balqa"),
+        defaultValue:'Amman',
         allowNull: false,
     },
 
@@ -48,7 +52,7 @@ sequelize.define('lands', {
         allowNull: false,
     },
 
-    MoreInfo: {
+    moreInfo: {
         type: DataTypes.STRING,
         allowNull: true,
     }

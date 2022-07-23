@@ -11,6 +11,7 @@ sequelize.define('chalets', {
     },
     owner: {
         type: DataTypes.ENUM('Owner','Broker'),
+        defaultValue: 'Owner',
         required: true
     },
     price: {
@@ -27,17 +28,20 @@ sequelize.define('chalets', {
     },
     buildingAge: {
         type: DataTypes.ENUM('Under-Construction','0-11 months','1-5 years','6-9 years','10-19 years','+20 years'),
+        defaultValue: '1-5 years',
         allowNull: false,
     },
     rooms: {
         type: DataTypes.ENUM('1-Bedroom', '2-Bedrooms','3-Bedrooms','4-Bedrooms','5-Bedrooms','+6-Bedrooms'),
+        defaultValue: '3-Bedrooms',
         allowNull: false,
     },
     bathrooms: {
         type: DataTypes.ENUM('1-Bathroom','2-Bathrooms','3-Bathrooms','4-Bathrooms','+5-Bathrooms'),
+        defaultValue: '3-Bathrooms',
         allowNull: false,
     },
-    avilability: {
+    availability : {
         type: DataTypes.BOOLEAN,
         allowNull: false,
     },
@@ -47,10 +51,12 @@ sequelize.define('chalets', {
     },
     rentDuration: {
         type: DataTypes.ENUM("Daily","Weekly","Monthly","Yearly"),
+        defaultValue: 'Daily',
         allowNull: false,
     },
     city: {
-        type: DataTypes.ENUM("Amman","Zarqa","Irbid","Aqaba","Mafraq","Jarash","Ma'an","Karak","AL-Salt","Ajloun","Tafilah","Al-Balqa"),
+        type: DataTypes.ENUM("Amman","Zarqa","Irbid","Aqaba","Mafraq","Jarash","Ma'an","Karak","Madaba","Ajloun","Tafilah","Al-Balqa"),
+        defaultValue: 'Amman',
         allowNull: false,
     },
     address: {
