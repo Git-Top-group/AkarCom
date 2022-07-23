@@ -83,7 +83,7 @@ Manageability : true
 
 ### Domain Modeling
 
-![](./assets/midDomain.PNG)
+![](./assets/midDomain.jpeg)
 
 ### Using a Database? Make an Database Schema Diagram
 
