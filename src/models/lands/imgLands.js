@@ -1,7 +1,7 @@
 'use strict';
 const landImagesModel = (sequelize, DataTypes) => 
 sequelize.define('landImages', {
-    warehouseId: {
+    landId: {
         type: DataTypes.INTEGER,
         required: true
     },
