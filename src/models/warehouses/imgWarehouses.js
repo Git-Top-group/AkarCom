@@ -5,10 +5,7 @@ sequelize.define('warehouseImages', {
         type: DataTypes.INTEGER,
         required: true
     },
-    imgId: {
-        type: DataTypes.INTEGER,
-        required: true
-    },
+   
     type: {
         type: DataTypes.STRING,
         required: true
@@ -19,7 +16,7 @@ sequelize.define('warehouseImages', {
 
     },
     data: {
-        type: DataTypes.STRING,
+        type: DataTypes.BLOB("long"),
         required: true
     }
 });

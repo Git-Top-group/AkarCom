@@ -2,10 +2,6 @@
 const usersModel = (sequelize, DataTypes) =>
     sequelize.define('users', {
 
-        userId: {
-            type: DataTypes.INTEGER,
-            required: true
-        },
         username: {
             type: DataTypes.INTEGER,
             required: true
@@ -16,7 +12,7 @@ const usersModel = (sequelize, DataTypes) =>
 
         },
         role: {
-            type: DataTypes.ENUM('sell', 'rent'),
+            type: DataTypes.ENUM('Sell', 'Rent'),
             required: false
         },
         firstName: {
@@ -30,7 +26,7 @@ const usersModel = (sequelize, DataTypes) =>
 
         },
         phoneNumber: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             required: false
 
         },
@@ -41,15 +37,10 @@ const usersModel = (sequelize, DataTypes) =>
         },
 
         city: {
-            type: DataTypes.ENUM("Amman", "Zarqa", "Irbid", "Aqaba", "Mafraq", "Jarash", "Ma'an", "Karak", "AL-Salt", "Ajloun", "Tafilah", "al-Balqa"),
+            type: DataTypes.ENUM("Amman","Zarqa","Irbid","Aqaba","Mafraq","Jarash","Ma'an","Karak","Madaba","Ajloun","Tafilah","Al-Balqa"),
+            defaultValue:'Amman',
             allowNull: false,
         },
-
-        profilePic: {
-            type: DataTypes.STRING,
-            required: false
-        },
-
         dataOfBirth: {
             type: DataTypes.DATE,
             required: false
