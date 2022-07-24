@@ -14,9 +14,17 @@ class Collection {
       return this.model.findAll({});
     }
   }
-  create(record) {
-    return this.model.create(record);
-  }
+
+  async createRecord(userIdParams,obj) {
+    obj.userId=userIdParams;
+        try {     
+            let newRecord = await this.model.create(obj);
+            return newRecord;
+        } catch (e) {
+            console.error("Error in creating a new record in model ", this.model)
+        }   
+    }
+
   update(id, data) {
     return this.model.findOne({ where: { id } })
       .then(record => record.update(data));

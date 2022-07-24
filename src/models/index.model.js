@@ -53,7 +53,6 @@ const landImages = landImagesModel(sequelize, DataTypes);
 const villaImages = villaImagesModel(sequelize, DataTypes);
 const warehouseImages = warehouseImagesModel(sequelize, DataTypes);
 
-/*
 
 //1-1 relationship between users and their images
 users.hasOne(userImages, {
@@ -189,7 +188,7 @@ warehouseImages.belongsTo(warehouses, {
     targetKey: "id",
 });
 
-*/
+
 
 module.exports = {
     sequelize:sequelize,

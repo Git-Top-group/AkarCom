@@ -3,46 +3,43 @@ const villasModel = (sequelize, DataTypes) =>
 sequelize.define('villas', {
     userId: {
         type: DataTypes.INTEGER,
-        required: true
+        allowNull: true
     },
     process: {
         type: DataTypes.ENUM('Sell','Rent'),
-        required: true
+        allowNull: false
     },
     owner: {
         type: DataTypes.ENUM('Owner','Broker'),
         defaultValue:'Owner',
-        required: true
-
     },
     price: {
         type: DataTypes.FLOAT,
-        required: true
+        allowNull: false
     },
     surfaceArea: {
         type: DataTypes.FLOAT,
-        required: true
+        allowNull: false
     },
     landArea: {
         type: DataTypes.FLOAT,
-        required: true
+        allowNull: false
     },
     floors: {
         type: DataTypes.INTEGER,
-        required: true
+        allowNull: false
     },
     buildingAge: {
         type: DataTypes.ENUM('Under-Construction','0-11 months','1-5 years','6-9 years','10-19 years','+20 years'),
         defaultValue:'1-5 years',
-        required: false
     },
     rooms: {
-        type: DataTypes.INTEGER,
-        required: false,
+        type: DataTypes.ENUM('1-Bedroom', '2-Bedrooms','3-Bedrooms','4-Bedrooms','5-Bedrooms','+6-Bedrooms'),
+        defaultValue: '5-Bedrooms',
     },
     bathRooms: {
-        type: DataTypes.INTEGER,
-        required: false,
+        type: DataTypes.ENUM('1-Bathroom','2-Bathrooms','3-Bathrooms','4-Bathrooms','+5-Bathrooms'),
+        defaultValue: '4-Bathrooms',
     },
 
     availability: {
@@ -58,13 +55,11 @@ sequelize.define('villas', {
     rentDuration: {
         type: DataTypes.ENUM("Daily","Weekly","Monthly","Yearly"),
         defaultValue:'Monthly',
-        allowNull: false,
     },
 
     city: {
         type: DataTypes.ENUM("Amman","Zarqa","Irbid","Aqaba","Mafraq","Jarash","Ma'an","Karak","Madaba","Ajloun","Tafilah","Al-Balqa"),
         defaultValue:'Amman',
-        allowNull: false,
     },
 
     address: {

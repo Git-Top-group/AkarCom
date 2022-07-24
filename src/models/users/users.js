@@ -18,9 +18,8 @@ const userModel = (sequelize, DataTypes) => {
     },
     role: {
       type: DataTypes.ENUM('user', 'admin'),
-      defaultValue: 'user',
-      allowNull: true,
-    },
+      defaultValue: 'user'
+      },
     firstName: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -42,22 +41,21 @@ const userModel = (sequelize, DataTypes) => {
 
     city: {
         type: DataTypes.ENUM("Amman","Zarqa","Irbid","Aqaba","Mafraq","Jarash","Ma'an","Karak","Madaba","Ajloun","Tafilah","Al-Balqa"),
-        defaultValue:'Amman',
-        allowNull: true,
-      },
+        defaultValue:'Amman'
+   },
     dataOfBirth: {
         type: DataTypes.DATE,
         allowNull: true,
       },
     token: {
       type: DataTypes.VIRTUAL,
-      get() {
+      /*get() {
         return jwt.sign({ username: this.username }, SECRET);
       },
       set(tokenObj) {
         let token = jwt.sign(tokenObj, SECRET);
-        return token;
-      }
+        //return token;
+      }*/
     },
     capabilities: {
       type: DataTypes.VIRTUAL,
@@ -80,14 +78,21 @@ const userModel = (sequelize, DataTypes) => {
   model.authenticateBasic = async function (username, password) {
     const user = await this.findOne({ where: { username } });
     const valid = await bcrypt.compare(password, user.password);
-    if (valid) { return user; }
-    throw new Error('Invalid User');
+    if (valid) {
+      let newToken = jwt.sign({ username: user.username }, SECRET,{expiresIn : '60 min'});//reqire a new token in 15 min
+      user.token = newToken;
+      return user;
+  }
+  else {
+      throw new Error("Invalid user");
+  }
   };
 
   model.authenticateToken = async function (token) {
     try {
       const parsedToken = jwt.verify(token, SECRET);
       const user = this.findOne({ where: { username: parsedToken.username } });
+      user.token="Mohammad";
       if (user) { return user; }
       throw new Error("User Not Found");
     } catch (e) {
