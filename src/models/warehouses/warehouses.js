@@ -4,30 +4,28 @@ sequelize.define('warehouses', {
   
     userId: {
         type: DataTypes.INTEGER,
-        required: true
+        allowNull: true
     },
     process: {
         type: DataTypes.ENUM('Sell','Rent'),
-        required: true
+        allowNull: false
     },
     type: {
         type: DataTypes.ENUM('Industrial','Commercial','Agricultural'),
         defaultValue: 'Commercial',
-        required: true
     },
     owner: {
         type: DataTypes.ENUM('Owner','Broker'),
         defaultValue: 'Owner',
-        required: true
 
     },
     price: {
         type: DataTypes.FLOAT,
-        required: true
+        allowNull: false
     },
     area: {
         type: DataTypes.FLOAT,
-        required: true
+        allowNull: false
     },
 
     availability : {
@@ -38,13 +36,11 @@ sequelize.define('warehouses', {
     rentDuration: {
         type: DataTypes.ENUM("Daily","Weekly","Monthly","Yearly"),
         defaultValue: 'Monthly',
-        allowNull: false,
     },
 
     city: {
         type: DataTypes.ENUM("Amman","Zarqa","Irbid","Aqaba","Mafraq","Jarash","Ma'an","Karak","Madaba","Ajloun","Tafilah","Al-Balqa"),
         defaultValue: 'Amman',
-        allowNull: false,
     },
 
     address: {

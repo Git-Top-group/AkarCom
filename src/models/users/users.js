@@ -9,55 +9,53 @@ const userModel = (sequelize, DataTypes) => {
   const model = sequelize.define('users', {
     username: {
       type: DataTypes.STRING,
-      required: true,
+      allowNull: false,
       unique: true
     },
     password: {
       type: DataTypes.STRING,
-      required: true
+      allowNull: false,
     },
     role: {
       type: DataTypes.ENUM('user', 'admin'),
-      required: true, 
       defaultValue: 'user'
-    },
+      },
     firstName: {
         type: DataTypes.STRING,
-        required: false
-    },
+        allowNull: true,
+      },
     lastName: {
         type: DataTypes.STRING,
-        required: false
-    },
+        allowNull: true,
+      },
     phoneNumber: {
         type: DataTypes.STRING,
-        required: false
+        allowNull: true,
 
     },
     email: {
         type: DataTypes.STRING,
-        required: false
+        allowNull: true,
 
     },
 
     city: {
         type: DataTypes.ENUM("Amman","Zarqa","Irbid","Aqaba","Mafraq","Jarash","Ma'an","Karak","Madaba","Ajloun","Tafilah","Al-Balqa"),
-        defaultValue:'Amman',
-        allowNull: false,
-    },
+        defaultValue:'Amman'
+   },
     dataOfBirth: {
         type: DataTypes.DATE,
-        required: false
-    },
+        allowNull: true,
+      },
     token: {
       type: DataTypes.VIRTUAL,
-      get() {
+      /*get() {
         return jwt.sign({ username: this.username }, SECRET);
       },
       set(tokenObj) {
         let token = jwt.sign(tokenObj, SECRET);
-        return token;
-      }
+        //return token;
+      }*/
     },
     capabilities: {
       type: DataTypes.VIRTUAL,
@@ -80,14 +78,21 @@ const userModel = (sequelize, DataTypes) => {
   model.authenticateBasic = async function (username, password) {
     const user = await this.findOne({ where: { username } });
     const valid = await bcrypt.compare(password, user.password);
-    if (valid) { return user; }
-    throw new Error('Invalid User');
+    if (valid) {
+      let newToken = jwt.sign({ username: user.username }, SECRET,{expiresIn : '60 min'});//reqire a new token in 15 min
+      user.token = newToken;
+      return user;
+  }
+  else {
+      throw new Error("Invalid user");
+  }
   };
 
   model.authenticateToken = async function (token) {
     try {
       const parsedToken = jwt.verify(token, SECRET);
       const user = this.findOne({ where: { username: parsedToken.username } });
+      user.token="Mohammad";
       if (user) { return user; }
       throw new Error("User Not Found");
     } catch (e) {
