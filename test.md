@@ -71,3 +71,21 @@ Warehouses
     "address":"somewhere",
     "moreInfo":"anything"
 }
+
+http://localhost:3000/userId/houses     method `GET`:  done 
+http://localhost:3000/userId/newpost/category   method `POST`  : done
+
+http://localhost:3000/userId/dashboard  method `PUT`: todo
+http://localhost:3000/userId/dashboard   method `DELETE` : todo
+
+
+to get all data
+http://localhost:3000/allData  method `GET`: todo
+
+to get all data for specific user (dashboard)
+
+http://localhost:3000/userId/dashboard/ method `GET`: todo
+
+
+
+filtration to get `any` data  (ex: on Process ): todo(لبكره)
