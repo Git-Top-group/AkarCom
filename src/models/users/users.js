@@ -9,46 +9,46 @@ const userModel = (sequelize, DataTypes) => {
   const model = sequelize.define('users', {
     username: {
       type: DataTypes.STRING,
-      required: true,
+      allowNull: false,
       unique: true
     },
     password: {
       type: DataTypes.STRING,
-      required: true
+      allowNull: false,
     },
     role: {
       type: DataTypes.ENUM('user', 'admin'),
-      required: true, 
-      defaultValue: 'user'
+      defaultValue: 'user',
+      allowNull: true,
     },
     firstName: {
         type: DataTypes.STRING,
-        required: false
-    },
+        allowNull: true,
+      },
     lastName: {
         type: DataTypes.STRING,
-        required: false
-    },
+        allowNull: true,
+      },
     phoneNumber: {
         type: DataTypes.STRING,
-        required: false
+        allowNull: true,
 
     },
     email: {
         type: DataTypes.STRING,
-        required: false
+        allowNull: true,
 
     },
 
     city: {
         type: DataTypes.ENUM("Amman","Zarqa","Irbid","Aqaba","Mafraq","Jarash","Ma'an","Karak","Madaba","Ajloun","Tafilah","Al-Balqa"),
         defaultValue:'Amman',
-        allowNull: false,
-    },
+        allowNull: true,
+      },
     dataOfBirth: {
         type: DataTypes.DATE,
-        required: false
-    },
+        allowNull: true,
+      },
     token: {
       type: DataTypes.VIRTUAL,
       get() {
