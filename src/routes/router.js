@@ -74,13 +74,17 @@ routers.delete('/:userId/dashboard/:model/:postId', bearer, acl('CRUD'), async (
 
 })
 //Filter one or more at the same time (visitor)
-routers.get('/:model/:process/:city/:owner', async (req, res) => {
-
+routers.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms', async (req, res) => {
     const process = req.params.process;
     const city = req.params.city;
     const owner = req.params.owner;
-    let filteredData = await req.model.readFiltered(process, city, owner);
-    if(filteredData.length!=0){
+    const availability = req.params.availability;
+    const buildingAge = req.params.buildingAge;
+    const furnished = req.params.furnished;
+    const rooms = req.params.rooms;
+    const bathRooms = req.params.bathRooms;
+    let filteredData = await req.model.readFiltered(process, city, owner,availability,buildingAge,furnished,rooms,bathRooms);
+    if(filteredData){
     res.status(200).send(filteredData);
     }else{
         res.status(403).send(`Error: your filteration does not match any existing data`);

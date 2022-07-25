@@ -86,6 +86,5 @@ to get all data for specific user (dashboard)
 
 http://localhost:3000/userId/dashboard/ method `GET`: todo
 
+http://localhost:3000/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms  method `GET`: done
 
-
-filtration to get `any` data  (ex: on Process ): todo(لبكره)

@@ -129,19 +129,29 @@ class Collection {
     }
 
   }
-  async readFiltered(process, city, owner) {
+  async readFiltered(process, city, owner, availability, buildingAge, furnished, rooms, bathRooms) {
     try {
       let record = null;
 
       let options = { where: {} };
-      if (process !== "all" ) 
+      if (process !== "all")
         options.where.process = process;
-      if (city !== "all") 
+      if (city !== "all")
         options.where.city = city;
-      if (owner !== "all") 
+      if (owner !== "all")
         options.where.owner = owner
-      
-        
+      if (availability !== "all")
+        options.where.availability = availability
+      if (buildingAge !== "all")
+        options.where.buildingAge = buildingAge
+      if (furnished !== "all")
+        options.where.furnished = furnished
+      if (rooms !== "all")
+        options.where.rooms = rooms
+      if (bathRooms !== "all")
+        options.where.bathRooms = bathRooms
+
+
       console.log({ options });
       record = await this.model.findAll(options);
       return record;
