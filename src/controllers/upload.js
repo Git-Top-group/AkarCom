@@ -8,9 +8,6 @@ const uploadFiles = async (req, res) => {
     if (req.file == undefined) {
       return res.send(`You must select a file.`);
     }
-    console.log("!!!!!!!!!!!!!!!!!!",req.file.mimetype,"LL",req.file.originalname,"LL",fs.readFileSync(
-        __basedir + "/assets/uploads/" + req.file.filename
-      ),);
     let obj={
         type: req.file.mimetype,
         name: req.file.originalname,
