@@ -21,6 +21,7 @@ authRouter.post('/signup', async (req, res, next) => {
 });
 
 authRouter.post('/signin', basicAuth, (req, res, next) => {
+  
     console.log(req.user.token);
 
   const user = {
@@ -48,22 +49,6 @@ authRouter.get('/:userId/dashboard', bearerAuth, async (req, res, next) => {
     res.status(200).send('Welcome to the secret area')
   });
   
-  //Update posts
-routers.put('/:userId/dashboard/:model/:postId',bearer, acl('CRUD'),async(req,res)=>{
-  const userId = parseInt(req.params.userId);
-  const postId = parseInt(req.params.postId);
-  let obj = req.body; 
-  let updatedModel = await req.model.update(userId,postId,obj);
-  if(updatedModel){
-      if(updatedModel[0]!=0){
-          res.status(201).json(updatedModel[1]);
-      }else{
-          res.status(403).send(`There is no model with this id: ${id}`);
-      }
-  }
-  else{
-      res.status(403).send(`There is an error in updating post, check the post id or if you are signed in or not`);
-  }
-})
+
 
 module.exports = authRouter;

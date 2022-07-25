@@ -9,6 +9,7 @@ const errorHandler = require("./error-handlers/500");
 const logger = require("./middleware/logger");
 const authRouter = require("./auth/routes");
 const routers = require("./routes/router")
+const adminRouters = require("./routes/adminRoutes")
 
 const app = express();
 app.use(express.json());
@@ -19,6 +20,7 @@ app.get('/', (req, res) => {
   })
 
 app.use(authRouter);
+app.use(adminRouters);
 app.use(routers);
 app.use("*", notFoundHandler);
 app.use(errorHandler); 
