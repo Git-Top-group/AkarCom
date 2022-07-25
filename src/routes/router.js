@@ -26,6 +26,11 @@ routers.get('/:userId/:model',async(req,res)=>{
     let allData = await req.model.get();
     res.status(200).send(allData);
 })
+routers.get('/:userId/:model/:postId',async(req,res)=>{
+      let postId = parseInt(req.params.postId)
+    let allData = await req.model.getById(postId);
+    res.status(200).send(allData);
+})
 
 //Create posts 
 routers.post('/:userId/newpost/:model',bearer, acl('CRUD'),async(req,res)=>{
@@ -40,11 +45,11 @@ routers.post('/:userId/newpost/:model',bearer, acl('CRUD'),async(req,res)=>{
 })
 
 //Update posts
-routers.put('/:userId/dashboard/:id',bearer, acl('updateHisPosts'),async(req,res)=>{
-    const username = req.params.username;
-    const id = parseInt(req.params.id);
-    let updateModel = req.body; 
-    let updatedModel = await req.model.updateRecord(username,updateModel,id);
+routers.put('/:userId/dashboard/:model/:postId',bearer, acl('CRUD'),async(req,res)=>{
+    const userId = parseInt(req.params.userId);
+    const postId = parseInt(req.params.postId);
+    let obj = req.body; 
+    let updatedModel = await req.model.update(userId,postId,obj);
     if(updatedModel){
         if(updatedModel[0]!=0){
             res.status(201).json(updatedModel[1]);
@@ -56,6 +61,20 @@ routers.put('/:userId/dashboard/:id',bearer, acl('updateHisPosts'),async(req,res
         res.status(403).send(`There is an error in updating post, check the post id or if you are signed in or not`);
     }
 })
+routers.delete('/:userId/dashboard/:model/:postId',bearer, acl('CRUD'),async(req,res)=>{
+    const userId = parseInt(req.params.userId);
+    const postId = parseInt(req.params.postId);
+    let deletedModel = await req.model.removeRecord(userId,postId);
+    if(deletedModel){
+        res.send("Deleted Successfully");
+        res.status(204);
+    }
+    else{
+        res.status(403).send(`There is an error in deleting post, check the post id or if you are signed in or not`);
+    }
+    
+})
+
 
 
 module.exports = routers;

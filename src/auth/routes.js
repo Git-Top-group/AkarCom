@@ -48,5 +48,6 @@ authRouter.get('/:userId/dashboard', bearerAuth, async (req, res, next) => {
     res.status(200).send('Welcome to the secret area')
   });
   
+  
 
 module.exports = authRouter;

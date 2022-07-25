@@ -14,24 +14,114 @@ class Collection {
       return this.model.findAll({});
     }
   }
+  getAll(id){
+    console.log("from getall finction >>>>>> ") 
+       if (id) {
+      return this.model.findAll({ where: { id } });
+    }
+    else {
+      return this.model.findAll({});
+    }
+}
 
-  async createRecord(userIdParams,obj) {
-    obj.userId=userIdParams;
-        try {     
+getById(postId){
+  console.log("from getall finction >>>>>> ") 
+     if (postId) {
+    return this.model.findOne({ where: { id:postId } });
+  }
+  else {
+    return this.model.findAll({});
+  }
+}
+  async createRecord(userId,obj) {
+    obj.userId=userId;
+        try {   
+         
             let newRecord = await this.model.create(obj);
             return newRecord;
         } catch (e) {
             console.error("Error in creating a new record in model ", this.model)
         }   
     }
+    async createAdminRecord(userId,obj) {
+      obj.userId=userId;
+      // console.log(obj.userId ,"this the obj.userId👩🏿‍🦰👩🏿‍🦰👩🏿‍🦰 ")
 
-  update(id, data) {
-    return this.model.findOne({ where: { id } })
-      .then(record => record.update(data));
+      // if(){}
+          try {     
+            // users.findOne({where:{id:userId}})
+              let newRecord = await this.model.create(obj);
+              return newRecord;
+          } catch (e) {
+              console.error("Error in creating a new record in model ", this.model)
+          }   
+      }
+    async update(userId,postId,obj) {
+    
+      let updated=null;
+      if (!postId) {
+          throw new Error('No id provided for model ', this.model)
+      }
+      let record = await this.model.findOne({ where: { id: postId } });
+    
+      if(record){
+          if(userId===record.userId){
+              try {
+                updated = await this.model.update(obj,{where:{id:postId},returning: true});
+                console.log("Updated",updated);
+                return updated;
+            } catch (e) {
+                console.error("Error in updating record in model ", this.model)
+            }
+              }else{
+                console.error('You can not update posts of other users !!  ');
+              }
+      }else{
+          console.error(`There is no model with this id: ${id}`);
+      }
+      
   }
-  delete(id) {
-    return this.model.destroy({ where: { id }});
+  async removeRecord(userId,postId) {
+    if (!postId) {
+        throw new Error('No id provided for model ', this.model)
+    }
+    let record = await this.model.findOne({ where: { id:postId } });
+    if(record){
+        if(userId===record.userId){
+            try {
+                let deleted = await this.model.destroy({ where: { id: postId } });
+                return deleted;
+            } catch (e) {
+                console.error('Error in deleting record in model ', this.model);
+            }
+        }else{
+            console.error('You can not delete posts of other users !!  ');
+          }
+    }else{
+        console.error(`There is no model with this id: ${id}`);
+    }
+    
+}
+  
+
+async removeUserRecord(postId) {
+  if (!postId) {
+      throw new Error('No id provided for model ', this.model)
   }
+  let record = await this.model.findOne({ where: { id:postId } });
+  if(record){
+          try {
+              let deleted = await this.model.destroy({ where: { id: postId } });
+              return deleted;
+          } catch (e) {
+              console.error('Error in deleting record in model ', this.model);
+          }
+      
+  }else{
+      console.error(`There is no model with this id: ${id}`);
+  }
+  
+}
 }
 module.exports = Collection;
 
