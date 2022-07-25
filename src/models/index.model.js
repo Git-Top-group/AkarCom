@@ -45,14 +45,24 @@ const lands = landsModel(sequelize, DataTypes);
 const villas = villasModel(sequelize, DataTypes);
 const warehouses = warehousesModel(sequelize, DataTypes);
 
-const userImages = userImagesModel(sequelize, DataTypes);
-const houseImages = houseImagesModel(sequelize, DataTypes);
-const apartmentImages = apartmentImagesModel(sequelize, DataTypes);
-const chaletImages = chaletImagesModel(sequelize, DataTypes);
-const landImages = landImagesModel(sequelize, DataTypes);
-const villaImages = villaImagesModel(sequelize, DataTypes);
-const warehouseImages = warehouseImagesModel(sequelize, DataTypes);
 
+
+const userImages = userImagesModel(sequelize,DataTypes);
+const houseImages = houseImagesModel(sequelize,DataTypes);
+const apartmentImages = apartmentImagesModel(sequelize,DataTypes);
+const chaletImages = chaletImagesModel(sequelize,DataTypes);
+const landImages = landImagesModel(sequelize,DataTypes);
+const villaImages = villaImagesModel(sequelize,DataTypes);
+const warehouseImages = warehouseImagesModel(sequelize,DataTypes);
+
+const db = {};
+db.userImages=userImages;
+db.houseImages=houseImages;
+db.apartmentImages=apartmentImages;
+db.chaletImages=chaletImages;
+db.landImages=landImages;
+db.villaImages=villaImages;
+db.warehouseImages=warehouseImages;
 
 //1-1 relationship between users and their images
 users.hasOne(userImages, {
@@ -125,6 +135,7 @@ warehouses.belongsTo(users, {
     foreignKey: "userId",
     targetKey: "id",
 });
+
 
 //1-M relationships between real estates and their images
 
@@ -200,13 +211,14 @@ module.exports = {
     villas: new Collection(villas),
     warehouses: new Collection(warehouses),
 
-    houseImages: new Collection(houseImages),
+    /*houseImages: new Collection(houseImages),
     apartmentImages: new Collection(apartmentImages),
     chaletImages: new Collection(chaletImages),
     landImages: new Collection(landImages),
     villaImages: new Collection(villaImages),
-    warehouseImages: new Collection(warehouseImages),
+    warehouseImages: new Collection(warehouseImages),*/
 
     users: users,
-    userImages: new Collection(userImages),
+   // userImages: new Collection(userImages),
+   db:db
 }; 

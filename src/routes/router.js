@@ -5,6 +5,13 @@ const routers = express.Router();
 const bearer=require("../auth/middleware/bearer.js");
 const acl=require("../auth/middleware/acl.js");
 
+const homeController = require("../controllers/home");
+const uploadController = require("../controllers/upload");
+const upload = require("../middleware/upload");
+
+routers.get("/", homeController.getHome);
+routers.post("/upload", upload.single("file"), uploadController.uploadFiles);
+
 routers.param("model",(req,res,next)=>{
     if (modelFolder[req.params.model]) {
         req.model = modelFolder[req.params.model];

@@ -1,23 +1,20 @@
 'use strict';
 const warehouseImagesModel = (sequelize, DataTypes) => 
-sequelize.define('warehouseImages', {
+sequelize.define('warehouseimages', {
     warehouseId: {
         type: DataTypes.INTEGER,
-        required: true
+        allowNull: true
     },
    
     type: {
         type: DataTypes.STRING,
-        required: true
     },
     name: {
         type: DataTypes.STRING,
-        required: true
 
     },
     data: {
         type: DataTypes.BLOB("long"),
-        required: true
     }
 });
 module.exports =warehouseImagesModel ;
