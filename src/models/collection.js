@@ -15,7 +15,7 @@ class Collection {
     }
   }
   getAll(id){
-    console.log("from getall finction >>>>>> ") 
+
        if (id) {
       return this.model.findAll({ where: { id } });
     }
@@ -25,7 +25,7 @@ class Collection {
 }
 
 getById(postId){
-  console.log("from getall finction >>>>>> ") 
+ 
      if (postId) {
     return this.model.findOne({ where: { id:postId } });
   }
@@ -33,29 +33,36 @@ getById(postId){
     return this.model.findAll({});
   }
 }
-  async createRecord(userId,obj) {
-    obj.userId=userId;
-        try {   
+  // async createRecord(userId,obj) {
+  //   obj.userId=userId;
+  //       try {   
          
+  //           let newRecord = await this.model.create(obj);
+  //           return newRecord;
+  //       } catch (e) {
+  //           console.error("Error in creating a new record in model ", this.model)
+  //       }   
+  //   }
+    async createRecord(realId,userId,obj) {
+      obj.userId=userId;
+      
+      if(realId == userId){
+        try {     
+          // users.findOne({where:{id:userId}})
             let newRecord = await this.model.create(obj);
             return newRecord;
         } catch (e) {
             console.error("Error in creating a new record in model ", this.model)
         }   
-    }
-    async createAdminRecord(userId,obj) {
-      obj.userId=userId;
-      // console.log(obj.userId ,"this the obj.userId👩🏿‍🦰👩🏿‍🦰👩🏿‍🦰 ")
+        
+      }else{
 
-      // if(){}
-          try {     
-            // users.findOne({where:{id:userId}})
-              let newRecord = await this.model.create(obj);
-              return newRecord;
-          } catch (e) {
-              console.error("Error in creating a new record in model ", this.model)
-          }   
+        console.error("the real user id  not matching the id that you sent by params")
+
       }
+    }
+
+
     async update(userId,postId,obj) {
     
       let updated=null;

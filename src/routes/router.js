@@ -34,13 +34,13 @@ routers.get('/:userId/:model/:postId',async(req,res)=>{
 
 //Create posts 
 routers.post('/:userId/newpost/:model',bearer, acl('CRUD'),async(req,res)=>{
-    const userId = parseInt(req.params.userId);
+    let userId = parseInt(req.params.userId);
     let newModel = req.body;
-    let model = await req.model.createRecord(userId,newModel);
+    let model = await req.model.createRecord(req.user.id,userId,newModel);
     if(model){
        res.status(201).json(model);
     }else{
-        res.status(403).send('User ID not exist ');
+        res.status(403).send('the real user id  not matching the id that you sent by params ');
     }
 })
 
