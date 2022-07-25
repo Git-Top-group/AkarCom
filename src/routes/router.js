@@ -15,11 +15,29 @@ routers.param("model",(req,res,next)=>{
 }) 
 
 
-//Get specific model posts (visitor)
-routers.get('/:model',async(req,res)=>{
-    let allData = await req.model.get();
-    res.status(200).send(allData);
+// //Get specific model posts (visitor)
+ routers.get('/:model',async(req,res)=>{
+     let allData = await req.model.get();
+   res.status(200).send(allData);
 })
+
+// routers.getSingleEstate = (req, res, ) => {
+//     const allData = req.query.model;
+//     realEstate.find({ _id: id })
+//       .then((item) => {
+//         res.status(200).json(item);
+//       })
+//       .catch((err) => {
+//         res.status(400).json({ error: err });
+//       });
+//   };
+  
+  
+
+
+
+
+
 
 //Get specific model posts (user)
 routers.get('/:userId/:model',async(req,res)=>{
@@ -57,5 +75,53 @@ routers.put('/:userId/dashboard/:id',bearer, acl('updateHisPosts'),async(req,res
     }
 })
 
+
+
+
+
+//search 
+
+
+
+// routers.getSearchReuslts = (req, res, next) => {
+//     let keyword = req.body.keyword;
+//     console.log(keyword);
+  
+//     realEstate.find({
+//       $or: [
+//         {
+//           title: new RegExp(keyword, "i"),
+//         },
+//         { category: new RegExp(keyword, "i") },
+//         { subCategory: new RegExp(keyword, "i") },
+//       ],
+//     })
+//       .then((realEstate) => {
+//         res.send(realEstate);
+//       })
+//       .catch((err) => {
+//         res.status(400).send(err);
+//       });
+//   };
+  
+  
+routers.findAll = (req, res) => {
+
+    const posts= req.query.model;
+   
+    let condition = posts? {posts: { $regex: new RegExp(posts), $options: "i" } } : {};
+      estate.find(condition)
+        .then(data => {
+          if (!data)
+            res.status(404).send({ message: "Not found real Estate with id " + id });
+          else res.send(data);
+        })
+        .catch(err => {
+          res
+            .status(500)
+            .send({ message: "Error retrieving real Estate with id=" + id });
+        });
+    
+  };
 
 module.exports = routers;
