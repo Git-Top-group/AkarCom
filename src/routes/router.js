@@ -78,4 +78,24 @@ routers.delete('/:userId/dashboard/:model/:postId', bearer, acl('CRUD'), async (
 })
 
 
+
+routers.findAll = (req, res) => {
+
+    const posts= req.query.model;
+   
+    let condition = posts? {posts: { $regex: new RegExp(posts), $options: "i" } } : {};
+      model.find(condition)
+        .then(data => {
+          if (!data)
+            res.status(404).send({ message: "Not found real Estate with id " + id });
+          else res.send(data);
+        })
+        .catch(err => {
+          res
+            .status(500)
+            .send({ message: "Error retrieving real Estate with id=" + id });
+        });
+    
+  };
+
 module.exports = routers;
