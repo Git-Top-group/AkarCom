@@ -25,13 +25,35 @@ class Collection {
         }   
     }
 
-  update(id, data) {
-    return this.model.findOne({ where: { id } })
-      .then(record => record.update(data));
+    async update(userId,postId,obj) {
+    
+      let updated=null;
+      if (!postId) {
+          throw new Error('No id provided for model ', this.model)
+      }
+      let record = await this.model.findOne({ where: { id: postId } });
+    
+      if(record){
+          if(userId===record.userId){
+              try {
+                updated = await this.model.update(obj,{where:{id:postId},returning: true});
+                console.log("Updated",updated);
+                return updated;
+            } catch (e) {
+                console.error("Error in updating record in model ", this.model)
+            }
+              }else{
+                console.error('You can not update posts of other users !!  ');
+              }
+      }else{
+          console.error(`There is no model with this id: ${id}`);
+      }
+      
   }
   delete(id) {
     return this.model.destroy({ where: { id }});
   }
 }
 module.exports = Collection;
+
 
