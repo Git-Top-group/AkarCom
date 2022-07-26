@@ -1,5 +1,15 @@
+***signup***
+{
+
+    "username":"admin",
+    "password":"123",
+    "role":"admin"
+
+}
+
 ***Houses***
 {
+
     "process":"Rent",
     "price": 250 ,
     "surfaceArea": 212,
@@ -9,10 +19,12 @@
         "furnished":true,
     "address":"somewhere",
     "moreInfo":"anything"
+
 }
 
 ***for testing houses filtration ***
 {
+
     "process": "Rent",
     "owner": "Owner",
     "price": 250,
@@ -28,11 +40,12 @@
     "city": "Amman",
     "address": "somewhere",
     "moreInfo": "anything",
-  }
 
+  }
 
 ***Apartment***
 {
+
     "process":"Rent",
     "price": 250 ,
     "area": 212.5,
@@ -42,10 +55,12 @@
         "furnished":true,
     "address":"somewhere",
     "moreInfo":"anything"
+
 }
 
 ***Chalets***
 {
+
     "process":"Rent",
     "price": 250 ,
     "surfaceArea": 212.5,
@@ -55,10 +70,12 @@
         "furnished":true,
     "address":"somewhere",
     "moreInfo":"anything"
+
 }
 
 ***Lands***
 {
+
     "process":"Rent",
     "price": 250 ,
     "area": 212.5,
@@ -66,10 +83,12 @@
         "furnished":true,
     "address":"somewhere",
     "moreInfo":"anything"
+
 }
 
 ***Villas***
 {
+
     "process":"Rent",
     "price": 250 ,
     "surfaceArea": 212.5,
@@ -79,10 +98,12 @@
         "furnished":true,
     "address":"somewhere",
     "moreInfo":"anything"
+
 }
 
 ***Warehouses***
 {
+
     "process":"Rent",
     "price": 250 ,
     "area": 212.5,
@@ -90,25 +111,23 @@
         "availability"  :true,
     "address":"somewhere",
     "moreInfo":"anything"
+
 }
 
-http://localhost:3000/userId/houses     method `GET`:  done 
+http://localhost:3000/userId/houses     method `GET` :  done 
 
-http://localhost:3000/userId/newpost/category   method `POST`  : done
+http://localhost:3000/userId/newpost/category   method `POST` : done
 
-
-http://localhost:3000/userId/dashboard  method `PUT`: todo
+http://localhost:3000/userId/dashboard  method `PUT` : todo
 
 http://localhost:3000/userId/dashboard   method `DELETE` : todo
 
-
 to get all data
-http://localhost:3000/allData  method `GET`: todo
+http://localhost:3000/allData  method `GET` : todo
 
 to get all data for specific user (dashboard)
 
-http://localhost:3000/userId/dashboard/ method `GET`: todo
+http://localhost:3000/userId/dashboard/ method `GET` : todo
 
 http://localhost:3000/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms/:rentDuration/:floors  
-method `GET`: done except price and area
-
+method `GET` : done except price and area
