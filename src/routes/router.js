@@ -41,6 +41,7 @@ routers.post(
   bearer,
   acl("CRUD"),
   async (req, res) => {
+
     let userId = parseInt(req.params.userId);
     let newModel = req.body;
     newModel.model = req.params.model;
@@ -62,11 +63,13 @@ routers.put(
   bearer,
   acl("CRUD"),
   async (req, res) => {
+
     const userId = parseInt(req.params.userId);
     const postId = parseInt(req.params.postId);
     let obj = req.body;
     let updatedModel = await req.model.update(req.user.id, userId, postId, obj);
     if (updatedModel) {
+
       if (updatedModel[0] != 0) {
         res.status(201).json(updatedModel[1]);
       } else {
@@ -74,9 +77,11 @@ routers.put(
       }
     } else {
       res.status(403).send(`You can not update posts of other users !!`);
+
     }
   }
 );
+
 
 //delete posts : (step 3)
 routers.delete(
@@ -96,8 +101,38 @@ routers.delete(
       res.status(204);
     } else {
       res.status(403).send(`You can not delete posts of other users !!`);
+
     }
   }
 );
 
+})
+
+//Filter one or more at the same time (visitor)
+routers.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms/:rentDuration/:floors/:priceFrom/:priceTo', async (req, res) => {
+    const process = req.params.process;
+    const city = req.params.city;
+    const owner = req.params.owner;
+    const availability = req.params.availability;
+    const buildingAge = req.params.buildingAge;
+    const furnished = req.params.furnished;
+    const rooms = req.params.rooms;
+    const bathRooms = req.params.bathRooms;
+    const rentDuration = req.params.rentDuration;
+    const floors = req.params.floors;
+
+    const priceFrom = req.params.priceFrom;
+    const priceTo = req.params.priceTo;
+
+
+    let filteredData = await req.model.readFiltered(process, city, owner, availability, buildingAge, furnished, rooms, bathRooms, rentDuration, floors, priceFrom, priceTo);
+    if (filteredData) {
+        res.status(200).send(filteredData);
+    } else {
+        res.status(403).send(`Error: your filteration does not match any existing data`);
+    }
+
+})
+
 module.exports = routers;
+

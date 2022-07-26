@@ -34,6 +34,7 @@ adminRouters.delete(
   acl("CRUD_Users"),
   async (req, res) => {
     const userId = parseInt(req.params.userId);
+
     const postId = parseInt(req.params.postId);
     let deletedModel = await req.model.removeRecord(
       req.user.id,
@@ -47,7 +48,9 @@ adminRouters.delete(
     } else {
       res.status(403).send(`You can not delete posts of other users !!`);
     }
-  }
-);
+
+}
+    
+})
 
 module.exports = adminRouters;
