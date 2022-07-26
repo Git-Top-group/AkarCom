@@ -9,6 +9,10 @@ sequelize.define('apartments', {
         type: DataTypes.ENUM('Sell','Rent'),
         allowNull: false
     },
+    model: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     owner: {
         type: DataTypes.ENUM('Owner','Broker'),
         defaultValue: 'Owner',

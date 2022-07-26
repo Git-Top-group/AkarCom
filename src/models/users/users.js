@@ -81,7 +81,7 @@ const userModel = (sequelize, DataTypes) => {
     if (valid) {
       let newToken = jwt.sign({ username: user.username }, SECRET,{expiresIn : '60 min'});//reqire a new token in 15 min
       user.token = newToken;
-      console.log("user id from basic auth✔✔😆😆✔✔✔✔🔥🔥🔥 ",user.id)
+      
       return user;
   }
   else {
