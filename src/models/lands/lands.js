@@ -10,6 +10,10 @@ sequelize.define('lands', {
         type: DataTypes.ENUM('Sell','Rent'),
         allowNull: false
     },
+    model: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     type: {
         type: DataTypes.ENUM('Industrial','Commercial','Agricultural'),
         defaultValue:'Commercial',
