@@ -13,52 +13,53 @@ routers.param("model", (req, res, next) => {
         next('invalid input');
     }
 })
-
-
-//Get specific model posts (visitor)
-routers.get('/:model', async (req, res) => {
-    let allData = await req.model.get();
-    res.status(200).send(allData);
-})
-//Get specific model posts (user)
-routers.get('/:userId/:model', async (req, res) => {
-    let allData = await req.model.get();
-    res.status(200).send(allData);
-})
-routers.get('/:userId/:model/:postId', async (req, res) => {
-    let postId = parseInt(req.params.postId)
-    let allData = await req.model.getById(postId);
-    res.status(200).send(allData);
-})
-
 //Create posts 
-routers.post('/:userId/newpost/:model', bearer, acl('CRUD'), async (req, res) => {
+routers.post('/newpost/:userId/:model', bearer, acl('CRUD'), async (req, res) => {
     let userId = parseInt(req.params.userId);
     let newModel = req.body;
-
     let model = await req.model.createRecord(req.user.id, userId, newModel);
     if (model) {
         res.status(201).json(model);
 
     } else {
-        res.status(403).send('the real user id  not matching the id that you sent by params ');
+        res.status(403).send('the real user id not matching the id that you sent by params ');
     }
 })
-
-//Update posts
-routers.put('/:userId/dashboard/:model/:postId', bearer, acl('CRUD'), async (req, res) => {
+//Get one of my posts (user)
+routers.get('/dashboard/:userId/:model/:postId', bearer, acl('CRUD'), async (req, res) => {
+    const userId = parseInt(req.params.userId);
+    const postId = parseInt(req.params.postId);
+    let oneData = await req.model.getOneDash(userId, postId);
+    if (oneData) {
+        res.status(200).send(oneData);
+    } else {
+        res.status(403).send('the real user id not matching the id that you sent by params ');
+    }
+});
+//Get all my posts (user)//
+routers.get('/dashboard/:userId/:model', bearer, acl('CRUD'), async (req, res) => {
+    const userId = parseInt(req.params.userId);
+    let oneData = await req.model.getAllDash(userId);
+    if (oneData) {
+        res.status(200).send(oneData);
+    } else {
+        res.status(403).send('the real user id not matching the id that you sent by params ');
+    }
+});
+//Update my posts
+routers.put('/dashboard/:userId/:model/:postId', bearer, acl('CRUD'), async (req, res) => {
+    console.log('====================================');
+    console.log(req.body.role);
+    console.log('====================================');
     const userId = parseInt(req.params.userId);
     const postId = parseInt(req.params.postId);
     let obj = req.body;
-
-
     let updatedModel = await req.model.update(req.user.id, userId, postId, obj);
-
     if (updatedModel) {
         if (updatedModel[0] != 0) {
             res.status(201).json(updatedModel[1]);
         } else {
-            res.status(403).send(`There is no model with this id: ${id}`);
+            res.status(403).send(`There is no model with this id`);
         }
     }
     else {
@@ -67,12 +68,11 @@ routers.put('/:userId/dashboard/:model/:postId', bearer, acl('CRUD'), async (req
     }
 })
 
-
-routers.delete('/:userId/dashboard/:model/:postId', bearer, acl('CRUD'), async (req, res) => {
+//Delete my posts
+routers.delete('/dashboard/:userId/:model/:postId', bearer, acl('CRUD'), async (req, res) => {
     const userId = parseInt(req.params.userId);
     const postId = parseInt(req.params.postId);
-    let deletedModel = await req.model.removeRecord(req.user.id, userId, postId);
-
+    let deletedModel = await req.model.removeDash(userId, postId);
     if (deletedModel) {
         res.send("Deleted Successfully");
         res.status(204);
@@ -81,6 +81,7 @@ routers.delete('/:userId/dashboard/:model/:postId', bearer, acl('CRUD'), async (
 
         res.status(403).send(`You can not delete posts of other users !!`);
     }
+
 
 })
 
@@ -109,4 +110,5 @@ routers.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished
     }
 
 })
+
 module.exports = routers;
