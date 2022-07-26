@@ -45,8 +45,7 @@ class Collection {
   //   }
   async createRecord(realId, userId, obj) {
     obj.userId = userId;
-
-    if (realId == userId) {
+    if (realId === userId) {
       try {
         // users.findOne({where:{id:userId}})
         let newRecord = await this.model.create(obj);
@@ -129,11 +128,11 @@ class Collection {
     }
 
   }
-  async readFiltered(process, city, owner, availability, buildingAge, furnished, rooms, bathRooms) {
+  async readFiltered(process, city, owner, availability, buildingAge, furnished, rooms, bathRooms, rentDuration, floors, priceFrom, priceTo) {
     try {
       let record = null;
-
       let options = { where: {} };
+
       if (process !== "all")
         options.where.process = process;
       if (city !== "all")
@@ -150,6 +149,18 @@ class Collection {
         options.where.rooms = rooms
       if (bathRooms !== "all")
         options.where.bathRooms = bathRooms
+      if (rentDuration !== "all")
+        options.where.rentDuration = rentDuration
+      if (floors !== "all")
+        options.where.floors = floors
+
+      if (priceFrom!== "all" && priceTo!== "all")
+        options.where.price = { $between: [priceFrom, priceTo] }
+
+      // if (surfaceAreaFrom && surfaceAreaTo)
+      // options.where.surfaceArea = {$between: [surfaceAreaFrom, surfaceAreaTo]}
+      // if (landAreaFrom && landAreaTo)
+      // options.where.landArea = {$between: [landAreaFrom, landAreaTo]}
 
 
       console.log({ options });

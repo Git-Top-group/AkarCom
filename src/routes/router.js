@@ -35,9 +35,9 @@ routers.get('/:userId/:model/:postId', async (req, res) => {
 routers.post('/:userId/newpost/:model', bearer, acl('CRUD'), async (req, res) => {
     let userId = parseInt(req.params.userId);
     let newModel = req.body;
-    let model = await req.model.createRecord(req.user.id, userId, newModel);
+    let model = await req.model.createRecord(req.user.id,userId, newModel);
     if (model) {
-        res.status(201).json(model);
+        res.status(201).send(model);
     } else {
         res.status(403).send('the real user id  not matching the id that you sent by params ');
     }
@@ -74,7 +74,7 @@ routers.delete('/:userId/dashboard/:model/:postId', bearer, acl('CRUD'), async (
 
 })
 //Filter one or more at the same time (visitor)
-routers.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms', async (req, res) => {
+routers.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms/:rentDuration/:floors/:priceFrom/:priceTo', async (req, res) => {
     const process = req.params.process;
     const city = req.params.city;
     const owner = req.params.owner;
@@ -83,10 +83,16 @@ routers.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished
     const furnished = req.params.furnished;
     const rooms = req.params.rooms;
     const bathRooms = req.params.bathRooms;
-    let filteredData = await req.model.readFiltered(process, city, owner,availability,buildingAge,furnished,rooms,bathRooms);
-    if(filteredData){
-    res.status(200).send(filteredData);
-    }else{
+    const rentDuration = req.params.rentDuration;
+    const floors = req.params.floors;
+
+    const priceFrom = req.params.priceFrom;
+    const priceTo = req.params.priceTo;
+
+    let filteredData = await req.model.readFiltered(process, city, owner, availability, buildingAge, furnished, rooms, bathRooms, rentDuration, floors, priceFrom, priceTo);
+    if (filteredData) {
+        res.status(200).send(filteredData);
+    } else {
         res.status(403).send(`Error: your filteration does not match any existing data`);
     }
 

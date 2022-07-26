@@ -1,4 +1,4 @@
-Houses
+***Houses***
 {
     "process":"Rent",
     "price": 250 ,
@@ -11,7 +11,27 @@ Houses
     "moreInfo":"anything"
 }
 
-Apartment
+***for testing houses filtration ***
+{
+    "process": "Rent",
+    "owner": "Owner",
+    "price": 250,
+    "surfaceArea": 212,
+    "landArea": 455,
+    "floors": 2,
+    "buildingAge": "0-11 months",
+    "rooms": "Studio",
+    "bathRooms": "1-Bedroom",
+    "availability": true,
+    "furnished": true,
+    "rentDuration": "Weekly",
+    "city": "Amman",
+    "address": "somewhere",
+    "moreInfo": "anything",
+  }
+
+
+***Apartment***
 {
     "process":"Rent",
     "price": 250 ,
@@ -24,7 +44,7 @@ Apartment
     "moreInfo":"anything"
 }
 
-Chalets
+***Chalets***
 {
     "process":"Rent",
     "price": 250 ,
@@ -37,7 +57,7 @@ Chalets
     "moreInfo":"anything"
 }
 
-Lands
+***Lands***
 {
     "process":"Rent",
     "price": 250 ,
@@ -48,7 +68,7 @@ Lands
     "moreInfo":"anything"
 }
 
-Villas
+***Villas***
 {
     "process":"Rent",
     "price": 250 ,
@@ -61,7 +81,7 @@ Villas
     "moreInfo":"anything"
 }
 
-Warehouses
+***Warehouses***
 {
     "process":"Rent",
     "price": 250 ,
@@ -73,9 +93,12 @@ Warehouses
 }
 
 http://localhost:3000/userId/houses     method `GET`:  done 
+
 http://localhost:3000/userId/newpost/category   method `POST`  : done
 
+
 http://localhost:3000/userId/dashboard  method `PUT`: todo
+
 http://localhost:3000/userId/dashboard   method `DELETE` : todo
 
 
@@ -86,5 +109,6 @@ to get all data for specific user (dashboard)
 
 http://localhost:3000/userId/dashboard/ method `GET`: todo
 
-http://localhost:3000/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms  method `GET`: done
+http://localhost:3000/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms/:rentDuration/:floors  
+method `GET`: done except price and area
 
