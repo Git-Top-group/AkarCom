@@ -21,8 +21,8 @@ authRouter.post('/signup', async (req, res, next) => {
 });
 
 authRouter.post('/signin', basicAuth, (req, res, next) => {
-  
-    console.log(req.user.token);
+
+  console.log(req.user.token);
 
   const user = {
     user: req.user,
@@ -43,12 +43,12 @@ authRouter.get('/secret', bearerAuth, async (req, res, next) => {
 });
 
 authRouter.get('/:userId/dashboard', bearerAuth, async (req, res, next) => {
-    let userId = parseInt(req.params.userId);
-    const user = await users.findOne({where: {id:userId}});
-    const posts = await models.findAll({where: {userId:userId}});
-    res.status(200).send('Welcome to the secret area')
-  });
-  
+  let userId = parseInt(req.params.userId);
+  const user = await users.findOne({ where: { id: userId } });
+  const posts = await models.findAll({ where: { userId: userId } });
+  res.status(200).send('Welcome to the secret area')
+});
+
 
 
 module.exports = authRouter;

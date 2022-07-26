@@ -45,7 +45,9 @@ class Collection {
   //   }
   async createRecord(realId, userId, obj) {
     obj.userId = userId;
-    if (realId === userId) {
+
+
+    if (realId == userId) {
       try {
         // users.findOne({where:{id:userId}})
         let newRecord = await this.model.create(obj);
@@ -58,20 +60,26 @@ class Collection {
 
       console.error("the real user id  not matching the id that you sent by params")
 
+
     }
   }
 
 
-  async update(userId, postId, obj) {
+
+
+  async update(realId, userId, postId, obj) {
 
     let updated = null;
     if (!postId) {
       throw new Error('No id provided for model ', this.model)
     }
+
+
     let record = await this.model.findOne({ where: { id: postId } });
 
     if (record) {
-      if (userId === record.userId) {
+      if (realId === userId) {
+
         try {
           updated = await this.model.update(obj, { where: { id: postId }, returning: true });
           console.log("Updated", updated);
@@ -87,13 +95,18 @@ class Collection {
     }
 
   }
-  async removeRecord(userId, postId) {
+
+
+  async removeRecord(realId, userId, postId) {
+
     if (!postId) {
       throw new Error('No id provided for model ', this.model)
     }
     let record = await this.model.findOne({ where: { id: postId } });
     if (record) {
-      if (userId === record.userId) {
+
+      if (realId === userId) {
+
         try {
           let deleted = await this.model.destroy({ where: { id: postId } });
           return deleted;
@@ -128,6 +141,7 @@ class Collection {
     }
 
   }
+
   async readFiltered(process, city, owner, availability, buildingAge, furnished, rooms, bathRooms, rentDuration, floors, priceFrom, priceTo) {
     try {
       let record = null;
@@ -172,6 +186,7 @@ class Collection {
     }
 
   }
+
 
 
 

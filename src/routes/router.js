@@ -35,9 +35,11 @@ routers.get('/:userId/:model/:postId', async (req, res) => {
 routers.post('/:userId/newpost/:model', bearer, acl('CRUD'), async (req, res) => {
     let userId = parseInt(req.params.userId);
     let newModel = req.body;
-    let model = await req.model.createRecord(req.user.id,userId, newModel);
+
+    let model = await req.model.createRecord(req.user.id, userId, newModel);
     if (model) {
-        res.status(201).send(model);
+        res.status(201).json(model);
+
     } else {
         res.status(403).send('the real user id  not matching the id that you sent by params ');
     }
@@ -48,7 +50,10 @@ routers.put('/:userId/dashboard/:model/:postId', bearer, acl('CRUD'), async (req
     const userId = parseInt(req.params.userId);
     const postId = parseInt(req.params.postId);
     let obj = req.body;
-    let updatedModel = await req.model.update(userId, postId, obj);
+
+
+    let updatedModel = await req.model.update(req.user.id, userId, postId, obj);
+
     if (updatedModel) {
         if (updatedModel[0] != 0) {
             res.status(201).json(updatedModel[1]);
@@ -57,22 +62,28 @@ routers.put('/:userId/dashboard/:model/:postId', bearer, acl('CRUD'), async (req
         }
     }
     else {
-        res.status(403).send(`There is an error in updating post, check the post id or if you are signed in or not`);
+
+        res.status(403).send(`You can not update posts of other users !!`);
     }
 })
+
+
 routers.delete('/:userId/dashboard/:model/:postId', bearer, acl('CRUD'), async (req, res) => {
     const userId = parseInt(req.params.userId);
     const postId = parseInt(req.params.postId);
-    let deletedModel = await req.model.removeRecord(userId, postId);
+    let deletedModel = await req.model.removeRecord(req.user.id, userId, postId);
+
     if (deletedModel) {
         res.send("Deleted Successfully");
         res.status(204);
     }
     else {
-        res.status(403).send(`There is an error in deleting post, check the post id or if you are signed in or not`);
+
+        res.status(403).send(`You can not delete posts of other users !!`);
     }
 
 })
+
 //Filter one or more at the same time (visitor)
 routers.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms/:rentDuration/:floors/:priceFrom/:priceTo', async (req, res) => {
     const process = req.params.process;
@@ -88,6 +99,7 @@ routers.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished
 
     const priceFrom = req.params.priceFrom;
     const priceTo = req.params.priceTo;
+
 
     let filteredData = await req.model.readFiltered(process, city, owner, availability, buildingAge, furnished, rooms, bathRooms, rentDuration, floors, priceFrom, priceTo);
     if (filteredData) {

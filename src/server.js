@@ -17,13 +17,13 @@ app.use(express.json());
 app.use(logger);
 app.get('/', (req, res) => {
     res.send('this is the home page')
-  })
+})
 
 app.use(authRouter);
 app.use(adminRouters);
 app.use(routers);
 app.use("*", notFoundHandler);
-app.use(errorHandler); 
+app.use(errorHandler);
 
 function start(PORT) {
     app.listen(PORT, () => {
