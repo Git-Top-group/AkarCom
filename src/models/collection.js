@@ -46,6 +46,7 @@ class Collection {
   async createRecord(realId, userId, obj) {
     obj.userId = userId;
 
+
     if (realId == userId) {
       try {
         // users.findOne({where:{id:userId}})
@@ -58,6 +59,7 @@ class Collection {
     } else {
 
       console.error("the real user id  not matching the id that you sent by params")
+
 
     }
   }
@@ -72,10 +74,12 @@ class Collection {
       throw new Error('No id provided for model ', this.model)
     }
 
+
     let record = await this.model.findOne({ where: { id: postId } });
 
     if (record) {
       if (realId === userId) {
+
         try {
           updated = await this.model.update(obj, { where: { id: postId }, returning: true });
           console.log("Updated", updated);
@@ -89,16 +93,20 @@ class Collection {
     } else {
       console.error(`There is no model with this id: ${id}`);
     }
+
   }
 
 
   async removeRecord(realId, userId, postId) {
+
     if (!postId) {
       throw new Error('No id provided for model ', this.model)
     }
     let record = await this.model.findOne({ where: { id: postId } });
     if (record) {
+
       if (realId === userId) {
+
         try {
           let deleted = await this.model.destroy({ where: { id: postId } });
           return deleted;
@@ -113,10 +121,6 @@ class Collection {
     }
 
   }
-
-
-
-
 
 
   async removeUserRecord(postId) {
@@ -137,6 +141,57 @@ class Collection {
     }
 
   }
+
+  async readFiltered(process, city, owner, availability, buildingAge, furnished, rooms, bathRooms, rentDuration, floors, priceFrom, priceTo) {
+    try {
+      let record = null;
+      let options = { where: {} };
+
+      if (process !== "all")
+        options.where.process = process;
+      if (city !== "all")
+        options.where.city = city;
+      if (owner !== "all")
+        options.where.owner = owner
+      if (availability !== "all")
+        options.where.availability = availability
+      if (buildingAge !== "all")
+        options.where.buildingAge = buildingAge
+      if (furnished !== "all")
+        options.where.furnished = furnished
+      if (rooms !== "all")
+        options.where.rooms = rooms
+      if (bathRooms !== "all")
+        options.where.bathRooms = bathRooms
+      if (rentDuration !== "all")
+        options.where.rentDuration = rentDuration
+      if (floors !== "all")
+        options.where.floors = floors
+
+      if (priceFrom!== "all" && priceTo!== "all")
+        options.where.price = { $between: [priceFrom, priceTo] }
+
+      // if (surfaceAreaFrom && surfaceAreaTo)
+      // options.where.surfaceArea = {$between: [surfaceAreaFrom, surfaceAreaTo]}
+      // if (landAreaFrom && landAreaTo)
+      // options.where.landArea = {$between: [landAreaFrom, landAreaTo]}
+
+
+      console.log({ options });
+      record = await this.model.findAll(options);
+      return record;
+
+    } catch (e) {
+      console.error("Error in reading filtered model", this.model)
+    }
+
+  }
+
+
+
+
+
+
 }
 module.exports = Collection;
 
