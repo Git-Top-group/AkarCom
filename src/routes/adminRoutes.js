@@ -51,6 +51,6 @@ adminRouters.delete(
 
 }
     
-})
+)
 
 module.exports = adminRouters;
