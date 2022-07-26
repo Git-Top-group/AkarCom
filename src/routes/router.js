@@ -106,7 +106,7 @@ routers.delete(
   }
 );
 
-})
+
 
 //Filter one or more at the same time (visitor)
 routers.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms/:rentDuration/:floors/:priceFrom/:priceTo', async (req, res) => {
