@@ -4,7 +4,7 @@ const express = require("express");
 const routers = express.Router();
 const bearer = require("../auth/middleware/bearer.js");
 const acl = require("../auth/middleware/acl.js");
-
+const {users} =require("../models/index.model")
 routers.param("model", (req, res, next) => {
   if (modelFolder[req.params.model]) {
     req.model = modelFolder[req.params.model];
@@ -107,7 +107,53 @@ routers.delete(
 );
 
 
+//to update users info
+// routers.put(
+//   "/profile/:userId/update",
+//   bearer,
+//   acl("CRUD"),
+//   async (req, res) => {
 
+//     const userId = parseInt(req.params.userId);
+ 
+//     let obj = req.body;
+//     let updatedModel = await req.users.updateProfile(req.user, userId, obj);
+//     if (updatedModel) {
+
+//       if (updatedModel[0] != 0) {
+//         res.status(201).json(updatedModel[1]);
+//       } else {
+//         res.status(403).send(`you cannot update profile}`);
+//       }
+//     } else {
+//       res.status(403).send(`You can not update profile of other users !!`);
+
+//     }
+//   }
+// );
+// routers.delete(
+//   "/clear/:model/:postId",
+//   bearer,
+//   acl("CRUD_Users"),
+//   async (req, res, next) => {
+    
+//     const postId = parseInt(req.params.postId);
+//     try {
+//       let deletedData = await req.model.clear(postId);
+//       console.log(deletedData);
+//       res.status(200).send("record deleted and the model is clean ");
+//       return deletedData;
+//     } catch (e) {
+//       console.error("Error in deleting record in user ");
+//     }
+    
+//   }
+// );
+
+routers.get('/null/:model/', async (req, res) => {
+  let oneData = await req.model.getbyNull();
+  res.status(200).send(oneData);
+})
 //Filter one or more at the same time (visitor)
 routers.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms/:rentDuration/:floors/:priceFrom/:priceTo', async (req, res) => {
     const process = req.params.process;

@@ -50,7 +50,36 @@ adminRouters.delete(
     }
 
 }
+
     
 )
+adminRouters.delete(
+  "/clear/:model",
+  bearer,
+  acl("CRUD_Users"),
+  async (req, res) => {
+    
+
+    const postId = parseInt(req.params.postId);
+    
+    let deletedModel = await req.model.clear(
+     
+     
+      postId,
+      req.user.role
+    );
+    if (deletedModel) {
+      res.send("Deleted Successfully");
+      res.status(204);
+    } else {
+      res.status(403).send(`You can not delete posts of other users !!`);
+    }
+
+}
+
+    
+)
+
+
 
 module.exports = adminRouters;
