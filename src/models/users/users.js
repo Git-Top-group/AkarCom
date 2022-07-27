@@ -38,13 +38,16 @@ const userModel = (sequelize, DataTypes) => {
         allowNull: true,
 
     },
-
     city: {
         type: DataTypes.ENUM("Amman","Zarqa","Irbid","Aqaba","Mafraq","Jarash","Ma'an","Karak","Madaba","Ajloun","Tafilah","Al-Balqa"),
         defaultValue:'Amman'
    },
     dataOfBirth: {
         type: DataTypes.DATE,
+        allowNull: true,
+      },
+      userImage:{
+        type: DataTypes.STRING,
         allowNull: true,
       },
     token: {
