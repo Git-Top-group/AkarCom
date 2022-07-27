@@ -93,7 +93,7 @@ const userModel = (sequelize, DataTypes) => {
     try {
       const parsedToken = jwt.verify(token, SECRET);
       const user = this.findOne({ where: { username: parsedToken.username } });
-      user.token="Mohammad";
+      // user.token="Mohammad";
       if (user) { return user; }
       throw new Error("User Not Found");
     } catch (e) {
@@ -101,6 +101,19 @@ const userModel = (sequelize, DataTypes) => {
     }
   };
 
+//   model.profileUpdate =async function(userId) {
+// try{
+
+//   const user = this.findOne({ where: { id:userId } });
+// }
+// catch{
+
+
+// }
+
+
+
+  // }
   return model;
 }
 

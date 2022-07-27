@@ -80,7 +80,6 @@
     "price": 250 ,
     "area": 212.5,
         "availability"  :true,
-        "furnished":true,
     "address":"somewhere",
     "moreInfo":"anything"
 
@@ -130,4 +129,5 @@ to get all data for specific user (dashboard)
 http://localhost:3000/userId/dashboard/ method `GET` : todo
 
 http://localhost:3000/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms/:rentDuration/:floors  
+http://localhost:4000/lands/Rent/Amman/all/all/all/all/all/all/all/all/all/all 
 method `GET` : done except price and area

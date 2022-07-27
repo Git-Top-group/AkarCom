@@ -1,5 +1,6 @@
 
 "use strict";
+// const {users} = require("../models/index.model");
 
 
 class Collection {
@@ -86,8 +87,55 @@ class Collection {
       console.error(`There is no model with this id: ${id}`);
     }
   }
+  async updatePro(realId, userId, postId, obj) {
 
+    let updated = null;
+    if (!userId) {
+      throw new Error("No id provided for model ", this.model);
+    }
+    let record = await this.model.findOne({ where: { id: userId } });
+    if (record) {
+      if (realId === userId) {
 
+        try {
+          updated = await this.model.update(obj, {
+            where: { id: userId },
+            returning: true,
+          });
+          
+          return updated;
+        } catch (e) {
+          console.error("Error in updating record in model ", this.model);
+        }
+      } else {
+        console.error("You can not update posts of other users !!  ");
+      }
+    } else {
+      console.error(`There is no model with this id: ${id}`);
+    }
+  }
+  async getOrder(postId,userId,userPostId){
+
+if(postId){
+
+  let record = await this.model.findOne({ where: { id: postId } });
+  // let userContact =await users.findOne({where: {id:userId}})
+  let obj={
+
+postId: postId,
+OwnerId:record.userId,
+customerId: userId,
+model:record.model,
+// customerName : userContact.id,
+  }
+return obj;
+}
+ }
+
+async getbyNull(){
+  let ids = null;
+    return this.model.findAll({ where: { userId:ids } });
+}
   async removeRecord(realId, userId, postId, role) {
 
     if (!postId) {
@@ -112,6 +160,21 @@ class Collection {
     }
   }
  
+  async clear (postId){
+let ids = null;
+  try {
+         let deleted = await this.model.destroy({
+          where: {userId:ids},
+          
+        })
+        console.log(ids , " 🔥💛🔥💛💛💛🔥🥩🥩🍞🥩");
+         return deleted;
+       } catch (e) {
+         console.error("Error in deleting record in model ");
+       }
+}     
+
+  
 
 
   async readFiltered(process, city, owner, availability, buildingAge, furnished, rooms, bathRooms, rentDuration, floors, priceFrom, priceTo) {
