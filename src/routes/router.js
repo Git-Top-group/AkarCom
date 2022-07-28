@@ -46,6 +46,50 @@ routers.get("/dashboard/:userId/:model/:postId", bearer, async (req, res) => {
   res.status(200).send(allData);
 });
 
+//Get specific post images
+routers.get("/dashboard/:userId/:model/:postId/:modelImages", bearer, async (req, res) => {
+  let model = req.params.model;
+  let userId = parseInt(req.params.userId);
+  let postId = parseInt(req.params.postId);
+  let imageId = parseInt(req.params.imageId);
+  try{
+    let allData = await req.modelImages.getPostImages(req.user.id, userId, model,postId,imageId);
+    if(allData){
+      res.status(200).send(allData);
+    }else{
+      res
+          .status(200)
+          .send("Please provide your adv. with photos to get more clients. ");
+    }
+  }catch{
+    res
+    .status(403)
+    .send("the real user id  not matching the id that you sent by params ");
+  }
+  });
+
+//Get specific post (specific image)
+routers.get("/dashboard/:userId/:model/:postId/:modelImages/:imageId", bearer, async (req, res) => {
+  let postId = parseInt(req.params.postId);
+  let imageId = parseInt(req.params.imageId);
+  let userId = parseInt(req.params.userId);
+  let model=req.params.model;
+  try{
+    let allData = await req.modelImages.getPostImages(req.user.id, userId, model,postId,imageId);
+    if(allData){
+      res.status(200).send(allData);
+    }else{
+      res
+          .status(200)
+          .send("Please provide your adv. with photos to get more clients. ");
+    }
+  }catch{
+    res
+    .status(403)
+    .send("the real user id  not matching the id that you sent by params ");
+  }
+  });
+
 //Create posts ✔✔✔
 routers.post(
   "/newpost/:userId/:model",
@@ -69,23 +113,16 @@ routers.post(
 );
 
 // create post images
-
 routers.post(
   "/newpost/:userId/:model/:postId/:modelImages",
   bearer,
   acl("CRUD"),
   async (req, res) => {
-
     let userId = parseInt(req.params.userId);
     let newModel = req.body;
     let postId = parseInt(req.params.postId);
-    newModel.postId = postId;
-
-    let model = await req.modelImages.create(newModel);
-
+    let model = await req.modelImages.createImage(req.user.id, userId, postId, newModel, req.params.model);
     if (model) {
-      model.postId = postId;
-      model.model = req.params.model;
       res.status(201).json(model);
     } else {
       res
@@ -123,6 +160,32 @@ routers.put(
 );
 
 
+//Update post images : (step 3)
+routers.put(
+  "/dashboard/:userId/:model/:postId/:modelImages/:imageId",
+  bearer,
+  acl("CRUD"),
+  async (req, res) => {
+    const userId = parseInt(req.params.userId);
+    const postId = parseInt(req.params.postId);
+    const imageId = parseInt(req.params.imageId);
+    let obj = req.body;
+    obj.model = req.params.model;
+    let updatedModel = await req.modelImages.updateImage(req.user.id, userId,postId, obj, imageId);
+    if (updatedModel) {
+      if (updatedModel[0] != 0) {
+        res.status(201).json(updatedModel[1]);
+      } else {
+        res.status(403).send(`There is no model with this id: ${postId}`);
+      }
+    } else {
+      res.status(403).send(`You can not update posts of other users !!`);
+
+    }
+  }
+);
+
+
 //delete posts : (step 3)
 routers.delete(
   "/dashboard/:userId/:model/:postId",
@@ -139,6 +202,28 @@ routers.delete(
     if (deletedModel) {
       res.send("Deleted Successfully");
       res.status(204);
+    } else {
+      res.status(403).send(`You can not delete posts of other users !!`);
+
+    }
+  }
+);
+
+//delete post images : (step 3)
+routers.delete(
+  "/dashboard/:userId/:model/:postId/:modelImages/:imageId",
+  bearer,
+  acl("CRUD"),
+  async (req, res) => {
+    const userId = parseInt(req.params.userId);
+    const postId = parseInt(req.params.postId);
+    const imageId = parseInt(req.params.imageId);
+    let deletedModel = await req.modelImages.deleteImage(
+      req.user.id,userId,postId,imageId
+    );
+    if (deletedModel) {
+      res.status(204);
+      res.send("Deleted Successfully");
     } else {
       res.status(403).send(`You can not delete posts of other users !!`);
 

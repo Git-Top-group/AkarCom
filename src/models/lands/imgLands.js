@@ -5,6 +5,10 @@ const landImagesModel = (sequelize, DataTypes) =>
             type: DataTypes.INTEGER,
             allowNull: true
         },
+        userId: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
         model: {
             type: DataTypes.STRING,
             allowNull: true
