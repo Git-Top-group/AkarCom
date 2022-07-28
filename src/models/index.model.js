@@ -2,42 +2,48 @@
 require('dotenv').config();
 const { Sequelize, DataTypes } = require('sequelize');
 
-const userModel=require("./users/users");
-const userImagesModel=require("./users/imgUsers");
+const userModel = require("./users/users");
 
-const housesModel=require("./houses/houses");
-const houseImagesModel=require("./houses/imgHouses");
+const housesModel = require("./houses/houses");
+const houseImagesModel = require("./houses/imgHouses");
+const houseOrdersModel =require("./houses/houseOrders");
 
-const apartmentsModel=require("./apartments/apartment");
-const apartmentImagesModel=require("./apartments/imgApartment");
+const apartmentsModel = require("./apartments/apartment");
+const apartmentImagesModel = require("./apartments/imgApartment");
+const apartmentOrdersModel =require("./apartments/apartmentOrders");
 
-const chaletsModel=require("./chalets/chalets");
-const chaletImagesModel=require("./chalets/imgChalets");
+const chaletsModel = require("./chalets/chalets");
+const chaletImagesModel = require("./chalets/imgChalets");
+const chaletOrdersModel =require("./chalets/chaletOrders");
 
-const landsModel=require("./lands/lands");
-const landImagesModel=require("./lands/imgLands");
+const landsModel = require("./lands/lands");
+const landImagesModel = require("./lands/imgLands");
+const landOrdersModel=require("./lands/landOrders");
 
-const villasModel=require("./villas/villas");
-const villaImagesModel=require("./villas/imgVillas");
 
-const warehousesModel=require("./warehouses/warehouses");
-const warehouseImagesModel=require("./warehouses/imgWarehouses");
+const villasModel = require("./villas/villas");
+const villaImagesModel = require("./villas/imgVillas");
+const villaOrdersModel=require("./villas/villaOrders");
 
-const Collection=require("./collection");
+const warehousesModel = require("./warehouses/warehouses");
+const warehouseImagesModel = require("./warehouses/imgWarehouses");
+const warehouseOrdersModel=require("./warehouses/warehouseOrders");
+
+const Collection = require("./collection");
 
 const POSTGRES_URI = process.env.NODE_ENV === 'test' ? 'sqlite:memory:' : process.env.DATABASE_URL;
 let sequelizeOptions =
-process.env.NODE_ENV === "production"
-     ? {
-         dialectOptions: {
-            ssl: { require: true, rejectUnauthorized: false}
-         },
-     }
-     : {};
+    process.env.NODE_ENV === "production"
+        ? {
+            dialectOptions: {
+                ssl: { require: true, rejectUnauthorized: false }
+            },
+        }
+        : {};
 
 let sequelize = new Sequelize(POSTGRES_URI, sequelizeOptions);
 
-const users = userModel(sequelize,DataTypes);
+const users = userModel(sequelize, DataTypes);
 const houses = housesModel(sequelize, DataTypes);
 const apartments = apartmentsModel(sequelize, DataTypes);
 const chalets = chaletsModel(sequelize, DataTypes);
@@ -45,7 +51,7 @@ const lands = landsModel(sequelize, DataTypes);
 const villas = villasModel(sequelize, DataTypes);
 const warehouses = warehousesModel(sequelize, DataTypes);
 
-const userImages = userImagesModel(sequelize, DataTypes);
+
 const houseImages = houseImagesModel(sequelize, DataTypes);
 const apartmentImages = apartmentImagesModel(sequelize, DataTypes);
 const chaletImages = chaletImagesModel(sequelize, DataTypes);
@@ -54,16 +60,15 @@ const villaImages = villaImagesModel(sequelize, DataTypes);
 const warehouseImages = warehouseImagesModel(sequelize, DataTypes);
 
 
-//1-1 relationship between users and their images
-users.hasOne(userImages, {
-    foreignKey: "userId",
-    sourceKey: "id"
-});
+const houseOrders = houseOrdersModel(sequelize, DataTypes);
+const apartmentOrders = apartmentOrdersModel(sequelize, DataTypes);
+const chaletOrders = chaletOrdersModel(sequelize, DataTypes);
+const landOrders = landOrdersModel(sequelize, DataTypes);
+const villaOrders = villaOrdersModel(sequelize, DataTypes);
+const warehouseOrders = warehouseOrdersModel(sequelize, DataTypes);
 
-userImages.belongsTo(users, {
-    foreignKey: "userId",
-    targetKey: "id",
-});
+
+
 
 //1-M relationship between users and real estates categories
 users.hasMany(houses, {
@@ -126,73 +131,147 @@ warehouses.belongsTo(users, {
     targetKey: "id",
 });
 
+
 //1-M relationships between real estates and their images
 
 houses.hasMany(houseImages, {
-    foreignKey: "houseId",
+    foreignKey: "postId",
     sourceKey: "id"
 });
 
 houseImages.belongsTo(houses, {
-    foreignKey: "houseId",
+    foreignKey: "postId",
     targetKey: "id",
 });
 
 apartments.hasMany(apartmentImages, {
-    foreignKey: "apartmentId",
+    foreignKey: "postId",
     sourceKey: "id"
 });
 
 apartmentImages.belongsTo(apartments, {
-    foreignKey: "apartmentId",
+    foreignKey: "postId",
     targetKey: "id",
 });
 
 chalets.hasMany(chaletImages, {
-    foreignKey: "chaletId",
+    foreignKey: "postId",
     sourceKey: "id"
 });
 
 chaletImages.belongsTo(chalets, {
-    foreignKey: "chaletId",
+    foreignKey: "postId",
     targetKey: "id",
 });
 
 lands.hasMany(landImages, {
-    foreignKey: "landId",
+    foreignKey: "postId",
     sourceKey: "id"
 });
 
 landImages.belongsTo(lands, {
-    foreignKey: "landId",
+    foreignKey: "postId",
     targetKey: "id",
 });
 
 villas.hasMany(villaImages, {
-    foreignKey: "villaId",
+    foreignKey: "postId",
     sourceKey: "id"
 });
 
 villaImages.belongsTo(villas, {
-    foreignKey: "villaId",
+    foreignKey: "postId",
     targetKey: "id",
 });
 
 warehouses.hasMany(warehouseImages, {
-    foreignKey: "warehouseId",
+    foreignKey: "postId",
     sourceKey: "id"
 });
 
 warehouseImages.belongsTo(warehouses, {
-    foreignKey: "warehouseId",
+    foreignKey: "postId",
+    targetKey: "id",
+});
+
+
+//1-M relationship between posts and orders:
+
+houses.hasMany(houseOrders, {
+    foreignKey: "postId",
+    sourceKey: "id",
+});
+houseOrders.belongsTo(houses, {
+    foreignKey: "postId",
+    targetKey: "id",
+});
+
+
+apartments.hasMany(apartmentOrders, {
+    foreignKey: "postId",
+    sourceKey: "id"
+});
+apartmentOrders.belongsTo(apartments, {
+    foreignKey: "postId",
     targetKey: "id",
 });
 
 
 
+chalets.hasMany(chaletOrders, {
+    foreignKey: "postId",
+    sourceKey: "id"
+});
+
+chaletOrders.belongsTo(chalets, {
+    foreignKey: "postId",
+    targetKey: "id",
+});
+
+lands.hasMany(landOrders, {
+    foreignKey: "postId",
+    sourceKey: "id"
+});
+
+landOrders.belongsTo(lands, {
+    foreignKey: "postId",
+    targetKey: "id",
+});
+
+villas.hasMany(villaOrders, {
+    foreignKey: "postId",
+    sourceKey: "id"
+});
+
+villaOrders.belongsTo(villas, {
+    foreignKey: "postId",
+    targetKey: "id",
+});
+
+warehouses.hasMany(warehouseOrders, {
+    foreignKey: "postId",
+    sourceKey: "id"
+});
+
+warehouseOrders.belongsTo(warehouses, {
+    foreignKey: "postId",
+    targetKey: "id",
+});
+
+
+// let db = {
+//     houses: houseImages,
+//     apartmentImages: apartmentImages,
+//     chaletImages: chaletImages,
+//     landImages: landImages,
+//     villaImages: villaImages,
+//     warehouseImages: warehouseImages
+// };
+
+
 module.exports = {
-    sequelize:sequelize,
-    DataTypes:DataTypes,
+    sequelize: sequelize,
+    DataTypes: DataTypes,
     houses: new Collection(houses),
     apartments: new Collection(apartments),
     chalets: new Collection(chalets),
@@ -200,6 +279,23 @@ module.exports = {
     villas: new Collection(villas),
     warehouses: new Collection(warehouses),
 
+
+    // houseImages: new Collection(houseImages),
+    // apartmentImages: new Collection(apartmentImages),
+    // chaletImages: new Collection(chaletImages),
+    // landImages: new Collection(landImages),
+    // villaImages: new Collection(villaImages),
+    // warehouseImages: new Collection(warehouseImages),
+
+
+    users: users,
+    /*houseImages: new Collection(),
+    apartmentImages: apartmentImages,
+    chaletImages: chaletImages,
+    landImages: landImages,
+    villaImages: villaImages,
+    warehouseImages: warehouseImages,
+*/
     houseImages: new Collection(houseImages),
     apartmentImages: new Collection(apartmentImages),
     chaletImages: new Collection(chaletImages),
@@ -207,6 +303,11 @@ module.exports = {
     villaImages: new Collection(villaImages),
     warehouseImages: new Collection(warehouseImages),
 
-    users: users,
-    userImages: new Collection(userImages),
+    houseOrders: houseOrders,
+    apartmentOrders: apartmentOrders,
+    chaletOrders: chaletOrders,
+    landOrders: landOrders,
+    villaOrders: villaOrders,
+    warehouseOrders: warehouseOrders,
+
 }; 

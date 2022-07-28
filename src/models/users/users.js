@@ -38,13 +38,16 @@ const userModel = (sequelize, DataTypes) => {
         allowNull: true,
 
     },
-
     city: {
         type: DataTypes.ENUM("Amman","Zarqa","Irbid","Aqaba","Mafraq","Jarash","Ma'an","Karak","Madaba","Ajloun","Tafilah","Al-Balqa"),
         defaultValue:'Amman'
    },
     dataOfBirth: {
         type: DataTypes.DATE,
+        allowNull: true,
+      },
+      userImage:{
+        type: DataTypes.STRING,
         allowNull: true,
       },
     token: {
@@ -93,7 +96,7 @@ const userModel = (sequelize, DataTypes) => {
     try {
       const parsedToken = jwt.verify(token, SECRET);
       const user = this.findOne({ where: { username: parsedToken.username } });
-      user.token="Mohammad";
+      // user.token="Mohammad";
       if (user) { return user; }
       throw new Error("User Not Found");
     } catch (e) {
@@ -101,6 +104,19 @@ const userModel = (sequelize, DataTypes) => {
     }
   };
 
+//   model.profileUpdate =async function(userId) {
+// try{
+
+//   const user = this.findOne({ where: { id:userId } });
+// }
+// catch{
+
+
+// }
+
+
+
+  // }
   return model;
 }
 
