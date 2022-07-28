@@ -2,7 +2,7 @@
 const housesModel = (sequelize, DataTypes) => 
 sequelize.define('houses', {
     
-    userId: {
+    userId: {  //fk from users table
         type: DataTypes.INTEGER,
         allowNull: true,
     },

@@ -32,10 +32,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 io.on('connection', (socket) => {
     console.log('Server connected to socketio server ', socket.id);
     socket.on('new-order', (payload) => { //(2)
-       
         console.log({ payload });
     });
-
 });
 
 app.use(logger);

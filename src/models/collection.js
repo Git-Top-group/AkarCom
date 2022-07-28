@@ -6,7 +6,6 @@ class Collection {
   constructor(model) {
     this.model = model;
   }
-
   get() {
     try {
       return this.model.findAll();
@@ -27,9 +26,9 @@ class Collection {
   }
   getOrder(postId) {
     if (postId) {
-      return this.model.findOne({ where: { id: postId  } });
+      return this.model.findOne({ where: { id: postId } });
     } else {
-      console.error("  does not exist");
+      console.error("does not exist");
     }
   }
   async getMyposts(realId, userId, model, postId) {
@@ -62,8 +61,6 @@ class Collection {
     }
     console.log("id not matching  ");
   }
-
-  //for users and admins
   async createRecord(realId, userId, obj) {
     obj.userId = userId;
     if (realId == userId) {
@@ -81,7 +78,6 @@ class Collection {
       );
     }
   }
-
   async update(realId, userId, postId, obj) {
 
     let updated = null;
@@ -148,28 +144,6 @@ class Collection {
       console.error(`There is no model with this id: ${id}`);
     }
   }
-  async getOrder(postId, userId, userPostId) {
-
-    if (postId) {
-
-      let record = await this.model.findOne({
-        where: {
-          id: postId
-        }
-      });
-      // let userContact =await users.findOne({where: {id:userId}})
-      let obj = {
-
-        postId: postId,
-        OwnerId: record.userId,
-        customerId: userId,
-        model: record.model,
-        // customerName : userContact.id,
-      }
-      return obj;
-    }
-  }
-
   async getbyNull() {
     let ids = null;
     return this.model.findAll({
@@ -178,7 +152,6 @@ class Collection {
       }
     });
   }
-
   async removeRecord(realId, userId, postId, role) {
 
     if (!postId) {
@@ -210,7 +183,6 @@ class Collection {
       console.error(`There is no model with this id: ${id}`);
     }
   }
-
   async clear(postId) {
     let ids = null;
     try {
@@ -226,8 +198,6 @@ class Collection {
       console.error("Error in deleting record in model ");
     }
   }
-
-
   async readFiltered(process, city, owner, availability, buildingAge, furnished, rooms, bathRooms, rentDuration, floors, priceFrom, priceTo) {
     try {
       let record = null;
@@ -278,12 +248,11 @@ class Collection {
     }
 
   }
-
-  async createImage(realId, userId,postId, obj,model) {
+  async createImage(realId, userId, postId, obj, model) {
     if (realId == userId) {
       obj.userId = userId;
-    obj.postId = postId;
-    obj.model=model;
+      obj.postId = postId;
+      obj.model = model;
       try {
         let newRecord = await this.model.create(obj);
         return newRecord;
@@ -295,10 +264,9 @@ class Collection {
       console.error(
         "the real user id  not matching the id that you sent by params"
       );
+    }
   }
-}
-
-  async updateImage(realId, userId,postId,obj,imageId) {
+  async updateImage(realId, userId, postId, obj, imageId) {
     let updated = null;
     if (!imageId) {
       throw new Error("No id provided for model ", this.model);
@@ -310,30 +278,28 @@ class Collection {
     });
     if (record) {
       if (realId === userId) {
-    try {
-       updated = await this.model.update(obj, {
-        where: {
-          postId: postId,
-          id: imageId
-        },
-        returning: true
-      });
-      return updated;
-    } catch (e) {
-      console.error("Error in updating record in model ", this.model)
+        try {
+          updated = await this.model.update(obj, {
+            where: {
+              postId: postId,
+              id: imageId
+            },
+            returning: true
+          });
+          return updated;
+        } catch (e) {
+          console.error("Error in updating record in model ", this.model)
+        }
+      } else {
+        console.error("You can not update posts of other users !!  ");
+      }
+    } else {
+      console.error(`There is no model with this id: ${id}`);
     }
-  } else {
-    console.error("You can not update posts of other users !!  ");
   }
-} else {
-  console.error(`There is no model with this id: ${id}`);
-}
-  }
-
-
-  async deleteImage(realId, userId, postId,imageId,user) {
-    if (!postId||!imageId) {
-        throw new Error('No id provided for model ', this.model)
+  async deleteImage(realId, userId, postId, imageId, user) {
+    if (!postId || !imageId) {
+      throw new Error('No id provided for model ', this.model)
     }
     let record = await this.model.findOne({
       where: {
@@ -342,67 +308,64 @@ class Collection {
     });
     if (record) {
       if (realId === userId) {
-    try {
-        let deleted = await this.model.destroy({ where: { postId: postId, id:imageId } });
-        return deleted;
-    } catch (e) {
-        console.error('Error in deleting record in model ', this.model);
+        try {
+          let deleted = await this.model.destroy({ where: { postId: postId, id: imageId } });
+          return deleted;
+        } catch (e) {
+          console.error('Error in deleting record in model ', this.model);
+        }
+      } else {
+        console.error("You can not delete posts of other users !!  ");
+      }
+    } else {
+      console.error(`There is no model with this id: ${imageId}`);
     }
-  } else {
-    console.error("You can not delete posts of other users !!  ");
   }
-} else {
-  console.error(`There is no model with this id: ${imageId}`);
-}
-}
-
-
-async getPostImages(realId, userId, model,postId,imageId) {
-  console.log(realId,userId,model,postId,imageId,this.model);
-  if (realId === userId) {
-  if (imageId) {
-    return await this.model.findOne({
-      where: {
-        model: model,
-        postId:postId,
-        id: imageId
-      },
-    });  
-  } else
-  if(!imageId&&postId&&model){
-    return await this.model.findAll({
-      where: {
-        model: model,
-        postId:postId
-      }
-    });
+  async getPostImages(realId, userId, model, postId, imageId) {
+    console.log(realId, userId, model, postId, imageId, this.model);
+    if (realId === userId) {
+      if (imageId) {
+        return await this.model.findOne({
+          where: {
+            model: model,
+            postId: postId,
+            id: imageId
+          },
+        });
+      } else
+        if (!imageId && postId && model) {
+          return await this.model.findAll({
+            where: {
+              model: model,
+              postId: postId
+            }
+          });
+        }
+    } else { throw new Error("ID not matching !!  "); }
   }
-}else{    throw new Error("ID not matching !!  "); }
-}
-
-getImages(postId) {
-  try {
-    return this.model.findAll({
-      where: {
-        postId:postId
-      }
-    });
-  } catch {
-    console.error("Error in getting all data");
+  getImages(postId) {
+    try {
+      return this.model.findAll({
+        where: {
+          postId: postId
+        }
+      });
+    } catch {
+      console.error("Error in getting all data");
+    }
   }
-}
-getImageById(postId,imageId) {
-  if (postId) {
-    return this.model.findOne({
-      where: {
-        postId:postId,
-        id:imageId
-      }
-    });
-  } else {
-    console.error("post does not exist");
+  getImageById(postId, imageId) {
+    if (postId) {
+      return this.model.findOne({
+        where: {
+          postId: postId,
+          id: imageId
+        }
+      });
+    } else {
+      console.error("post does not exist");
+    }
   }
-}
 
 }
 module.exports = Collection;

@@ -6,13 +6,12 @@ let host = `http://localhost:${PORT}`;
 const orderConnection = io.connect(host);
 
 const modelFolder = require("../models/index.model");
+const { orders } = require("../models/index.model");
+
 const express = require("express");
 const routers = express.Router();
 const bearer = require("../auth/middleware/bearer.js");
 const acl = require("../auth/middleware/acl.js");
-const uuid = require('uuid').v4;
-
-const {users} =require("../models/index.model")
 
 routers.param("model", (req, res, next) => {
   if (modelFolder[req.params.model]) {
@@ -22,8 +21,6 @@ routers.param("model", (req, res, next) => {
     next("invalid input");
   }
 });
-
-
 routers.param("modelImages", (req, res, next) => {
   if (modelFolder[req.params.modelImages]) {
     req.modelImages = modelFolder[req.params.modelImages];
@@ -32,8 +29,6 @@ routers.param("modelImages", (req, res, next) => {
     next("invalid input");
   }
 });
-
-
 routers.get("/dashboard/:userId/main", bearer, async (req, res) => {
   if (req.user.id == req.params.userId) {
     res.status(200).send("welcome to your dashboard");
@@ -54,95 +49,107 @@ routers.get("/dashboard/:userId/:model/:postId", bearer, async (req, res) => {
   let allData = await req.model.getMyposts(req.user.id, userId, model, postId);
   res.status(200).send(allData);
 });
-
-
 //Get specific post images
 routers.get("/dashboard/:userId/:model/:postId/:modelImages", bearer, async (req, res) => {
   let model = req.params.model;
   let userId = parseInt(req.params.userId);
   let postId = parseInt(req.params.postId);
   let imageId = parseInt(req.params.imageId);
-  try{
-    let allData = await req.modelImages.getPostImages(req.user.id, userId, model,postId,imageId);
-    if(allData){
+  try {
+    let allData = await req.modelImages.getPostImages(req.user.id, userId, model, postId, imageId);
+    if (allData) {
       res.status(200).send(allData);
-    }else{
+    } else {
       res
-          .status(200)
-          .send("Please provide your adv. with photos to get more clients. ");
+        .status(200)
+        .send("Please provide your adv. with photos to get more clients. ");
     }
-  }catch{
+  } catch {
     res
-    .status(403)
-    .send("the real user id  not matching the id that you sent by params ");
+      .status(403)
+      .send("the real user id  not matching the id that you sent by params ");
   }
-  });
-
+});
 //Get specific post (specific image)
 routers.get("/dashboard/:userId/:model/:postId/:modelImages/:imageId", bearer, async (req, res) => {
   let postId = parseInt(req.params.postId);
   let imageId = parseInt(req.params.imageId);
   let userId = parseInt(req.params.userId);
-  let model=req.params.model;
-  try{
-    let allData = await req.modelImages.getPostImages(req.user.id, userId, model,postId,imageId);
-    if(allData){
+  let model = req.params.model;
+  try {
+    let allData = await req.modelImages.getPostImages(req.user.id, userId, model, postId, imageId);
+    if (allData) {
       res.status(200).send(allData);
-    }else{
+    } else {
       res
-          .status(200)
-          .send("Please provide your adv. with photos to get more clients. ");
+        .status(200)
+        .send("Please provide your adv. with photos to get more clients. ");
     }
-  }catch{
+  } catch {
     res
-    .status(403)
-    .send("the real user id  not matching the id that you sent by params ");
+      .status(403)
+      .send("the real user id  not matching the id that you sent by params ");
   }
-  });
-
+});
 //Create posts ✔✔✔
-routers.post(
-  "/newpost/:userId/:model",
-  bearer,
-  acl("CRUD"),
-  async (req, res) => {
+routers.post("/newpost/:userId/:model", bearer, acl("CRUD"), async (req, res) => {
+  let userId = parseInt(req.params.userId);
+  let newModel = req.body;
+  newModel.model = req.params.model;
 
-    let userId = parseInt(req.params.userId);
-    let newModel = req.body;
-    newModel.model = req.params.model;
-
-    let model = await req.model.createRecord(req.user.id, userId, newModel);
-    if (model) {
-      res.status(201).json(model);
-    } else {
-      res
-        .status(403)
-        .send("the real user id  not matching the id that you sent by params ");
-    }
+  let model = await req.model.createRecord(req.user.id, userId, newModel);
+  if (model) {
+    res.status(201).json(model);
+  } else {
+    res
+      .status(403)
+      .send("the real user id  not matching the id that you sent by params ");
   }
+}
 );
-
-
 // create post images
-routers.post(
-  "/newpost/:userId/:model/:postId/:modelImages",
-  bearer,
-  acl("CRUD"),
-  async (req, res) => {
-    let userId = parseInt(req.params.userId);
-    let newModel = req.body;
-    let postId = parseInt(req.params.postId);
-    let model = await req.modelImages.createImage(req.user.id, userId, postId, newModel, req.params.model);
-    if (model) {
-      res.status(201).json(model);
-    } else {
-      res
-        .status(403)
-        .send("the real user id  not matching the id that you sent by params ");
-    }
+routers.post("/newpost/:userId/:model/:postId/:modelImages", bearer, acl("CRUD"), async (req, res) => {
+  let userId = parseInt(req.params.userId);
+  let newModel = req.body;
+  let postId = parseInt(req.params.postId);
+  let model = await req.modelImages.createImage(req.user.id, userId, postId, newModel, req.params.model);
+  if (model) {
+    res.status(201).json(model);
+  } else {
+    res
+      .status(403)
+      .send("the real user id  not matching the id that you sent by params ");
   }
+}
 );
+//make an order
+routers.post('/neworder/:model/:postId', bearer, acl("CRUD"), async (req, res) => {
+  let model = req.params.model;
+  let postId = parseInt(req.params.postId);
+  let clientId = parseInt(req.user.id);
+  let postData = await req.model.getOrder(postId);
+  let ownerId = postData.OwnerId;
+  let newOrder = {
+    clientId,
+    ownerId,
+    postId,
+    model
+  }
 
+  let orderRecord = await orders.create(newOrder);
+  let orderId = orderRecord.id //working
+  console.log({ newOrder });
+  // console.log("postData.OwnerId", postData );
+  let Order = {
+    event: 'new-order',
+    orderId:orderId,
+    time: new Date().toLocaleString(),
+    newOrder
+  }
+  
+  orderConnection.emit('new-order', Order)  //(1) 
+  res.status(200).send("Order has been sent, admin will contact soon");
+})
 //Update posts : (step 3)
 routers.put(
   "/dashboard/:userId/:model/:postId",
@@ -167,7 +174,6 @@ routers.put(
     }
   }
 );
-
 //Update post images : (step 3)
 routers.put(
   "/dashboard/:userId/:model/:postId/:modelImages/:imageId",
@@ -179,7 +185,7 @@ routers.put(
     const imageId = parseInt(req.params.imageId);
     let obj = req.body;
     obj.model = req.params.model;
-    let updatedModel = await req.modelImages.updateImage(req.user.id, userId,postId, obj, imageId);
+    let updatedModel = await req.modelImages.updateImage(req.user.id, userId, postId, obj, imageId);
     if (updatedModel) {
       if (updatedModel[0] != 0) {
         res.status(201).json(updatedModel[1]);
@@ -192,9 +198,6 @@ routers.put(
     }
   }
 );
-
-
-
 //delete posts : (step 3)
 routers.delete(
   "/dashboard/:userId/:model/:postId",
@@ -217,8 +220,6 @@ routers.delete(
     }
   }
 );
-
-
 //delete post images : (step 3)
 routers.delete(
   "/dashboard/:userId/:model/:postId/:modelImages/:imageId",
@@ -229,7 +230,7 @@ routers.delete(
     const postId = parseInt(req.params.postId);
     const imageId = parseInt(req.params.imageId);
     let deletedModel = await req.modelImages.deleteImage(
-      req.user.id,userId,postId,imageId
+      req.user.id, userId, postId, imageId
     );
     if (deletedModel) {
       res.status(204);
@@ -240,8 +241,6 @@ routers.delete(
     }
   }
 );
-
-
 //to update users info
 // routers.put(
 //   "/profile/:userId/update",
@@ -250,7 +249,7 @@ routers.delete(
 //   async (req, res) => {
 
 //     const userId = parseInt(req.params.userId);
- 
+
 //     let obj = req.body;
 //     let updatedModel = await req.users.updateProfile(req.user, userId, obj);
 //     if (updatedModel) {
@@ -271,7 +270,7 @@ routers.delete(
 //   bearer,
 //   acl("CRUD_Users"),
 //   async (req, res, next) => {
-    
+
 //     const postId = parseInt(req.params.postId);
 //     try {
 //       let deletedData = await req.model.clear(postId);
@@ -281,15 +280,13 @@ routers.delete(
 //     } catch (e) {
 //       console.error("Error in deleting record in user ");
 //     }
-    
+
 //   }
 // );
-
 routers.get('/null/:model/', async (req, res) => {
   let oneData = await req.model.getbyNull();
   res.status(200).send(oneData);
 })
-
 //Filter one or more at the same time (visitor)
 routers.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms/:rentDuration/:floors/:priceFrom/:priceTo', async (req, res) => {
   const process = req.params.process;
@@ -316,60 +313,5 @@ routers.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished
 
 })
 
-//make an order
-routers.get('/order/:model/:postId', bearer, acl("CRUD"), async (req, res) => {
-  let model = req.params.model;
-  let postId = parseInt(req.params.postId);
-  let clientId = parseInt(req.user.id);
-  let postData = await req.model.getOrder(postId);
-  let ownerId = postData.userId;
-  let orderId = uuid();
-
-  let Order = {
-    event: 'new-order',
-    time: new Date().toLocaleString(),
-    Details: {
-      orderId,
-      clientId,
-      model,
-      ownerId,
-      postId,
-      postData
-    }
-  }
-  console.log('====================================');
-  console.log(Order.Details.orderId,Order.Details,Order);
-  console.log({ model });//'houses' 
-  console.log({ postId });//
-  console.log({ ownerId });// (owner)
-  console.log({ clientId });//(who did hit route)
-  console.log({ postData });//( 
-    console.log('====================================');
-  // postData: houses {
-  // dataValues: {
-  //   id: 10,
-  //   userId: 1,
-  //   process: 'Sell',
-  //   model: 'houses',
-  //   owner: 'Owner',
-  //   price: 250,
-  //   surfaceArea: 212,
-  //   landArea: 455,
-  //   floors: 2,
-  //   buildingAge: '1-5 years',
-  //   rooms: '3-Bedrooms',
-  //   bathRooms: '3-Bathrooms',
-  //   availability: true,
-  //   furnished: true,
-  //   rentDuration: 'Monthly',
-  //   city: 'Irbid',
-  //   address: 'somewhere',
-  //   moreInfo: 'anything',
-  //   createdAt: 2022-07-27T08:37:19.689Z,
-  //   updatedAt: 2022-07-27T08:37:19.689Z
-  // },)
-  orderConnection.emit('new-order', Order)  //(1) 
-  res.status(200).send("Order has been sent, admin will contact soon");
-})
 module.exports = routers;
 
