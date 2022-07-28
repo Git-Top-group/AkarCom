@@ -1,9 +1,16 @@
 "use strict";
+require('dotenv').config();
+const PORT = process.env.PORT;
+const io = require('socket.io-client');
+let host = `http://localhost:${PORT}`;
+const orderConnection = io.connect(host);
+
 const modelFolder = require("../models/index.model");
 const express = require("express");
 const routers = express.Router();
 const bearer = require("../auth/middleware/bearer.js");
 const acl = require("../auth/middleware/acl.js");
+const uuid = require('uuid').v4;
 
 routers.param("model", (req, res, next) => {
   if (modelFolder[req.params.model]) {
@@ -13,7 +20,6 @@ routers.param("model", (req, res, next) => {
     next("invalid input");
   }
 });
-
 routers.get("/dashboard/:userId/main", bearer, async (req, res) => {
   if (req.user.id == req.params.userId) {
     res.status(200).send("welcome to your dashboard");
@@ -34,7 +40,6 @@ routers.get("/dashboard/:userId/:model/:postId", bearer, async (req, res) => {
   let allData = await req.model.getMyposts(req.user.id, userId, model, postId);
   res.status(200).send(allData);
 });
-
 //Create posts ✔✔✔
 routers.post(
   "/newpost/:userId/:model",
@@ -45,7 +50,7 @@ routers.post(
     let userId = parseInt(req.params.userId);
     let newModel = req.body;
     newModel.model = req.params.model;
-    
+
     let model = await req.model.createRecord(req.user.id, userId, newModel);
     if (model) {
       res.status(201).json(model);
@@ -56,7 +61,6 @@ routers.post(
     }
   }
 );
-
 //Update posts : (step 3)
 routers.put(
   "/dashboard/:userId/:model/:postId",
@@ -81,8 +85,6 @@ routers.put(
     }
   }
 );
-
-
 //delete posts : (step 3)
 routers.delete(
   "/dashboard/:userId/:model/:postId",
@@ -105,34 +107,86 @@ routers.delete(
     }
   }
 );
-
-
-
 //Filter one or more at the same time (visitor)
 routers.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms/:rentDuration/:floors/:priceFrom/:priceTo', async (req, res) => {
-    const process = req.params.process;
-    const city = req.params.city;
-    const owner = req.params.owner;
-    const availability = req.params.availability;
-    const buildingAge = req.params.buildingAge;
-    const furnished = req.params.furnished;
-    const rooms = req.params.rooms;
-    const bathRooms = req.params.bathRooms;
-    const rentDuration = req.params.rentDuration;
-    const floors = req.params.floors;
+  const process = req.params.process;
+  const city = req.params.city;
+  const owner = req.params.owner;
+  const availability = req.params.availability;
+  const buildingAge = req.params.buildingAge;
+  const furnished = req.params.furnished;
+  const rooms = req.params.rooms;
+  const bathRooms = req.params.bathRooms;
+  const rentDuration = req.params.rentDuration;
+  const floors = req.params.floors;
 
-    const priceFrom = req.params.priceFrom;
-    const priceTo = req.params.priceTo;
+  const priceFrom = req.params.priceFrom;
+  const priceTo = req.params.priceTo;
 
 
-    let filteredData = await req.model.readFiltered(process, city, owner, availability, buildingAge, furnished, rooms, bathRooms, rentDuration, floors, priceFrom, priceTo);
-    if (filteredData) {
-        res.status(200).send(filteredData);
-    } else {
-        res.status(403).send(`Error: your filteration does not match any existing data`);
-    }
+  let filteredData = await req.model.readFiltered(process, city, owner, availability, buildingAge, furnished, rooms, bathRooms, rentDuration, floors, priceFrom, priceTo);
+  if (filteredData) {
+    res.status(200).send(filteredData);
+  } else {
+    res.status(403).send(`Error: your filteration does not match any existing data`);
+  }
 
 })
 
+//make an order
+routers.get('/order/:model/:postId', bearer, acl("CRUD"), async (req, res) => {
+  let model = req.params.model;
+  let postId = parseInt(req.params.postId);
+  let clientId = parseInt(req.user.id);
+  let postData = await req.model.getOrder(postId);
+  let ownerId = postData.userId;
+  let orderId = uuid();
+
+  let Order = {
+    event: 'new-order',
+    time: new Date().toLocaleString(),
+    Details: {
+      orderId,
+      clientId,
+      model,
+      ownerId,
+      postId,
+      postData
+    }
+  }
+  console.log('====================================');
+  console.log(Order.Details.orderId,Order.Details,Order);
+  console.log({ model });//'houses' 
+  console.log({ postId });//
+  console.log({ ownerId });// (owner)
+  console.log({ clientId });//(who did hit route)
+  console.log({ postData });//( 
+    console.log('====================================');
+  // postData: houses {
+  // dataValues: {
+  //   id: 10,
+  //   userId: 1,
+  //   process: 'Sell',
+  //   model: 'houses',
+  //   owner: 'Owner',
+  //   price: 250,
+  //   surfaceArea: 212,
+  //   landArea: 455,
+  //   floors: 2,
+  //   buildingAge: '1-5 years',
+  //   rooms: '3-Bedrooms',
+  //   bathRooms: '3-Bathrooms',
+  //   availability: true,
+  //   furnished: true,
+  //   rentDuration: 'Monthly',
+  //   city: 'Irbid',
+  //   address: 'somewhere',
+  //   moreInfo: 'anything',
+  //   createdAt: 2022-07-27T08:37:19.689Z,
+  //   updatedAt: 2022-07-27T08:37:19.689Z
+  // },)
+  orderConnection.emit('new-order', Order)  //(1) 
+  res.status(200).send("Order has been sent, admin will contact soon");
+})
 module.exports = routers;
 

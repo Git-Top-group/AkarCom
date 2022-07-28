@@ -1,4 +1,5 @@
 "use strict";
+
 const modelFolder = require("../models/index.model");
 const express = require("express");
 const adminRouters = express.Router();
@@ -49,8 +50,9 @@ adminRouters.delete(
       res.status(403).send(`You can not delete posts of other users !!`);
     }
 
-}
-    
+  }
+
 )
+
 
 module.exports = adminRouters;
