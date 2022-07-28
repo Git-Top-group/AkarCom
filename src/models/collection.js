@@ -25,7 +25,13 @@ class Collection {
       console.error("post does not exist");
     }
   }
-
+  getOrder(postId) {
+    if (postId) {
+      return this.model.findOne({ where: { id: postId  } });
+    } else {
+      console.error("  does not exist");
+    }
+  }
   async getMyposts(realId, userId, model, postId) {
     if (realId === userId) {
       if (postId) {
@@ -172,6 +178,7 @@ class Collection {
       }
     });
   }
+
   async removeRecord(realId, userId, postId, role) {
 
     if (!postId) {
@@ -219,8 +226,6 @@ class Collection {
       console.error("Error in deleting record in model ");
     }
   }
-
-
 
 
   async readFiltered(process, city, owner, availability, buildingAge, furnished, rooms, bathRooms, rentDuration, floors, priceFrom, priceTo) {

@@ -1,9 +1,16 @@
 "use strict";
+require('dotenv').config();
+const PORT = process.env.PORT;
+const io = require('socket.io-client');
+let host = `http://localhost:${PORT}`;
+const orderConnection = io.connect(host);
+
 const modelFolder = require("../models/index.model");
 const express = require("express");
 const routers = express.Router();
 const bearer = require("../auth/middleware/bearer.js");
 const acl = require("../auth/middleware/acl.js");
+const uuid = require('uuid').v4;
 
 const {users} =require("../models/index.model")
 
@@ -16,6 +23,7 @@ routers.param("model", (req, res, next) => {
   }
 });
 
+
 routers.param("modelImages", (req, res, next) => {
   if (modelFolder[req.params.modelImages]) {
     req.modelImages = modelFolder[req.params.modelImages];
@@ -24,6 +32,7 @@ routers.param("modelImages", (req, res, next) => {
     next("invalid input");
   }
 });
+
 
 routers.get("/dashboard/:userId/main", bearer, async (req, res) => {
   if (req.user.id == req.params.userId) {
@@ -45,6 +54,7 @@ routers.get("/dashboard/:userId/:model/:postId", bearer, async (req, res) => {
   let allData = await req.model.getMyposts(req.user.id, userId, model, postId);
   res.status(200).send(allData);
 });
+
 
 //Get specific post images
 routers.get("/dashboard/:userId/:model/:postId/:modelImages", bearer, async (req, res) => {
@@ -112,6 +122,7 @@ routers.post(
   }
 );
 
+
 // create post images
 routers.post(
   "/newpost/:userId/:model/:postId/:modelImages",
@@ -131,8 +142,6 @@ routers.post(
     }
   }
 );
-
-
 
 //Update posts : (step 3)
 routers.put(
@@ -158,7 +167,6 @@ routers.put(
     }
   }
 );
-
 
 //Update post images : (step 3)
 routers.put(
@@ -186,6 +194,7 @@ routers.put(
 );
 
 
+
 //delete posts : (step 3)
 routers.delete(
   "/dashboard/:userId/:model/:postId",
@@ -208,6 +217,7 @@ routers.delete(
     }
   }
 );
+
 
 //delete post images : (step 3)
 routers.delete(
@@ -279,6 +289,7 @@ routers.get('/null/:model/', async (req, res) => {
   let oneData = await req.model.getbyNull();
   res.status(200).send(oneData);
 })
+
 //Filter one or more at the same time (visitor)
 routers.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms/:rentDuration/:floors/:priceFrom/:priceTo', async (req, res) => {
   const process = req.params.process;
@@ -291,6 +302,7 @@ routers.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished
   const bathRooms = req.params.bathRooms;
   const rentDuration = req.params.rentDuration;
   const floors = req.params.floors;
+
   const priceFrom = req.params.priceFrom;
   const priceTo = req.params.priceTo;
 
@@ -304,5 +316,60 @@ routers.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished
 
 })
 
+//make an order
+routers.get('/order/:model/:postId', bearer, acl("CRUD"), async (req, res) => {
+  let model = req.params.model;
+  let postId = parseInt(req.params.postId);
+  let clientId = parseInt(req.user.id);
+  let postData = await req.model.getOrder(postId);
+  let ownerId = postData.userId;
+  let orderId = uuid();
+
+  let Order = {
+    event: 'new-order',
+    time: new Date().toLocaleString(),
+    Details: {
+      orderId,
+      clientId,
+      model,
+      ownerId,
+      postId,
+      postData
+    }
+  }
+  console.log('====================================');
+  console.log(Order.Details.orderId,Order.Details,Order);
+  console.log({ model });//'houses' 
+  console.log({ postId });//
+  console.log({ ownerId });// (owner)
+  console.log({ clientId });//(who did hit route)
+  console.log({ postData });//( 
+    console.log('====================================');
+  // postData: houses {
+  // dataValues: {
+  //   id: 10,
+  //   userId: 1,
+  //   process: 'Sell',
+  //   model: 'houses',
+  //   owner: 'Owner',
+  //   price: 250,
+  //   surfaceArea: 212,
+  //   landArea: 455,
+  //   floors: 2,
+  //   buildingAge: '1-5 years',
+  //   rooms: '3-Bedrooms',
+  //   bathRooms: '3-Bathrooms',
+  //   availability: true,
+  //   furnished: true,
+  //   rentDuration: 'Monthly',
+  //   city: 'Irbid',
+  //   address: 'somewhere',
+  //   moreInfo: 'anything',
+  //   createdAt: 2022-07-27T08:37:19.689Z,
+  //   updatedAt: 2022-07-27T08:37:19.689Z
+  // },)
+  orderConnection.emit('new-order', Order)  //(1) 
+  res.status(200).send("Order has been sent, admin will contact soon");
+})
 module.exports = routers;
 
