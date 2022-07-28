@@ -19,37 +19,37 @@ const userModel = (sequelize, DataTypes) => {
     role: {
       type: DataTypes.ENUM('user', 'admin'),
       defaultValue: 'user'
-      },
+    },
     firstName: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     lastName: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     phoneNumber: {
-        type: DataTypes.STRING,
-        allowNull: true,
+      type: DataTypes.STRING,
+      allowNull: true,
 
     },
     email: {
-        type: DataTypes.STRING,
-        allowNull: true,
+      type: DataTypes.STRING,
+      allowNull: true,
 
     },
     city: {
-        type: DataTypes.ENUM("Amman","Zarqa","Irbid","Aqaba","Mafraq","Jarash","Ma'an","Karak","Madaba","Ajloun","Tafilah","Al-Balqa"),
-        defaultValue:'Amman'
-   },
+      type: DataTypes.ENUM("Amman", "Zarqa", "Irbid", "Aqaba", "Mafraq", "Jarash", "Ma'an", "Karak", "Madaba", "Ajloun", "Tafilah", "Al-Balqa"),
+      defaultValue: 'Amman'
+    },
     dataOfBirth: {
-        type: DataTypes.DATE,
-        allowNull: true,
-      },
-      userImage:{
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    userImage: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     token: {
       type: DataTypes.VIRTUAL,
       /*get() {
@@ -64,13 +64,13 @@ const userModel = (sequelize, DataTypes) => {
       type: DataTypes.VIRTUAL,
       get() {
         const acl = {
-            user: ['CRUD'],
-            admin: ['CRUD','CRUD_Users']
+          user: ['CRUD'],
+          admin: ['CRUD', 'CRUD_Users']
         };
         return acl[this.role];
       }
     }
-    
+
   });
 
   model.beforeCreate(async (user) => {
@@ -82,14 +82,14 @@ const userModel = (sequelize, DataTypes) => {
     const user = await this.findOne({ where: { username } });
     const valid = await bcrypt.compare(password, user.password);
     if (valid) {
-      let newToken = jwt.sign({ username: user.username }, SECRET,{expiresIn : '60 min'});//reqire a new token in 15 min
+      let newToken = jwt.sign({ username: user.username }, SECRET, { expiresIn: '60 min' });//reqire a new token in 15 min
       user.token = newToken;
-      
+
       return user;
-  }
-  else {
+    }
+    else {
       throw new Error("Invalid user");
-  }
+    }
   };
 
   model.authenticateToken = async function (token) {
@@ -104,15 +104,15 @@ const userModel = (sequelize, DataTypes) => {
     }
   };
 
-//   model.profileUpdate =async function(userId) {
-// try{
+  //   model.profileUpdate =async function(userId) {
+  // try{
 
-//   const user = this.findOne({ where: { id:userId } });
-// }
-// catch{
+  //   const user = this.findOne({ where: { id:userId } });
+  // }
+  // catch{
 
 
-// }
+  // }
 
 
 

@@ -78,7 +78,8 @@ adminRouters.delete(
 
     
 )
-
+adminRouters.get("/orders")
+adminRouters.get("/orders/:orderId")
 
 
 

@@ -2,9 +2,6 @@
 const modelFolder = require('../models/index.model');
 const express = require('express');
 const visitorRouters = express.Router();
-const bearer = require("../auth/middleware/bearer.js");
-const acl = require("../auth/middleware/acl.js");
-const {users}= require('../models/index.model');
 
 visitorRouters.param("model", (req, res, next) => {
     if (modelFolder[req.params.model]) {
@@ -14,16 +11,14 @@ visitorRouters.param("model", (req, res, next) => {
         next('invalid input');
     }
 })
-
 visitorRouters.param("modelImages", (req, res, next) => {
     if (modelFolder[req.params.modelImages]) {
-      req.modelImages = modelFolder[req.params.modelImages];
-      next();
+        req.modelImages = modelFolder[req.params.modelImages];
+        next();
     } else {
-      next("invalid input");
+        next("invalid input");
     }
-  });
-
+});
 //Get specific model posts (visitor)
 visitorRouters.get('/:model', async (req, res) => {
     let allData = await req.model.get();
@@ -45,7 +40,7 @@ visitorRouters.get('/:model/:postId/:modelImages', async (req, res) => {
 visitorRouters.get('/:model/:postId/:modelImages/:imageId', async (req, res) => {
     let postId = parseInt(req.params.postId);
     let imageId = parseInt(req.params.imageId);
-    let oneData = await req.modelImages.getImageById(postId,imageId);
+    let oneData = await req.modelImages.getImageById(postId, imageId);
     res.status(200).send(oneData);
 })
 //Filter one or more at the same time (visitor)
@@ -69,27 +64,5 @@ visitorRouters.get('/:model/:process/:city/:owner/:availability/:buildingAge/:fu
     } else {
         res.status(403).send(`Error: your filteration does not match any existing data`);
     }
-
-
 })
-
-visitorRouters.get('/:model/:postId/order/:userId', bearer, async (req, res) => {
-    let userId =parseInt(req.user.id);
-    let username= req.user.username;
-        console.log(`💛 ${username} >>> the order has been sent ✔✔✔✔`);
-    let postId = parseInt(req.params.postId)
-    let oneData = await req.model.getOrder(postId,userId)
-
-//    let userContact =await users.findOne({where: {id:userId}})
-// oneData.userIdOrder=userId
-res.status(200).send(oneData);
-oneData.username=username;
-    accept(oneData)
-})
-
-
-function accept(oneData){
-
-    console.log(`💚 admin >>> hello mr ${oneData.username}, you can visit us on the office at 9:00am`)
-}
 module.exports = visitorRouters;
