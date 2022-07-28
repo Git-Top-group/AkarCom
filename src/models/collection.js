@@ -375,16 +375,29 @@ async getPostImages(realId, userId, model,postId,imageId) {
 }else{    throw new Error("ID not matching !!  "); }
 }
 
-/*async getImageById(postId,imageId) {
-  if (!postId||!imageId) {
-    throw new Error('No id provided for model ', this.model)
-}
+getImages(postId) {
   try {
-    return this.model.findOne({ where: {postId:postId, id:imageId}});
+    return this.model.findAll({
+      where: {
+        postId:postId
+      }
+    });
   } catch {
-    console.error("Error in getting specific image");
+    console.error("Error in getting all data");
   }
 }
-*/
+getImageById(postId,imageId) {
+  if (postId) {
+    return this.model.findOne({
+      where: {
+        postId:postId,
+        id:imageId
+      }
+    });
+  } else {
+    console.error("post does not exist");
+  }
+}
+
 }
 module.exports = Collection;
