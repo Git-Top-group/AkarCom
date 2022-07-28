@@ -38,7 +38,6 @@ visitorRouters.get('/:model/:process/:city/:owner/:availability/:buildingAge/:fu
     const bathRooms = req.params.bathRooms;
     const rentDuration = req.params.rentDuration;
     const floors = req.params.floors;
-
     const priceFrom = req.params.priceFrom;
     const priceTo = req.params.priceTo;
 

@@ -75,14 +75,13 @@
 
 ***Lands***
 {
-
     "process":"Rent",
+    "model":"lands"
     "price": 250 ,
     "area": 212.5,
-        "availability"  :true,
+    "availability"  :true,
     "address":"somewhere",
     "moreInfo":"anything"
-
 }
 
 ***Villas***

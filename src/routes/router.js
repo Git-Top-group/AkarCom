@@ -4,10 +4,21 @@ const express = require("express");
 const routers = express.Router();
 const bearer = require("../auth/middleware/bearer.js");
 const acl = require("../auth/middleware/acl.js");
+
 const {users} =require("../models/index.model")
+
 routers.param("model", (req, res, next) => {
   if (modelFolder[req.params.model]) {
     req.model = modelFolder[req.params.model];
+    next();
+  } else {
+    next("invalid input");
+  }
+});
+
+routers.param("modelImages", (req, res, next) => {
+  if (modelFolder[req.params.modelImages]) {
+    req.modelImages = modelFolder[req.params.modelImages];
     next();
   } else {
     next("invalid input");
@@ -45,7 +56,7 @@ routers.post(
     let userId = parseInt(req.params.userId);
     let newModel = req.body;
     newModel.model = req.params.model;
-    
+
     let model = await req.model.createRecord(req.user.id, userId, newModel);
     if (model) {
       res.status(201).json(model);
@@ -56,6 +67,35 @@ routers.post(
     }
   }
 );
+
+// create post images
+
+routers.post(
+  "/newpost/:userId/:model/:postId/:modelImages",
+  bearer,
+  acl("CRUD"),
+  async (req, res) => {
+
+    let userId = parseInt(req.params.userId);
+    let newModel = req.body;
+    let postId = parseInt(req.params.postId);
+    newModel.postId = postId;
+
+    let model = await req.modelImages.create(newModel);
+
+    if (model) {
+      model.postId = postId;
+      model.model = req.params.model;
+      res.status(201).json(model);
+    } else {
+      res
+        .status(403)
+        .send("the real user id  not matching the id that you sent by params ");
+    }
+  }
+);
+
+
 
 //Update posts : (step 3)
 routers.put(
@@ -156,27 +196,26 @@ routers.get('/null/:model/', async (req, res) => {
 })
 //Filter one or more at the same time (visitor)
 routers.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms/:rentDuration/:floors/:priceFrom/:priceTo', async (req, res) => {
-    const process = req.params.process;
-    const city = req.params.city;
-    const owner = req.params.owner;
-    const availability = req.params.availability;
-    const buildingAge = req.params.buildingAge;
-    const furnished = req.params.furnished;
-    const rooms = req.params.rooms;
-    const bathRooms = req.params.bathRooms;
-    const rentDuration = req.params.rentDuration;
-    const floors = req.params.floors;
+  const process = req.params.process;
+  const city = req.params.city;
+  const owner = req.params.owner;
+  const availability = req.params.availability;
+  const buildingAge = req.params.buildingAge;
+  const furnished = req.params.furnished;
+  const rooms = req.params.rooms;
+  const bathRooms = req.params.bathRooms;
+  const rentDuration = req.params.rentDuration;
+  const floors = req.params.floors;
+  const priceFrom = req.params.priceFrom;
+  const priceTo = req.params.priceTo;
 
-    const priceFrom = req.params.priceFrom;
-    const priceTo = req.params.priceTo;
 
-
-    let filteredData = await req.model.readFiltered(process, city, owner, availability, buildingAge, furnished, rooms, bathRooms, rentDuration, floors, priceFrom, priceTo);
-    if (filteredData) {
-        res.status(200).send(filteredData);
-    } else {
-        res.status(403).send(`Error: your filteration does not match any existing data`);
-    }
+  let filteredData = await req.model.readFiltered(process, city, owner, availability, buildingAge, furnished, rooms, bathRooms, rentDuration, floors, priceFrom, priceTo);
+  if (filteredData) {
+    res.status(200).send(filteredData);
+  } else {
+    res.status(403).send(`Error: your filteration does not match any existing data`);
+  }
 
 })
 

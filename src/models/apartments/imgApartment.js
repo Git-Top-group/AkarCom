@@ -1,21 +1,17 @@
 'use strict';
-const apartmentImagesModel = (sequelize, DataTypes) => 
-sequelize.define('apartmentImages', {
-    apartmentId: {
-        type: DataTypes.INTEGER,
-        required: true
-    },
-    type: {
-        type: DataTypes.STRING,
-        required: true
-    },
-    name: {
-        type: DataTypes.STRING,
-        required: true
-    },
-    data: {
-        type: DataTypes.BLOB("long"),
-        required: true
-    }
-});
-module.exports =apartmentImagesModel;
+const apartmentImagesModel = (sequelize, DataTypes) =>
+    sequelize.define('apartmentimages', {
+        postId: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        model: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        url: {
+            type: DataTypes.STRING,
+            allowNull: false
+        }
+    });
+module.exports = apartmentImagesModel;
