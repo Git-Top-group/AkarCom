@@ -75,7 +75,7 @@ class Collection {
             where: { id: postId },
             returning: true,
           });
-          
+
           return updated;
         } catch (e) {
           console.error("Error in updating record in model ", this.model);
@@ -102,7 +102,7 @@ class Collection {
             where: { id: userId },
             returning: true,
           });
-          
+
           return updated;
         } catch (e) {
           console.error("Error in updating record in model ", this.model);
@@ -114,28 +114,28 @@ class Collection {
       console.error(`There is no model with this id: ${id}`);
     }
   }
-  async getOrder(postId,userId,userPostId){
+  async getOrder(postId, userId, userPostId) {
 
-if(postId){
+    if (postId) {
 
-  let record = await this.model.findOne({ where: { id: postId } });
-  // let userContact =await users.findOne({where: {id:userId}})
-  let obj={
+      let record = await this.model.findOne({ where: { id: postId } });
+      // let userContact =await users.findOne({where: {id:userId}})
+      let obj = {
 
-postId: postId,
-OwnerId:record.userId,
-customerId: userId,
-model:record.model,
-// customerName : userContact.id,
+        postId: postId,
+        OwnerId: record.userId,
+        customerId: userId,
+        model: record.model,
+        // customerName : userContact.id,
+      }
+      return obj;
+    }
   }
-return obj;
-}
- }
 
-async getbyNull(){
-  let ids = null;
-    return this.model.findAll({ where: { userId:ids } });
-}
+  async getbyNull() {
+    let ids = null;
+    return this.model.findAll({ where: { userId: ids } });
+  }
   async removeRecord(realId, userId, postId, role) {
 
     if (!postId) {
@@ -159,22 +159,22 @@ async getbyNull(){
       console.error(`There is no model with this id: ${id}`);
     }
   }
- 
-  async clear (postId){
-let ids = null;
-  try {
-         let deleted = await this.model.destroy({
-          where: {userId:ids},
-          
-        })
-        console.log(ids , " 🔥💛🔥💛💛💛🔥🥩🥩🍞🥩");
-         return deleted;
-       } catch (e) {
-         console.error("Error in deleting record in model ");
-       }
-}     
 
-  
+  async clear(postId) {
+    let ids = null;
+    try {
+      let deleted = await this.model.destroy({
+        where: { userId: ids },
+
+      })
+      console.log(ids, " 🔥💛🔥💛💛💛🔥🥩🥩🍞🥩");
+      return deleted;
+    } catch (e) {
+      console.error("Error in deleting record in model ");
+    }
+  }
+
+
 
 
   async readFiltered(process, city, owner, availability, buildingAge, furnished, rooms, bathRooms, rentDuration, floors, priceFrom, priceTo) {
@@ -203,7 +203,7 @@ let ids = null;
       if (floors !== "all")
         options.where.floors = floors
 
-      if (priceFrom!== "all" && priceTo!== "all")
+      if (priceFrom !== "all" && priceTo !== "all")
         options.where.price = { $between: [priceFrom, priceTo] }
 
       // if (surfaceAreaFrom && surfaceAreaTo)

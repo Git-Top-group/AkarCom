@@ -3,6 +3,7 @@ require('dotenv').config();
 const { Sequelize, DataTypes } = require('sequelize');
 
 const userModel = require("./users/users");
+const usersModelInfo = require("./users/usersInfo");
 
 const housesModel = require("./houses/houses");
 const houseImagesModel = require("./houses/imgHouses");
@@ -19,7 +20,6 @@ const chaletOrdersModel =require("./chalets/chaletOrders");
 const landsModel = require("./lands/lands");
 const landImagesModel = require("./lands/imgLands");
 const landOrdersModel=require("./lands/landOrders");
-
 
 const villasModel = require("./villas/villas");
 const villaImagesModel = require("./villas/imgVillas");
@@ -44,6 +44,9 @@ let sequelizeOptions =
 let sequelize = new Sequelize(POSTGRES_URI, sequelizeOptions);
 
 const users = userModel(sequelize, DataTypes);
+const usersInfo =usersModelInfo(sequelize,DataTypes); 
+
+
 const houses = housesModel(sequelize, DataTypes);
 const apartments = apartmentsModel(sequelize, DataTypes);
 const chalets = chaletsModel(sequelize, DataTypes);
@@ -68,6 +71,16 @@ const villaOrders = villaOrdersModel(sequelize, DataTypes);
 const warehouseOrders = warehouseOrdersModel(sequelize, DataTypes);
 
 
+
+//1-1 relationship between users and users Info
+users.hasOne(usersInfo,{
+    foreignKey: "userId",
+    sourceKey: "id",
+});
+usersInfo.belongsTo(users,{
+    foreignKey: "userId",
+    targetKey: "id",
+});
 
 
 //1-M relationship between users and real estates categories
@@ -216,8 +229,6 @@ apartmentOrders.belongsTo(apartments, {
     targetKey: "id",
 });
 
-
-
 chalets.hasMany(chaletOrders, {
     foreignKey: "postId",
     sourceKey: "id"
@@ -289,6 +300,7 @@ module.exports = {
 
 
     users: users,
+    usersInfo: usersInfo,
     houseImages: houseImages,
     apartmentImages: apartmentImages,
     chaletImages: chaletImages,

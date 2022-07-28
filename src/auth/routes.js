@@ -83,7 +83,7 @@ authRouter.get(
   permissions("CRUD_Users"),
   async (req, res, next) => {
     const userRecords = await users.findAll({});
-    const list = userRecords.map((user) => user.username);
+    const list = userRecords.map((user) => `user name : ${user.username} \n user ID : ${user.id}`);
     res.status(201).json(list);
   }
 );
