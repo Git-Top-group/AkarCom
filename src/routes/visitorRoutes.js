@@ -15,6 +15,15 @@ visitorRouters.param("model", (req, res, next) => {
     }
 })
 
+visitorRouters.param("modelImages", (req, res, next) => {
+    if (modelFolder[req.params.modelImages]) {
+      req.modelImages = modelFolder[req.params.modelImages];
+      next();
+    } else {
+      next("invalid input");
+    }
+  });
+
 //Get specific model posts (visitor)
 visitorRouters.get('/:model', async (req, res) => {
     let allData = await req.model.get();
@@ -24,6 +33,19 @@ visitorRouters.get('/:model', async (req, res) => {
 visitorRouters.get('/:model/:postId', async (req, res) => {
     let postId = parseInt(req.params.postId)
     let oneData = await req.model.getById(postId);
+    res.status(200).send(oneData);
+})
+//Get specific post images (visitor)
+visitorRouters.get('/:model/:postId/:modelImages', async (req, res) => {
+    let postId = parseInt(req.params.postId)
+    let oneData = await req.modelImages.getImages(postId);
+    res.status(200).send(oneData);
+})
+//Get specific post (specific images) (visitor)
+visitorRouters.get('/:model/:postId/:modelImages/:imageId', async (req, res) => {
+    let postId = parseInt(req.params.postId);
+    let imageId = parseInt(req.params.imageId);
+    let oneData = await req.modelImages.getImageById(postId,imageId);
     res.status(200).send(oneData);
 })
 //Filter one or more at the same time (visitor)

@@ -1,4 +1,3 @@
-
 "use strict";
 // const {users} = require("../models/index.model");
 
@@ -17,7 +16,11 @@ class Collection {
   }
   getById(id) {
     if (id) {
-      return this.model.findOne({ where: { id } });
+      return this.model.findOne({
+        where: {
+          id
+        }
+      });
     } else {
       console.error("post does not exist");
     }
@@ -27,14 +30,27 @@ class Collection {
     if (realId === userId) {
       if (postId) {
         return this.model.findOne({
-          where: { userId: realId, model: model, id: postId },
+          where: {
+            userId: realId,
+            model: model,
+            id: postId
+          },
         });
       }
       if (model && !postId) {
-        return this.model.findAll({ where: { userId: realId, model: model } });
+        return this.model.findAll({
+          where: {
+            userId: realId,
+            model: model
+          }
+        });
       }
       if (!model && !postId) {
-        return this.model.findAll({ where: { userId: realId } });
+        return this.model.findAll({
+          where: {
+            userId: realId
+          }
+        });
       }
 
     }
@@ -66,16 +82,22 @@ class Collection {
     if (!postId) {
       throw new Error("No id provided for model ", this.model);
     }
-    let record = await this.model.findOne({ where: { id: postId } });
+    let record = await this.model.findOne({
+      where: {
+        id: postId
+      }
+    });
     if (record) {
       if (realId === userId) {
 
         try {
           updated = await this.model.update(obj, {
-            where: { id: postId },
+            where: {
+              id: postId
+            },
             returning: true,
           });
-          
+
           return updated;
         } catch (e) {
           console.error("Error in updating record in model ", this.model);
@@ -93,16 +115,22 @@ class Collection {
     if (!userId) {
       throw new Error("No id provided for model ", this.model);
     }
-    let record = await this.model.findOne({ where: { id: userId } });
+    let record = await this.model.findOne({
+      where: {
+        id: userId
+      }
+    });
     if (record) {
       if (realId === userId) {
 
         try {
           updated = await this.model.update(obj, {
-            where: { id: userId },
+            where: {
+              id: userId
+            },
             returning: true,
           });
-          
+
           return updated;
         } catch (e) {
           console.error("Error in updating record in model ", this.model);
@@ -114,40 +142,56 @@ class Collection {
       console.error(`There is no model with this id: ${id}`);
     }
   }
-  async getOrder(postId,userId,userPostId){
+  async getOrder(postId, userId, userPostId) {
 
-if(postId){
+    if (postId) {
 
-  let record = await this.model.findOne({ where: { id: postId } });
-  // let userContact =await users.findOne({where: {id:userId}})
-  let obj={
+      let record = await this.model.findOne({
+        where: {
+          id: postId
+        }
+      });
+      // let userContact =await users.findOne({where: {id:userId}})
+      let obj = {
 
-postId: postId,
-OwnerId:record.userId,
-customerId: userId,
-model:record.model,
-// customerName : userContact.id,
+        postId: postId,
+        OwnerId: record.userId,
+        customerId: userId,
+        model: record.model,
+        // customerName : userContact.id,
+      }
+      return obj;
+    }
   }
-return obj;
-}
- }
 
-async getbyNull(){
-  let ids = null;
-    return this.model.findAll({ where: { userId:ids } });
-}
+  async getbyNull() {
+    let ids = null;
+    return this.model.findAll({
+      where: {
+        userId: ids
+      }
+    });
+  }
   async removeRecord(realId, userId, postId, role) {
 
     if (!postId) {
       throw new Error("No id provided for model ", this.model);
     }
-    let record = await this.model.findOne({ where: { id: postId } });
+    let record = await this.model.findOne({
+      where: {
+        id: postId
+      }
+    });
     if (record) {
 
       if (realId === userId || role == "admin") {
 
         try {
-          let deleted = await this.model.destroy({ where: { id: postId } });
+          let deleted = await this.model.destroy({
+            where: {
+              id: postId
+            }
+          });
           return deleted;
         } catch (e) {
           console.error("Error in deleting record in model ", this.model);
@@ -159,28 +203,32 @@ async getbyNull(){
       console.error(`There is no model with this id: ${id}`);
     }
   }
- 
-  async clear (postId){
-let ids = null;
-  try {
-         let deleted = await this.model.destroy({
-          where: {userId:ids},
-          
-        })
-        console.log(ids , " 🔥💛🔥💛💛💛🔥🥩🥩🍞🥩");
-         return deleted;
-       } catch (e) {
-         console.error("Error in deleting record in model ");
-       }
-}     
 
-  
+  async clear(postId) {
+    let ids = null;
+    try {
+      let deleted = await this.model.destroy({
+        where: {
+          userId: ids
+        },
+
+      })
+      console.log(ids, " 🔥💛🔥💛💛💛🔥🥩🥩🍞🥩");
+      return deleted;
+    } catch (e) {
+      console.error("Error in deleting record in model ");
+    }
+  }
+
+
 
 
   async readFiltered(process, city, owner, availability, buildingAge, furnished, rooms, bathRooms, rentDuration, floors, priceFrom, priceTo) {
     try {
       let record = null;
-      let options = { where: {} };
+      let options = {
+        where: {}
+      };
 
       if (process !== "all")
         options.where.process = process;
@@ -203,8 +251,10 @@ let ids = null;
       if (floors !== "all")
         options.where.floors = floors
 
-      if (priceFrom!== "all" && priceTo!== "all")
-        options.where.price = { $between: [priceFrom, priceTo] }
+      if (priceFrom !== "all" && priceTo !== "all")
+        options.where.price = {
+          $between: [priceFrom, priceTo]
+        }
 
       // if (surfaceAreaFrom && surfaceAreaTo)
       // options.where.surfaceArea = {$between: [surfaceAreaFrom, surfaceAreaTo]}
@@ -212,7 +262,9 @@ let ids = null;
       // options.where.landArea = {$between: [landAreaFrom, landAreaTo]}
 
 
-      console.log({ options });
+      console.log({
+        options
+      });
       record = await this.model.findAll(options);
       return record;
 
@@ -222,5 +274,117 @@ let ids = null;
 
   }
 
+  async createImage(realId, userId,postId, obj,model) {
+    if (realId == userId) {
+      obj.userId = userId;
+    obj.postId = postId;
+    obj.model=model;
+      try {
+        let newRecord = await this.model.create(obj);
+        return newRecord;
+      } catch (e) {
+        console.error("Error in creating a new record in model ", this.model);
+      }
+    } else {
+
+      console.error(
+        "the real user id  not matching the id that you sent by params"
+      );
+  }
+}
+
+  async updateImage(realId, userId,postId,obj,imageId) {
+    let updated = null;
+    if (!imageId) {
+      throw new Error("No id provided for model ", this.model);
+    }
+    let record = await this.model.findOne({
+      where: {
+        id: imageId
+      }
+    });
+    if (record) {
+      if (realId === userId) {
+    try {
+       updated = await this.model.update(obj, {
+        where: {
+          postId: postId,
+          id: imageId
+        },
+        returning: true
+      });
+      return updated;
+    } catch (e) {
+      console.error("Error in updating record in model ", this.model)
+    }
+  } else {
+    console.error("You can not update posts of other users !!  ");
+  }
+} else {
+  console.error(`There is no model with this id: ${id}`);
+}
+  }
+
+
+  async deleteImage(realId, userId, postId,imageId,user) {
+    if (!postId||!imageId) {
+        throw new Error('No id provided for model ', this.model)
+    }
+    let record = await this.model.findOne({
+      where: {
+        id: imageId
+      }
+    });
+    if (record) {
+      if (realId === userId) {
+    try {
+        let deleted = await this.model.destroy({ where: { postId: postId, id:imageId } });
+        return deleted;
+    } catch (e) {
+        console.error('Error in deleting record in model ', this.model);
+    }
+  } else {
+    console.error("You can not delete posts of other users !!  ");
+  }
+} else {
+  console.error(`There is no model with this id: ${imageId}`);
+}
+}
+
+
+async getPostImages(realId, userId, model,postId,imageId) {
+  console.log(realId,userId,model,postId,imageId,this.model);
+  if (realId === userId) {
+  if (imageId) {
+    return await this.model.findOne({
+      where: {
+        model: model,
+        postId:postId,
+        id: imageId
+      },
+    });  
+  } else
+  if(!imageId&&postId&&model){
+    return await this.model.findAll({
+      where: {
+        model: model,
+        postId:postId
+      }
+    });
+  }
+}else{    throw new Error("ID not matching !!  "); }
+}
+
+/*async getImageById(postId,imageId) {
+  if (!postId||!imageId) {
+    throw new Error('No id provided for model ', this.model)
+}
+  try {
+    return this.model.findOne({ where: {postId:postId, id:imageId}});
+  } catch {
+    console.error("Error in getting specific image");
+  }
+}
+*/
 }
 module.exports = Collection;

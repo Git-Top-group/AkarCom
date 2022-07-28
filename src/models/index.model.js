@@ -289,12 +289,19 @@ module.exports = {
 
 
     users: users,
-    houseImages: houseImages,
+    /*houseImages: new Collection(),
     apartmentImages: apartmentImages,
     chaletImages: chaletImages,
     landImages: landImages,
     villaImages: villaImages,
     warehouseImages: warehouseImages,
+*/
+    houseImages: new Collection(houseImages),
+    apartmentImages: new Collection(apartmentImages),
+    chaletImages: new Collection(chaletImages),
+    landImages: new Collection(landImages),
+    villaImages: new Collection(villaImages),
+    warehouseImages: new Collection(warehouseImages),
 
     houseOrders: houseOrders,
     apartmentOrders: apartmentOrders,
