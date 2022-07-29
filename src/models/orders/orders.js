@@ -2,20 +2,16 @@
 const ordersModel = (sequelize, DataTypes) =>
 sequelize.define('orders',{
     clientId:{  //fk from users table
-        type: DataTypes.INTEGER,
-        // allowNull: true
+        type: DataTypes.INTEGER
     },
     ownerId:{   //not fk
-        type: DataTypes.INTEGER,
-        // allowNull: true
+        type: DataTypes.INTEGER
     },
     postId:{   //not fk
-        type: DataTypes.INTEGER,
-        // allowNull: true
+        type: DataTypes.INTEGER
     },
     model:{
-        type:DataTypes.STRING,
-        // allowNull: true
+        type:DataTypes.STRING
     }
 })
 module.exports = ordersModel;
