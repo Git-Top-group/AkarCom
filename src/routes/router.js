@@ -54,15 +54,14 @@ routers.get("/dashboard/:userId/:model/:postId/:modelImages", bearer, async (req
   let model = req.params.model;
   let userId = parseInt(req.params.userId);
   let postId = parseInt(req.params.postId);
-  let imageId = parseInt(req.params.imageId);
   try {
-    let allData = await req.modelImages.getPostImages(req.user.id, userId, model, postId, imageId);
+    let allData = await req.modelImages.getPostImages(req.user.id, userId, model, postId);
     if (allData) {
       res.status(200).send(allData);
     } else {
       res
         .status(200)
-        .send("Please provide your adv. with photos to get more clients. ");
+        .send("Please provide your adv. with photos to get more clients or make sure you giving correct post id");
     }
   } catch {
     res
@@ -70,8 +69,8 @@ routers.get("/dashboard/:userId/:model/:postId/:modelImages", bearer, async (req
       .send("the real user id  not matching the id that you sent by params ");
   }
 });
-//Get specific post (specific image)
-routers.get("/dashboard/:userId/:model/:postId/:modelImages/:imageId", bearer, async (req, res) => {
+//Get specific post (specific image) no need we can get images from postid and model because postid is unique
+/*routers.get("/dashboard/:userId/:model/:postId/:modelImages/:imageId", bearer, async (req, res) => {
   let postId = parseInt(req.params.postId);
   let imageId = parseInt(req.params.imageId);
   let userId = parseInt(req.params.userId);
@@ -90,7 +89,7 @@ routers.get("/dashboard/:userId/:model/:postId/:modelImages/:imageId", bearer, a
       .status(403)
       .send("the real user id  not matching the id that you sent by params ");
   }
-});
+});*/
 //Create posts ✔✔✔
 routers.post("/newpost/:userId/:model", bearer, acl("CRUD"), async (req, res) => {
   let userId = parseInt(req.params.userId);
@@ -175,21 +174,21 @@ routers.put(
 );
 //Update post images : (step 3)
 routers.put(
-  "/dashboard/:userId/:model/:postId/:modelImages/:imageId",
+  "/dashboard/:userId/:model/:postId/:modelImages",
   bearer,
   acl("CRUD"),
   async (req, res) => {
     const userId = parseInt(req.params.userId);
     const postId = parseInt(req.params.postId);
-    const imageId = parseInt(req.params.imageId);
+    const model = req.params.model;
     let obj = req.body;
     obj.model = req.params.model;
-    let updatedModel = await req.modelImages.updateImage(req.user.id, userId, postId, obj, imageId);
+    let updatedModel = await req.modelImages.updateImage(req.user.id, userId, postId, obj,model);
     if (updatedModel) {
       if (updatedModel[0] != 0) {
         res.status(201).json(updatedModel[1]);
       } else {
-        res.status(403).send(`There is no model with this id: ${postId}`);
+        res.status(403).send(`You don't have post with id: ${postId}`);
       }
     } else {
       res.status(403).send(`You can not update posts of other users !!`);
@@ -221,15 +220,15 @@ routers.delete(
 );
 //delete post images : (step 3)
 routers.delete(
-  "/dashboard/:userId/:model/:postId/:modelImages/:imageId",
+  "/dashboard/:userId/:model/:postId/:modelImages",
   bearer,
   acl("CRUD"),
   async (req, res) => {
     const userId = parseInt(req.params.userId);
     const postId = parseInt(req.params.postId);
-    const imageId = parseInt(req.params.imageId);
+    const model = req.params.model;
     let deletedModel = await req.modelImages.deleteImage(
-      req.user.id, userId, postId, imageId
+      req.user.id, userId, postId, model
     );
     if (deletedModel) {
       res.status(204);

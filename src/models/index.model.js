@@ -121,7 +121,7 @@ warehouses.belongsTo(users, {
 
 //1-M relationships between real estates and their images
 
-houses.hasMany(houseImages, {
+houses.hasOne(houseImages, {
     foreignKey: "postId",
     sourceKey: "id"
 });
@@ -131,7 +131,7 @@ houseImages.belongsTo(houses, {
     targetKey: "id",
 });
 
-apartments.hasMany(apartmentImages, {
+apartments.hasOne(apartmentImages, {
     foreignKey: "postId",
     sourceKey: "id"
 });
@@ -141,7 +141,7 @@ apartmentImages.belongsTo(apartments, {
     targetKey: "id",
 });
 
-chalets.hasMany(chaletImages, {
+chalets.hasOne(chaletImages, {
     foreignKey: "postId",
     sourceKey: "id"
 });
@@ -151,7 +151,7 @@ chaletImages.belongsTo(chalets, {
     targetKey: "id",
 });
 
-lands.hasMany(landImages, {
+lands.hasOne(landImages, {
     foreignKey: "postId",
     sourceKey: "id"
 });
@@ -161,7 +161,7 @@ landImages.belongsTo(lands, {
     targetKey: "id",
 });
 
-villas.hasMany(villaImages, {
+villas.hasOne(villaImages, {
     foreignKey: "postId",
     sourceKey: "id"
 });
@@ -171,7 +171,7 @@ villaImages.belongsTo(villas, {
     targetKey: "id",
 });
 
-warehouses.hasMany(warehouseImages, {
+warehouses.hasOne(warehouseImages, {
     foreignKey: "postId",
     sourceKey: "id"
 });

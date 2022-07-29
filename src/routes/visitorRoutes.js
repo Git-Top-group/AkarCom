@@ -33,16 +33,17 @@ visitorRouters.get('/:model/:postId', async (req, res) => {
 //Get specific post images (visitor)
 visitorRouters.get('/:model/:postId/:modelImages', async (req, res) => {
     let postId = parseInt(req.params.postId)
-    let oneData = await req.modelImages.getImages(postId);
+    const model = req.params.model;
+    let oneData = await req.modelImages.getImages(postId,model);
     res.status(200).send(oneData);
 })
-//Get specific post (specific images) (visitor)
-visitorRouters.get('/:model/:postId/:modelImages/:imageId', async (req, res) => {
+//Get specific post (specific images) (visitor) No need we get images from postid now.
+/*visitorRouters.get('/:model/:postId/:modelImages/:imageId', async (req, res) => {
     let postId = parseInt(req.params.postId);
     let imageId = parseInt(req.params.imageId);
     let oneData = await req.modelImages.getImageById(postId, imageId);
     res.status(200).send(oneData);
-})
+})*/
 //Filter one or more at the same time (visitor)
 visitorRouters.get('/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms/:rentDuration/:floors/:priceFrom/:priceTo', async (req, res) => {
     const process = req.params.process;
