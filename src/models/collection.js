@@ -1,5 +1,4 @@
 "use strict";
-// const {users} = require("../models/index.model");
 
 
 class Collection {

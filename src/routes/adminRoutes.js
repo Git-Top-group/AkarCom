@@ -1,5 +1,7 @@
 "use strict";
 
+const { users } = require("../models/index.model");
+
 const modelFolder = require("../models/index.model");
 const express = require("express");
 const adminRouters = express.Router();
@@ -78,6 +80,12 @@ adminRouters.delete(
 
     
 )
+adminRouters.get("/users",bearer,acl("CRUD_Users"),async (req, res, next) => {
+    const userRecords = await users.findAll({});
+    const list = userRecords.map((user) => user);
+    res.status(201).json(list);
+  }
+);
 adminRouters.get("/orders")
 adminRouters.get("/orders/:orderId")
 
