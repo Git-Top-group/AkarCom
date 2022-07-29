@@ -211,6 +211,6 @@ module.exports = {
     villaImages: new Collection(villaImages),
     warehouseImages: new Collection(warehouseImages),
 
-    orders: orders,
+    orders: new Collection(orders),
 
 }; 

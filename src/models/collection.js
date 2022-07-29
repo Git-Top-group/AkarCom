@@ -11,6 +11,7 @@ class Collection {
     } catch {
       console.error("Error in getting all data");
     }
+    
   }
   getById(id) {
     if (id) {
@@ -366,5 +367,7 @@ class Collection {
     }
   }
 
+
+  
 }
 module.exports = Collection;

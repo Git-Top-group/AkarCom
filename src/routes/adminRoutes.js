@@ -86,9 +86,21 @@ adminRouters.get("/users",bearer,acl("CRUD_Users"),async (req, res, next) => {
     res.status(201).json(list);
   }
 );
-adminRouters.get("/orders")
-adminRouters.get("/orders/:orderId")
+// adminRouters.get("/orders")
+// adminRouters.get("/orders/:orderId")
 
+adminRouters.get("/:model/:orderId/:action" ,  bearer , acl("CRUD_Users"), async (req, res)=>{
+  let action = req.params.action;
+    let orderId =req.params.orderId;
+  let data =  await req.model.getOrder(orderId,action)
+  if(data){
+  res.status(200).send(data)
+  
+  }else{
+  
+    res.status(200).send("there in no orders , or error in postId")
+  }
+  })
 
 
 module.exports = adminRouters;
