@@ -5,7 +5,7 @@ const routers = express.Router();
 const bearer = require("../auth/middleware/bearer.js");
 const acl = require("../auth/middleware/acl.js");
 
-const {users} =require("../models/index.model")
+const { users } = require("../models/index.model")
 
 routers.param("model", (req, res, next) => {
   if (modelFolder[req.params.model]) {
@@ -68,6 +68,34 @@ routers.post(
   }
 );
 
+
+//Create user info ✔✔✔
+routers.post(
+  "/myinfo/:userId/:model",
+  bearer,
+  acl("CRUD"),
+  async (req, res) => {
+
+    let userId = parseInt(req.params.userId); 0
+    if (userId == req.user.id) {
+      let newModel = req.body;
+      newModel.model = req.params.model;
+      console.log(req.user.id, "realid");
+      console.log(userId, "user id ");
+      let model = await req.model.create(newModel);
+      if (model) {
+        res.status(201).json(model);
+      } else {
+        res
+          .status(403)
+          .send("the real user id  not matching the id that you sent by params ");
+      }
+    } else {
+      res.status(403).send("it's not the same user id");
+    }
+
+  }
+);
 // create post images
 
 routers.post(
@@ -155,7 +183,7 @@ routers.delete(
 //   async (req, res) => {
 
 //     const userId = parseInt(req.params.userId);
- 
+
 //     let obj = req.body;
 //     let updatedModel = await req.users.updateProfile(req.user, userId, obj);
 //     if (updatedModel) {
@@ -176,7 +204,7 @@ routers.delete(
 //   bearer,
 //   acl("CRUD_Users"),
 //   async (req, res, next) => {
-    
+
 //     const postId = parseInt(req.params.postId);
 //     try {
 //       let deletedData = await req.model.clear(postId);
@@ -186,7 +214,7 @@ routers.delete(
 //     } catch (e) {
 //       console.error("Error in deleting record in user ");
 //     }
-    
+
 //   }
 // );
 
