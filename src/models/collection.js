@@ -367,7 +367,18 @@ class Collection {
     }
   }
 
+async createOrder( order){
 
+let orderRecord =  await this.model.create(order)
+ if(orderRecord){
+
+
+  return orderRecord;
+ }else{
+
+  console.log("could'nt create order");
+ }
+}
   
 }
 module.exports = Collection;

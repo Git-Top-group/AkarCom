@@ -122,7 +122,8 @@ routers.post("/newpost/:userId/:model/:postId/:modelImages", bearer, acl("CRUD")
   }
 }
 );
-//make an order
+
+//make an order 
 routers.post('/neworder/:model/:postId', bearer, acl("CRUD"), async (req, res) => {
   let model = req.params.model;
   let postId = parseInt(req.params.postId);
@@ -136,7 +137,7 @@ routers.post('/neworder/:model/:postId', bearer, acl("CRUD"), async (req, res) =
     model
   }
 
-  let orderRecord = await orders.create(newOrder);
+  let orderRecord = await orders.createOrder(newOrder);
   let orderId = orderRecord.id;
   console.log({ newOrder });
   let Order = {
