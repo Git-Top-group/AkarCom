@@ -6,7 +6,7 @@ let host = `http://localhost:${PORT}`;
 const orderConnection = io.connect(host);
 
 const modelFolder = require("../models/index.model");
-const { orders } = require("../models/index.model");
+const { orders, users } = require("../models/index.model");
 
 const express = require("express");
 const routers = express.Router();
@@ -34,7 +34,7 @@ routers.get("/dashboard/:userId/main", bearer, async (req, res) => {
     res.status(200).send("welcome to your dashboard");
   } else res.status(404).send("you are noy allowed");
 });
-// ✔✔✔✔✔✔ this will allows user to see all his posts in dashboard for specific model (step 1)
+//this will allows user to see all his posts in dashboard for specific model 
 routers.get("/dashboard/:userId/:model", bearer, async (req, res) => {
   let model = req.params.model;
 
@@ -123,7 +123,7 @@ routers.post("/newpost/:userId/:model/:postId/:modelImages", bearer, acl("CRUD")
 }
 );
 //make an order
-routers.post('/neworder/:model/:postId', bearer, acl("CRUD"), async (req, res) => {
+routers.post('/:model/:postId/neworder', bearer, acl("CRUD"), async (req, res) => {
   let model = req.params.model;
   let postId = parseInt(req.params.postId);
   let clientId = parseInt(req.user.id);
@@ -135,45 +135,47 @@ routers.post('/neworder/:model/:postId', bearer, acl("CRUD"), async (req, res) =
     postId,
     model
   }
-
-  let orderRecord = await orders.create(newOrder);
-  let orderId = orderRecord.id;
-  console.log({ newOrder });
-  let Order = {
-    event: 'new-order',
-    orderId: orderId,
-    time: new Date().toLocaleString(),
-    newOrder
+  if (ownerId === clientId) { // no order to my post! 
+    res.send(`You are the owner of this ${model} post`)
   }
-
-  orderConnection.emit('new-order', Order)  //(1) 
-  res.status(200).send("Order has been sent, admin will contact soon");
-})
-//Update posts : (step 3)
-routers.put(
-  "/dashboard/:userId/:model/:postId",
-  bearer,
-  acl("CRUD"),
-  async (req, res) => {
-
-    const userId = parseInt(req.params.userId);
-    const postId = parseInt(req.params.postId);
-    let obj = req.body;
-    let updatedModel = await req.model.update(req.user.id, userId, postId, obj);
-    if (updatedModel) {
-
-      if (updatedModel[0] != 0) {
-        res.status(201).json(updatedModel[1]);
-      } else {
-        res.status(403).send(`There is no model with this id: ${id}`);
-      }
-    } else {
-      res.status(403).send(`You can not update posts of other users !!`);
-
+  // else if(!){   // no repeate orders for the same postId and same model name! 
+  //   res.send(`You already have an order for this ${model} post` ) 
+  // }
+  else {
+    let orderRecord = await orders.create(newOrder);
+    let orderId = orderRecord.id;
+    console.log({ newOrder });
+    let Order = {
+      event: 'new-order',
+      orderId: orderId,
+      time: new Date().toLocaleString(),
+      newOrder
     }
+
+    // console.log(">>>>>>>>>>>>>>>>>>>>>>>>",x);
+    orderConnection.emit('new-order', Order)  //(1) 
+    res.status(200).send("Order has been sent, admin will contact soon");
   }
+
+})
+//Update posts 
+routers.put("/dashboard/:userId/:model/:postId", bearer, acl("CRUD"), async (req, res) => {
+  const userId = parseInt(req.params.userId);
+  const postId = parseInt(req.params.postId);
+  let obj = req.body;
+  let updatedModel = await req.model.updatePost(req.user.id, userId, postId, obj);
+  if (updatedModel) {
+    if (updatedModel[0] != 0) {
+      res.status(201).json(updatedModel[1]);
+    } else {
+      res.status(403).send(`There is no model with this id: ${id}`);
+    }
+  } else {
+    res.status(403).send(`You can not update posts of other users !!`);
+  }
+}
 );
-//Update post images : (step 3)
+//Update post images 
 routers.put(
   "/dashboard/:userId/:model/:postId/:modelImages/:imageId",
   bearer,
@@ -197,7 +199,7 @@ routers.put(
     }
   }
 );
-//delete posts : (step 3)
+//delete posts 
 routers.delete(
   "/dashboard/:userId/:model/:postId",
   bearer,
@@ -219,7 +221,7 @@ routers.delete(
     }
   }
 );
-//delete post images : (step 3)
+//delete post images 
 routers.delete(
   "/dashboard/:userId/:model/:postId/:modelImages/:imageId",
   bearer,
@@ -286,6 +288,40 @@ routers.get('/null/:model/', async (req, res) => {
   let oneData = await req.model.getbyNull();
   res.status(200).send(oneData);
 });
+// search should be moved to visitor
+// routers.get('/search/:input', async (req, res) => {
+//   const input = req.params.input;
+//   let reg= input
+//   if(reg.test(input))
+//   console.log("input is>>>>>>>>>", input)
+//   let oneData = await req.model.findAll({ where: { id } })
+//   if (oneData) {
+//     res.status(200).send(oneData);
+//   } else {
+//     res.status(403).send(`Your search does not match any existing data`);
+//   }
 
+// })
+
+//user can update his own information
+routers.put("/updateuser/:userId", bearer, acl("CRUD"), async (req, res) => { //do not change password!
+  const userId = parseInt(req.params.userId);
+  const realId = parseInt(req.user.id);
+  let record = await users.findOne({ where: { id: userId } });
+  if (record) {
+    if (realId === userId || req.user.role == "admin") {
+      try {
+        let updatedUser = await record.update(req.body);
+        res.status(201).json(updatedUser);
+      } catch (e) {
+        res.send(e.message);
+      }
+    } else {
+      res.status(403).send(`You can not update other users information`);
+    }
+  }
+}
+
+);
 module.exports = routers;
 

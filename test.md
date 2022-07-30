@@ -6,7 +6,16 @@
     "role":"admin"
 
 }
-
+***update user***
+{
+    "username": "admin",
+    "role": "admin",
+    "firstName": "mmmm",
+    "lastName": "bbbb",
+    "phoneNumber": "07",
+    "email": "hotmail",
+    "city": "Irbid"
+}
 ***Houses***
 {
 

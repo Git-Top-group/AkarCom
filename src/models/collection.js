@@ -77,28 +77,14 @@ class Collection {
       );
     }
   }
-  async update(realId, userId, postId, obj) {
-
+  async updatePost(realId, userId, postId, obj) {
     let updated = null;
-    if (!postId) {
-      throw new Error("No id provided for model ", this.model);
-    }
-    let record = await this.model.findOne({
-      where: {
-        id: postId
-      }
-    });
+    if (!postId) { throw new Error("No id provided for model ", this.model) }
+    let record = await this.model.findOne({ where: { id: postId } });
     if (record) {
       if (realId === userId) {
-
         try {
-          updated = await this.model.update(obj, {
-            where: {
-              id: postId
-            },
-            returning: true,
-          });
-
+          updated = await this.model.update(obj, { where: { id: postId }, returning: true, });
           return updated;
         } catch (e) {
           console.error("Error in updating record in model ", this.model);
@@ -365,6 +351,24 @@ class Collection {
       console.error("post does not exist");
     }
   }
-
+  // async getSearch(input) {
+  //   try {
+  //     let record = null;
+  //     console.log('====================================');
+  //     console.log(this.model);
+  //     console.log('====================================');
+  //     let reg = /ho/gm;
+  //     if (input) {
+  //       if (reg.test(input)) {
+  //         record = await this.model.findAll({ where: { category: "houses" } });
+  //       }
+  //     } else {
+  //       record = await this.model.findAll();
+  //       return record;
+  //     }
+  //   } catch (e) {
+  //     console.error("Error in reading record in model ", this.model)
+  //   }
+  // }
 }
 module.exports = Collection;
