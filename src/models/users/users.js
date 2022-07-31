@@ -104,19 +104,7 @@ const userModel = (sequelize, DataTypes) => {
     }
   };
 
-  //   model.profileUpdate =async function(userId) {
-  // try{
-
-  //   const user = this.findOne({ where: { id:userId } });
-  // }
-  // catch{
-
-
-  // }
-
-
-
-  // }
+ 
   return model;
 }
 

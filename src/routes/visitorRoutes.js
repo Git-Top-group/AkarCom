@@ -11,6 +11,7 @@ visitorRouters.param("model", (req, res, next) => {
         next('invalid input');
     }
 })
+
 visitorRouters.param("modelImages", (req, res, next) => {
     if (modelFolder[req.params.modelImages]) {
         req.modelImages = modelFolder[req.params.modelImages];
@@ -19,7 +20,7 @@ visitorRouters.param("modelImages", (req, res, next) => {
         next("invalid input");
     }
 });
-//Get specific model posts (visitor)
+// Get specific model posts (visitor)
 visitorRouters.get('/:model', async (req, res) => {
     let allData = await req.model.get();
     res.status(200).send(allData);
@@ -65,4 +66,5 @@ visitorRouters.get('/:model/:process/:city/:owner/:availability/:buildingAge/:fu
         res.status(403).send(`Error: your filteration does not match any existing data`);
     }
 })
+
 module.exports = visitorRouters;
