@@ -75,10 +75,20 @@ adminRouters.delete(
       res.status(403).send(`You can not delete posts of other users !!`);
     }
 
-}
-
-    
+} 
 )
+
+adminRouters.get("/profiles/:model/:userId", bearer, acl("CRUD_Users"),async (req, res) => {
+  let userId = parseInt(req.params.userId);
+  let allProfiles = await req.model.getAllProfiles(userId,req.user.role);
+  if(allProfiles){
+    
+    res.status(200).send(allProfiles);
+  }else{
+    console.error("con't find any user profile with this id");
+  }
+
+});
 
 
 

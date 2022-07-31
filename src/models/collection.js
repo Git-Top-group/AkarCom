@@ -222,5 +222,83 @@ class Collection {
 
   }
 
+
+  // create user Profile
+  async createProfile(realId, userId, obj) {
+    if (realId == userId) {
+      try {
+        let newRecord = await this.model.create(obj);
+        // return newRecord;
+        console.log("newRecord++++++++",newRecord);
+      } catch (e) {
+        console.error("Error in creating a new record in model ", this.model);
+      }
+    } else {
+
+      console.error("the real user id  not matching the id that you sent by params");
+    }
+  }
+
+  // update user Profile
+  async updateProfile(realId, userId, obj) {
+    let updated = null;
+    if (!userId) {
+      throw new Error("No id provided for model ", this.model);
+    }
+    let updaterecord = await this.model.findOne({
+      where: {
+        userId: userId
+      }
+    });
+    console.log(this.model, "****************");
+    if (updaterecord) {
+      if (realId === userId) {
+        console.log("++++++++++++++");
+        try {
+          updated = await this.model.update(obj, {
+            where: { userId: userId },
+            returning: true
+          });
+          return updated;
+        } catch (e) {
+          console.error("Error in updating record in model ", this.model)
+        }
+      } else {
+        console.error("You can not update posts of other users !!  ");
+      }
+    } else {
+      console.error(`There is no model with this id: ${id}`);
+    }
+  }
+  // read user Profile
+  // async getProfile(realId, userId, role) {
+  //   if (realId === userId || role === "admin") {
+  //     return this.model.findOne({
+  //       where: { userId: userId },
+  //     });
+  //   } else {
+  //     console.error("you can't see contact information for other users, please make an order");
+  //   }
+  // }
+
+  // read all user Profiles
+  async getAllProfiles( userId,role) {
+    if(!userId){
+
+      if (role === "admin") {
+        return this.model.findAll({});
+      } else {
+        console.error("you can't see contact information for other users, please make an order");
+      }
+    }else{
+      return this.model.findOne({where:{userId:userId}})
+    }
+  }
 }
+
+
+
+
+
+
 module.exports = Collection;

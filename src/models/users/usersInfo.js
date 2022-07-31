@@ -4,7 +4,8 @@ const usersModelInfo = (sequelize, DataTypes) =>
     sequelize.define('infousers', {
         userId: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
+            unique: true, 
         },
         firstName: {
             type: DataTypes.STRING,

@@ -289,7 +289,8 @@ module.exports = {
     lands: new Collection(lands),
     villas: new Collection(villas),
     warehouses: new Collection(warehouses),
-
+    usersInfo: new Collection(usersInfo),
+    
 
     // houseImages: new Collection(houseImages),
     // apartmentImages: new Collection(apartmentImages),
@@ -300,7 +301,7 @@ module.exports = {
 
 
     users: users,
-    usersInfo: usersInfo,
+    
     houseImages: houseImages,
     apartmentImages: apartmentImages,
     chaletImages: chaletImages,

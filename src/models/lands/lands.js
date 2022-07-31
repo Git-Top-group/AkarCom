@@ -4,7 +4,9 @@ sequelize.define('lands', {
 
     userId: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
+        
+        // ONDELETECASCADE
     },
     process: {
         type: DataTypes.ENUM('Sell','Rent'),

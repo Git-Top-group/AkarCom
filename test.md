@@ -112,6 +112,16 @@
 
 }
 
+
+***profileuser***
+{
+    "firstName":"mohamed",
+    "lastName":"aldah",
+    "phoneNumber":"1324",
+    "email":"mosad@dsf.com",
+    "dataOfBirth":"2222-50-52"
+}
+
 http://localhost:3000/userId/houses     method `GET` :  done 
 
 http://localhost:3000/userId/newpost/category   method `POST` : done

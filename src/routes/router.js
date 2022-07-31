@@ -25,6 +25,8 @@ routers.param("modelImages", (req, res, next) => {
   }
 });
 
+
+
 routers.get("/dashboard/:userId/main", bearer, async (req, res) => {
   if (req.user.id == req.params.userId) {
     res.status(200).send("welcome to your dashboard");
@@ -69,33 +71,64 @@ routers.post(
 );
 
 
-//Create user info ✔✔✔
+//Create user Profile ✔✔✔
 routers.post(
-  "/myinfo/:userId/:model",
+  "/Profile/:userId/:model",
+  bearer,
+  acl("CRUD"),
+  async (req, res) => {
+    let userId = parseInt(req.params.userId);
+    let newModel = req.body;
+    newModel.userId = req.params.userId;
+    let newRecord = await req.model.createProfile(req.user.id, userId, newModel);
+console.log("newRecord   ----------  ",this.model);
+console.log("----------  ");
+console.log("----------  ");
+console.log("newModel   ----------  ",newModel);
+
+
+    if (newRecord) {
+      console.log("user id : ",userId,"","req.user.id : ",req.user.id);
+      res.status(201).json(newRecord);
+    } else {
+      res
+        .status(403)
+        .send("the real user id  not matching the id that you sent by params, your need to update your info ");
+    }
+  }
+);
+
+
+// update user Profile
+routers.put(
+  "/Profile/:userId/update/:model",
   bearer,
   acl("CRUD"),
   async (req, res) => {
 
-    let userId = parseInt(req.params.userId); 0
-    if (userId == req.user.id) {
-      let newModel = req.body;
-      newModel.model = req.params.model;
-      console.log(req.user.id, "realid");
-      console.log(userId, "user id ");
-      let model = await req.model.create(newModel);
-      if (model) {
-        res.status(201).json(model);
+    const userId = parseInt(req.params.userId);
+    let obj = req.body;
+    let updatedModel = await req.model.updateProfile(req.user.id, userId, obj);
+    if (updatedModel) {
+      if (updatedModel[0] != 0) {
+        res.status(201).json(updatedModel[1]);
       } else {
-        res
-          .status(403)
-          .send("the real user id  not matching the id that you sent by params ");
+        res.status(403).send(`you cannot update profile}`);
       }
     } else {
-      res.status(403).send("it's not the same user id");
-    }
+      res.status(403).send(`You can not update profile of other users !!`);
 
+    }
   }
 );
+
+// read user Profile
+// routers.get("/Profile/:userId/:model", bearer, acl("CRUD"),async (req, res) => {
+//   let userId = parseInt(req.params.userId);
+//   let allProfiles = await req.model.getProfile(req.user.id, userId,req.user.role);
+//   res.status(200).send(allProfiles);
+// });
+
 // create post images
 
 routers.post(
