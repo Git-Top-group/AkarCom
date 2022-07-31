@@ -86,28 +86,14 @@ class Collection {
       );
     }
   }
-  async update(realId, userId, postId, obj) {
-
+  async updatePost(realId, userId, postId, obj) {
     let updated = null;
-    if (!postId) {
-      throw new Error("No id provided for model ", this.model);
-    }
-    let record = await this.model.findOne({
-      where: {
-        id: postId
-      }
-    });
+    if (!postId) { throw new Error("No id provided for model ", this.model) }
+    let record = await this.model.findOne({ where: { id: postId } });
     if (record) {
       if (realId === userId) {
-
         try {
-          updated = await this.model.update(obj, {
-            where: {
-              id: postId
-            },
-            returning: true,
-          });
-
+          updated = await this.model.update(obj, { where: { id: postId }, returning: true, });
           return updated;
         } catch (e) {
           console.error("Error in updating record in model ", this.model);
@@ -256,5 +242,6 @@ class Collection {
     }
 
   }
+
 }
 module.exports = Collection;
