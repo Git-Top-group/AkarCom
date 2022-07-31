@@ -121,22 +121,13 @@ routers.post("/newpost/:userId/:model/:postId/:modelImages", bearer, acl("CRUD")
   }
 }
 );
-
-
-
 //Update posts : (step 3)
-routers.put(
-  "/dashboard/:userId/:model/:postId",
-  bearer,
-  acl("CRUD"),
-  async (req, res) => {
-
+routers.put("/dashboard/:userId/:model/:postId",bearer,acl("CRUD"),async (req, res) => {
     const userId = parseInt(req.params.userId);
     const postId = parseInt(req.params.postId);
     let obj = req.body;
     let updatedModel = await req.model.update(req.user.id, userId, postId, obj);
     if (updatedModel) {
-
       if (updatedModel[0] != 0) {
         res.status(201).json(updatedModel[1]);
       } else {
@@ -148,17 +139,8 @@ routers.put(
   }
 }
 );
-
-
-
-
-
 //Update post images : (step 3)
-routers.put(
-  "/dashboard/:userId/:model/:postId/:modelImages",
-  bearer,
-  acl("CRUD"),
-  async (req, res) => {
+routers.put("/dashboard/:userId/:model/:postId/:modelImages",bearer,acl("CRUD"),async (req, res) => {
     const userId = parseInt(req.params.userId);
     const postId = parseInt(req.params.postId);
     const model = req.params.model;
@@ -178,11 +160,7 @@ routers.put(
   }
 );
 //delete posts 
-routers.delete(
-  "/dashboard/:userId/:model/:postId",
-  bearer,
-  acl("CRUD"),
-  async (req, res) => {
+routers.delete("/dashboard/:userId/:model/:postId",bearer,acl("CRUD"),async (req, res) => {
     const userId = parseInt(req.params.userId);
     const postId = parseInt(req.params.postId);
     let deletedModel = await req.model.removeRecord(
@@ -200,11 +178,7 @@ routers.delete(
   }
 );
 //delete post images 
-routers.delete(
-  "/dashboard/:userId/:model/:postId/:modelImages",
-  bearer,
-  acl("CRUD"),
-  async (req, res) => {
+routers.delete("/dashboard/:userId/:model/:postId/:modelImages",bearer,acl("CRUD"),async (req, res) => {
     const userId = parseInt(req.params.userId);
     const postId = parseInt(req.params.postId);
     const model = req.params.model;
@@ -216,16 +190,13 @@ routers.delete(
       res.send("Deleted Successfully");
     } else {
       res.status(403).send(`You can not delete posts of other users !!`);
-
     }
   }
 );
-
 routers.get('/null/:model/', async (req, res) => {
   let oneData = await req.model.getbyNull();
   res.status(200).send(oneData);
 });
-
 //user can update his own information
 routers.put("/updateuser/:userId", bearer, acl("CRUD"), async (req, res) => { //do not change password!
   const userId = parseInt(req.params.userId);
