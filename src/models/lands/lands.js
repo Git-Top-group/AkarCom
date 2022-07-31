@@ -4,7 +4,7 @@ sequelize.define('lands', {
 
     userId: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
     },
     process: {
         type: DataTypes.ENUM('Sell','Rent'),

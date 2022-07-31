@@ -3,7 +3,8 @@ const apartmentsModel = (sequelize, DataTypes) =>
 sequelize.define('apartments', {
     userId: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
+        
     },
     process: {
         type: DataTypes.ENUM('Sell','Rent'),

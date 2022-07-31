@@ -8,8 +8,6 @@
 }
 ***update user***
 {
-    "username": "admin",
-    "role": "admin",
     "firstName": "mmmm",
     "lastName": "bbbb",
     "phoneNumber": "07",

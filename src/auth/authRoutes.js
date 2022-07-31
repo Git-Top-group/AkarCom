@@ -99,11 +99,13 @@ authRouter.post('/logout', basicAuth, async (req, res, next) => {
 })
 
 
-authRouter.put('/update/user/:id', bearerAuth,permissions('CRUD'), async (req, res, next) => {
-  let id = req.params.id;
+authRouter.put("/update/user/:id", bearerAuth,permissions('CRUD'), async (req, res, next) => {
+  let id = parseInt(req.params.id);
   let newPassword = req.body.password;
-  if (id === req.user.id || req.user.role === "admin"){
-    
+  let realId = parseInt(req.user.id);
+
+  if (id === realId || req.user.role === "admin"){
+ 
     let newhashedPass = await bcrypt.hash(newPassword, 10);
     let obj = {
       // username: req.body.username,
@@ -113,8 +115,7 @@ authRouter.put('/update/user/:id', bearerAuth,permissions('CRUD'), async (req, r
       phoneNumber: req.body.phoneNumber,
       // email: req.body.email,
       city: req.body.city,
-      // dataOfBirth: req.body.dataOfBirth,
-      // userImage: req.body.userImage,
+      // dataOfBirth: req.body.dataOfBirth
     }
     let updated = await users.update(obj, { where: { id: id }, returning: true, })
     if (updated) {
