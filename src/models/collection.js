@@ -11,7 +11,7 @@ class Collection {
     } catch {
       console.error("Error in getting all data");
     }
-    
+
   }
   getById(id) {
     if (id) {
@@ -25,20 +25,19 @@ class Collection {
     }
   }
   action(id) {
-    
+
     if (id) {
-      
-   console.log("this will fire a (socket.emit) to the admin(socket.on) 🔥🔥🔥")
 
-   return this.model.findOne({ where: { id: id  } });
+      console.log("this will fire a (socket.emit) to the admin(socket.on) 🔥🔥🔥")
 
-    }else {
+      return this.model.findOne({ where: { id: id } });
 
-   return this.model.findAll({  });
+    } else {
+
+      return this.model.findAll({});
 
     }
-    }
-
+  }
   async getMyposts(realId, userId, model, postId) {
     if (realId === userId) {
       if (postId) {
@@ -242,6 +241,5 @@ class Collection {
     }
 
   }
-
 }
 module.exports = Collection;

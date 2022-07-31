@@ -24,16 +24,16 @@ class ImageCollection {
       );
     }
   }
-  async updateImage(realId, userId, postId, obj,model) {
-    console.log(realId,userId,postId,model);
+  async updateImage(realId, userId, postId, obj, model) {
+    console.log(realId, userId, postId, model);
     let updated = null;
-    if (!postId||!model) {
+    if (!postId || !model) {
       throw new Error("No id provided for model ", this.model);
     }
     let record = await this.model.findOne({
       where: {
         postId: postId,
-        model:model
+        model: model
       }
     });
     if (record) {
@@ -43,7 +43,7 @@ class ImageCollection {
             where: {
               postId: postId,
               model: model,
-              userId:userId
+              userId: userId
             },
             returning: true
           });
@@ -65,13 +65,13 @@ class ImageCollection {
     let record = await this.model.findOne({
       where: {
         postId: postId,
-        model:model
+        model: model
       }
     });
     if (record) {
       if (realId === userId) {
         try {
-          let deleted = await this.model.destroy({ where: { postId: postId, model: model, userId:userId } });
+          let deleted = await this.model.destroy({ where: { postId: postId, model: model, userId: userId } });
           return deleted;
         } catch (e) {
           console.error('Error in deleting record in model ', this.model);
@@ -88,30 +88,30 @@ class ImageCollection {
       throw new Error('No id provided for model ', this.model)
     }
     if (realId === userId) {
-      if (postId&&model) {
+      if (postId && model) {
         return await this.model.findOne({
           where: {
             model: model,
             postId: postId,
-            userId:userId
+            userId: userId
           },
         });
-      } 
+      }
     } else { throw new Error("ID not matching !!  "); }
   }
-  getImages(postId,model) {
-    if (postId&&model) {
-    try {
-      return this.model.findOne({
-        where: {
-          postId: postId,
-          model:model
-        }
-      });
-    } catch {
-      console.error("Error in getting all data");
+  getImages(postId, model) {
+    if (postId && model) {
+      try {
+        return this.model.findOne({
+          where: {
+            postId: postId,
+            model: model
+          }
+        });
+      } catch {
+        console.error("Error in getting all data");
+      }
     }
-  }
   }
   /*getImageById(postId, imageId) {
     if (postId) {
@@ -126,5 +126,5 @@ class ImageCollection {
     }
   }*/
 
-}
+};
 module.exports = ImageCollection;

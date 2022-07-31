@@ -30,14 +30,8 @@ adminRouters.post("/admin/signin", basicAuth, (req, res, next) => {
     res.status(403).send(" invalid sign/in , you are not an admin ");
   }
 });
-
-adminRouters.delete(
-  "/:model/:userId/:postId",
-  bearer,
-  acl("CRUD_Users"),
-  async (req, res) => {
+adminRouters.delete("/:model/:userId/:postId",bearer,acl("CRUD_Users"),async (req, res) => {
     const userId = parseInt(req.params.userId);
-
     const postId = parseInt(req.params.postId);
     let deletedModel = await req.model.removeRecord(
       req.user.id,
@@ -54,18 +48,9 @@ adminRouters.delete(
   }
 
 )
-adminRouters.delete(
-  "/clear/:model",
-  bearer,
-  acl("CRUD_Users"),
-  async (req, res) => {
-
-
+adminRouters.delete("/clear/:model",bearer,acl("CRUD_Users"),async (req, res) => {
     const postId = parseInt(req.params.postId);
-
     let deletedModel = await req.model.clear(
-
-
       postId,
       req.user.role
     );
@@ -86,18 +71,13 @@ adminRouters.get("/users", bearer, acl("CRUD_Users"), async (req, res, next) => 
   res.status(201).json(list);
 }
 );
-// adminRouters.get("/orders")
-// adminRouters.get("/orders/:orderId")
-
 // adminRouters.get("/:model/:orderId/:action" ,  bearer , acl("CRUD_Users"), async (req, res)=>{
 //   let action = req.params.action;
 //     let orderId =req.params.orderId;
 //   let data =  await req.model.getOrder(orderId,action)
 //   if(data){
 //   res.status(200).send(data)
-  
 //   }else{
-  
 //     res.status(200).send("there in no orders , or error in postId")
 //   }
 //   })
