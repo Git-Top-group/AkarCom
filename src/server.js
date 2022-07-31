@@ -14,7 +14,7 @@ const authRouter = require("./auth/authRoutes");
 const routers = require("./routes/router")
 const adminRouters = require("./routes/adminRoutes")
 const visitorRouters = require("./routes/visitorRoutes")
-
+const ordersRouter =require("./routes/ordersRouter")
 
 const app = express();
 app.use(express.json());
@@ -41,10 +41,13 @@ app.get('/', (req, res) => {
     res.send('this is the home page')
 })
 
+app.use(ordersRouter);
 app.use(authRouter);
 app.use(adminRouters);
 app.use(routers);
 app.use(visitorRouters);
+
+
 
 app.use("*", notFoundHandler);
 app.use(errorHandler);

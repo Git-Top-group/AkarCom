@@ -82,6 +82,7 @@ authRouter.delete("/delete/:username", bearerAuth, permissions("CRUD_Users"), as
     return deleted;
   } catch (e) {
     console.error("Error in deleting record in user ", username);
+
   }
 }
 );

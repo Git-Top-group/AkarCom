@@ -139,3 +139,6 @@ http://localhost:3000/userId/dashboard/ method `GET` : todo
 http://localhost:3000/:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms/:rentDuration/:floors  
 http://localhost:4000/lands/Rent/Amman/all/all/all/all/all/all/all/all/all/all 
 method `GET` : done except price and area
+
+
+ http://localhost:4000/user/messages/send/2/okay to accept a message from admin by owner
