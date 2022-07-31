@@ -5,7 +5,7 @@ const { Sequelize, DataTypes } = require('sequelize');
 const userModel = require("./users/users");
 
 const ordersModel =require("./orders/orders");  
-
+const messagesModel =require("./orders/messages");
 const housesModel = require("./houses/houses");
 const houseImagesModel = require("./houses/imgHouses");
 
@@ -25,6 +25,8 @@ const warehousesModel = require("./warehouses/warehouses");
 const warehouseImagesModel = require("./warehouses/imgWarehouses");
 
 const Collection = require("./collection");
+const ImageCollection =require("./imagesCollection")
+const OrderCollection = require("./orderCollection")
 
 const POSTGRES_URI = process.env.NODE_ENV === 'test' ? 'sqlite:memory:' : process.env.DATABASE_URL;
 let sequelizeOptions =
@@ -55,7 +57,7 @@ const villaImages = villaImagesModel(sequelize, DataTypes);
 const warehouseImages = warehouseImagesModel(sequelize, DataTypes);
 
 const orders = ordersModel(sequelize, DataTypes);
-
+const messages =messagesModel(sequelize, DataTypes);
 
 //1-M relationship between users and real estates categories
 users.hasMany(houses, {
@@ -192,6 +194,16 @@ orders.belongsTo(users, {
     targetKey: "id",
 });
 
+users.hasMany(messages ,{
+    foreignKey: "userId",
+    sourceKey: "id",
+
+})
+messages.belongsTo(users, {
+    foreignKey: "userId",
+    targetKey: "id",
+});
+
 module.exports = {
     sequelize: sequelize,
     DataTypes: DataTypes,
@@ -204,13 +216,13 @@ module.exports = {
 
     users: users,
 
-    houseImages: new Collection(houseImages),
-    apartmentImages: new Collection(apartmentImages),
-    chaletImages: new Collection(chaletImages),
-    landImages: new Collection(landImages),
-    villaImages: new Collection(villaImages),
-    warehouseImages: new Collection(warehouseImages),
+    houseImages: new ImageCollection(houseImages),
+    apartmentImages: new ImageCollection(apartmentImages),
+    chaletImages: new ImageCollection(chaletImages),
+    landImages: new ImageCollection(landImages),
+    villaImages: new ImageCollection(villaImages),
+    warehouseImages: new ImageCollection(warehouseImages),
 
-    orders: new Collection(orders),
-
+    orders: new OrderCollection(orders),
+messages: new OrderCollection(messages),
 }; 
