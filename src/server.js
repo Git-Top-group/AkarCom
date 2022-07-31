@@ -33,6 +33,13 @@ io.on('connection', (socket) => {
     console.log('Server connected to socketio server ', socket.id);
     socket.on('new-order', (payload) => { //(2)
         console.log({ payload });
+        io.emit('adminNewOrder', (payload)) //(3)
+        socket.on("rejectOrder",(payload)=>{   //(6-b)
+            console.log("!!!!!!!!!!!!!1111111111111")
+            io.emit('clientReject', (payload)) //(7-b)
+
+        })
+
     });
 });
 

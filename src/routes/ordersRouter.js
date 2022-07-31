@@ -77,30 +77,62 @@ ordersRouter.get("/allorders/:postId/:orderId", bearer, acl("CRUD_Users"),
   }
 );
 //to send a message to owner
-ordersRouter.post("/allorders/:postId/:orderId/:action", bearer, acl("CRUD_Users"), async (req, res) => {
-  let action = req.params.action;
-  let orderId = req.params.orderId;
-  let postId = req.params.postId
-  let message = req.body.message;
-  let data = await orders.orderAction(orderId, postId, action);
-  if (data) {
-    let obj = {
-      orderId: orderId,
-      postId: data.postId,
-      userId: data.ownerId,
-      model: data.model,
-      messageBody: message,
-    };
-    let usermessage = await messages.createMessage(obj);
-    res.status(200).send(usermessage);
-  } else {
-    res.status(204).send("deleted");
+orderConnection.on("adminNewOrder", () => //(4)
+  ordersRouter.post("/allorders/:postId/:orderId/:action", bearer, acl("CRUD_Users"), async (req, res) => {
+    let action = req.params.action;
+    let orderId = req.params.orderId;
+    let postId = req.params.postId
+    let message = req.body.message;
+    if (action) {
+      if (action == "accept") {
+        console.log("this will fire a (socket.emit) to the owner(socket.on) 🔥🔥🔥and  the project🔥🔥🔥")
+        let data = await orders.findOne({ where: { id: orderId } });
+        if (data) {
+          let obj = {
+            orderId: orderId,
+            postId: data.postId,
+            userId: data.ownerId,
+            model: data.model,
+            messageBody: message,
+          };
+          let usermessage = await messages.createMessage(obj);
+          res.status(200).send(usermessage);
+        } else {
+          res.status(204).send("deleted");
+        }
+        return data;
+      } else if (action === "reject") {
+        orderConnection.emit("rejectOrder", orderId) //(5-b)
+        res.status(200).send("Admin rejected the order and sent it to server")
+        // orders.destroy({ where: { id: orderId } })
+      } else {
+        let data = "there are no action ❌❌❌❌"
+        return (data);
+      }
+    }
+    // let data = await orders.orderAction(orderId, postId, action);
   }
-}
+  )
 );
+ordersRouter.get("/myorders/:userId", bearer, acl("CRUD"), async (req, res) => {
+}
+)
+
+ordersRouter.get("/myorders/:userId/:model/:orderId", bearer, acl("CRUD"), async (req, res) => {
+  let model = req.params.model;
+  let orderId = parseInt(req.params.orderId);
+  let userId = parseInt(req.params.userId);
+  let allData = await orders.getMyOrders(req.user.id, userId, model, orderId);
+  
+  orderConnection.on("clientReject", (payload) => //(8-b)
+  console.log("00000000000000000kkkkkkkkkkkkk")
+  )
+  res.status(200).send(allData);
+}
+)
+
 //when user recive a socket from admin  : he will hit this route
 ordersRouter.get("/check/:userId/:messageId/:action", bearer, acl("CRUD"), async (req, res) => {
-  // bearer,
   let realId = req.user.id;
   let userId = req.params.userId;
   let messageId = req.params.messageId;
