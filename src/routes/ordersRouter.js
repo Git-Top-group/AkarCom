@@ -24,7 +24,7 @@ ordersRouter.param("model", (req, res, next) => {
 
 // make an order
 ordersRouter.post(
-  "/neworder/:model/:postId",
+  "/:model/:postId/neworder",
   bearer,
   acl("CRUD"),
   async (req, res) => {
@@ -41,21 +41,26 @@ ordersRouter.post(
       postId,
       model,
     };
+    if (ownerId === clientId) { // no order to my post! 
+      res.send(`You are the owner of this ${model} post`)
+    }else{
 
-    let orderRecord = await orders.createOrder(newOrder);
-    let orderId = orderRecord.id;
-    console.log({ newOrder });
-    let Order = {
-      event: "new-order",
-      orderId: orderId,
-      time: new Date().toLocaleString(),
-      newOrder,
-    };
+      let orderRecord = await orders.createOrder(newOrder);
+      let orderId = orderRecord.id;
+      console.log({ newOrder });
+      let Order = {
+        event: "new-order",
+        orderId: orderId,
+        time: new Date().toLocaleString(),
+        newOrder,
+      };
+  
+      orderConnection.emit("new-order", Order); //(1)
+      res.status(200).send("Order has been sent, admin will contact soon");
+    }
+  
 
-    orderConnection.emit("new-order", Order); //(1)
-    res.status(200).send("Order has been sent, admin will contact soon");
-  }
-);
+    });
 
 ordersRouter.get("/allorders", bearer, acl("CRUD_Users"), async (req, res) => {
   let allData = await orders.get();
