@@ -3,7 +3,7 @@ require('dotenv').config();
 const PORT = process.env.PORT;
 const io = require('socket.io-client');
 let host = `http://localhost:${PORT}`;
-// const orderConnection = io.connect(host);
+const orderConnection = io.connect(host);
 
 const modelFolder = require("../models/index.model");
 const { orders, users } = require("../models/index.model");
