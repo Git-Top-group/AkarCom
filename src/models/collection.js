@@ -243,5 +243,9 @@ class Collection {
 
   }
 
+  // async updateprofile(id,password){
+  //   return this.model.
+  // }
+
 }
 module.exports = Collection;

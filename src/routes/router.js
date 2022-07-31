@@ -227,24 +227,24 @@ routers.get('/null/:model/', async (req, res) => {
 });
 
 //user can update his own information
-routers.put("/updateuser/:userId", bearer, acl("CRUD"), async (req, res) => { //do not change password!
-  const userId = parseInt(req.params.userId);
-  const realId = parseInt(req.user.id);
-  let record = await users.findOne({ where: { id: userId } });
-  if (record) {
-    if (realId === userId || req.user.role == "admin") {
-      try {
-        let updatedUser = await record.update(req.body);
-        res.status(201).json(updatedUser);
-      } catch (e) {
-        res.send(e.message);
-      }
-    } else {
-      res.status(403).send(`You can not update other users information`);
-    }
-  }
-}
+// routers.put("/updateuser/:userId", bearer, acl("CRUD"), async (req, res) => { //do not change password!
+//   const userId = parseInt(req.params.userId);
+//   const realId = parseInt(req.user.id);
+//   let record = await users.findOne({ where: { id: userId } });
+//   if (record) {
+//     if (realId === userId || req.user.role == "admin") {
+//       try {
+//         let updatedUser = await record.update(req.body);
+//         res.status(201).json(updatedUser);
+//       } catch (e) {
+//         res.send(e.message);
+//       }
+//     } else {
+//       res.status(403).send(`You can not update other users information`);
+//     }
+//   }
+// }
 
-);
+// );
 module.exports = routers;
 

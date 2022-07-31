@@ -64,7 +64,7 @@ authRouter.put("/profile/:userId/update", bearerAuth,
   });
 
 authRouter.post("/signin", basicAuth, (req, res, next) => {
-  console.log(req.user.token);
+  console.log(req.user.token, "///////////////////");
 
   const user = {
     user: req.user,
@@ -90,5 +90,41 @@ authRouter.delete("/delete/:username", bearerAuth, permissions("CRUD_Users"), as
 authRouter.get("/secret", bearerAuth, async (req, res, next) => {
   res.status(200).send("Welcome to the secret area");
 });
+
+authRouter.post('/logout', basicAuth, async (req, res, next) => {
+  let ntoken = req.user.token;
+  res.clearCookie(ntoken);
+  return res.json("logout")
+  //  return res.redirect('/signin'); 
+})
+
+
+authRouter.put('/update/user/:id', bearerAuth,permissions('CRUD'), async (req, res, next) => {
+  let id = req.params.id;
+  let newPassword = req.body.password;
+  if (id === req.user.id || req.user.role === "admin"){
+    
+    let newhashedPass = await bcrypt.hash(newPassword, 10);
+    let obj = {
+      // username: req.body.username,
+      password: newhashedPass,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      phoneNumber: req.body.phoneNumber,
+      // email: req.body.email,
+      city: req.body.city,
+      // dataOfBirth: req.body.dataOfBirth,
+      // userImage: req.body.userImage,
+    }
+    let updated = await users.update(obj, { where: { id: id }, returning: true, })
+    if (updated) {
+      console.log(updated);
+      // return updated;
+      res.status(201).send("user updated sucssesfully")
+    }
+  }else{
+    res.send("you can't update other users profiles");
+  }
+})
 
 module.exports = authRouter;
