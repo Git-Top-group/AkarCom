@@ -15,11 +15,13 @@ const routers = require("./routes/router")
 const adminRouters = require("./routes/adminRoutes")
 const visitorRouters = require("./routes/visitorRoutes")
 const ordersRouter =require("./routes/ordersRouter")
+const cookieParser = require('cookie-parser');
 
 const app = express();
 app.use(express.json());
 const server = http.createServer(app);
 const io = socketio(server);
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
@@ -41,12 +43,12 @@ app.get('/', (req, res) => {
     res.send('this is the home page')
 })
 
-app.use(ordersRouter);
 app.use(authRouter);
+app.use(ordersRouter);
 app.use(adminRouters);
 app.use(routers);
 app.use(visitorRouters);
-
+app.use(cookieParser());
 
 
 app.use("*", notFoundHandler);
