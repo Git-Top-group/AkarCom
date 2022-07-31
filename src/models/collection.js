@@ -11,6 +11,7 @@ class Collection {
     } catch {
       console.error("Error in getting all data");
     }
+    
   }
   getById(id) {
     if (id) {
@@ -23,13 +24,21 @@ class Collection {
       console.error("post does not exist");
     }
   }
-  getOrder(postId) {
-    if (postId) {
-      return this.model.findOne({ where: { id: postId } });
-    } else {
-      console.error("does not exist");
+  action(id) {
+    
+    if (id) {
+      
+   console.log("this will fire a (socket.emit) to the admin(socket.on) 🔥🔥🔥")
+
+   return this.model.findOne({ where: { id: id  } });
+
+    }else {
+
+   return this.model.findAll({  });
+
     }
-  }
+    }
+
   async getMyposts(realId, userId, model, postId) {
     if (realId === userId) {
       if (postId) {
@@ -77,28 +86,14 @@ class Collection {
       );
     }
   }
-  async update(realId, userId, postId, obj) {
-
+  async updatePost(realId, userId, postId, obj) {
     let updated = null;
-    if (!postId) {
-      throw new Error("No id provided for model ", this.model);
-    }
-    let record = await this.model.findOne({
-      where: {
-        id: postId
-      }
-    });
+    if (!postId) { throw new Error("No id provided for model ", this.model) }
+    let record = await this.model.findOne({ where: { id: postId } });
     if (record) {
       if (realId === userId) {
-
         try {
-          updated = await this.model.update(obj, {
-            where: {
-              id: postId
-            },
-            returning: true,
-          });
-
+          updated = await this.model.update(obj, { where: { id: postId }, returning: true, });
           return updated;
         } catch (e) {
           console.error("Error in updating record in model ", this.model);
@@ -247,6 +242,7 @@ class Collection {
     }
 
   }
+
   async createImage(realId, userId, postId, obj, model) {
     if (realId == userId) {
       obj.userId = userId;

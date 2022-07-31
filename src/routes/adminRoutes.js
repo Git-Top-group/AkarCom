@@ -51,7 +51,7 @@ adminRouters.delete(
     } else {
       res.status(403).send(`You can not delete posts of other users !!`);
     }
-}
+  }
 
 )
 adminRouters.delete(
@@ -59,13 +59,13 @@ adminRouters.delete(
   bearer,
   acl("CRUD_Users"),
   async (req, res) => {
-    
+
 
     const postId = parseInt(req.params.postId);
-    
+
     let deletedModel = await req.model.clear(
-     
-     
+
+
       postId,
       req.user.role
     );
@@ -76,19 +76,31 @@ adminRouters.delete(
       res.status(403).send(`You can not delete posts of other users !!`);
     }
 
-}
-
-    
-)
-adminRouters.get("/users",bearer,acl("CRUD_Users"),async (req, res, next) => {
-    const userRecords = await users.findAll({});
-    const list = userRecords.map((user) => user);
-    res.status(201).json(list);
   }
-);
-adminRouters.get("/orders")
-adminRouters.get("/orders/:orderId")
 
+
+)
+adminRouters.get("/users", bearer, acl("CRUD_Users"), async (req, res, next) => {
+  const userRecords = await users.findAll({});
+  const list = userRecords.map((user) => user);
+  res.status(201).json(list);
+}
+);
+// adminRouters.get("/orders")
+// adminRouters.get("/orders/:orderId")
+
+// adminRouters.get("/:model/:orderId/:action" ,  bearer , acl("CRUD_Users"), async (req, res)=>{
+//   let action = req.params.action;
+//     let orderId =req.params.orderId;
+//   let data =  await req.model.getOrder(orderId,action)
+//   if(data){
+//   res.status(200).send(data)
+  
+//   }else{
+  
+//     res.status(200).send("there in no orders , or error in postId")
+//   }
+//   })
 
 
 module.exports = adminRouters;
