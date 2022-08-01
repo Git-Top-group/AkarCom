@@ -33,24 +33,23 @@ class OrderCollection {
     }
 
   }
-  orderAction(orderId, postId, action) {
-    if (postId) {
-      if (orderId) {
-        if (action) {
-          if (action == "accept") {
-            console.log("this will fire a (socket.emit) to the owner(socket.on) 🔥🔥🔥and  the project🔥🔥🔥")
-            return this.model.findOne({ where: { id: orderId } });
-          } else if (action === "reject") {
-            this.model.destroy({ where: { id: orderId } })
-
-          } else {
-            let data = "there is no action ❌❌❌❌"
-            console.log(data);
-          }
-        }
-      }
-    }
-  }
+  // orderAction(orderId, postId, action) {
+  //   if (postId) {
+  //     if (orderId) {
+  //       if (action) {
+  //         if (action == "accept") {
+  //           console.log("this will fire a (socket.emit) to the owner(socket.on) 🔥🔥🔥and  the project🔥🔥🔥")
+  //           return this.model.findOne({ where: { id: orderId } });
+  //         } else if (action === "reject") {
+  //           this.model.destroy({ where: { id: orderId } })
+  //         } else {
+  //           let data = "there is no action ❌❌❌❌"
+  //           console.log(data);
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
   async createMessage(data) {
     console.log("++++++++++++++++++++++++++", data);
     if (data) {
@@ -123,6 +122,31 @@ class OrderCollection {
       console.log("could'nt create order");
     }
   }
-
+  async getMyOrders(realId, clientId, model, orderId) {
+    if (realId === clientId) {
+      if (orderId) {
+        return this.model.findOne({
+          where: {
+            clientId: realId,
+            model: model,
+            id: orderId
+          },
+        });
+      }
+      if (model && !orderId) {
+        return this.model.findAll({
+          where: {
+            clientId: realId,
+            model: model
+          }
+        });
+      }
+      if (!model && !orderId) {
+        return this.model.findAll({
+          where: {
+            clientId: realId
+          }})}}
+    console.log("id not matching  ");
+  }
 }
 module.exports = OrderCollection;
