@@ -2,7 +2,8 @@
 const modelFolder = require('../models/index.model');
 const express = require('express');
 const visitorRouters = express.Router();
-
+const bearer =require("../auth/middleware/bearer")
+const {Op} =require("sequelize")
 visitorRouters.param("model", (req, res, next) => {
     if (modelFolder[req.params.model]) {
         req.model = modelFolder[req.params.model];
@@ -71,7 +72,7 @@ visitorRouters.get('/:model/:process/:city/:owner/:availability/:buildingAge/:fu
 
 ///search bar 
 
-visitorRouters.post('/hi/search/:model/:term',brearer, async (req, res) => {
+visitorRouters.post('/hi/search/:model/:term',bearer, async (req, res) => {
 
 
     let { term } = req.params;
