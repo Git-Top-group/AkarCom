@@ -99,8 +99,8 @@ authRouter.post('/logout', basicAuth, async (req, res, next) => {
 })
 
 
-authRouter.put('/update/user/:id', bearerAuth,permissions('CRUD'), async (req, res, next) => {
-  let id = req.params.id;
+authRouter.put('/user/profile/:id/update', bearerAuth,permissions('CRUD'), async (req, res, next) => {
+  let id = parseInt(req.params.id);
   let newPassword = req.body.password;
   if (id === req.user.id || req.user.role === "admin"){
     
