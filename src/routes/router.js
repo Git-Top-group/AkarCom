@@ -217,5 +217,39 @@ routers.get('/null/:model/', async (req, res) => {
 // }
 
 // );
+routers.get('/user/profile/:userId' , bearer ,acl("CRUD"), async (req, res)=>{
+  let realId= parseInt(req.user.id) 
+  let userId=parseInt(req.params.userId);
+  let record = await users.findOne({ where: { id: userId } });
+  
+  if(record){
+    if(realId=== userId || req.user.role == "admin"){
+  
+      res.status(200).send(record)
+  
+    }else{
+  
+  let obj={
+    
+    name : record.firstName +" "+ record.lastName,
+     city: record.city,
+     img: record.userImage,
+     phone : " ***-***-****",
+     email: "***************"
+    
+    }
+    res.status(200).send(obj)
+  
+    }
+  }else{
+  
+  
+    res.status(200).send("user not found")
+  }
+  
+  
+  
+  })
+  
 module.exports = routers;
 

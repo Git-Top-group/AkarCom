@@ -73,4 +73,7 @@ adminRouters.get("/users", bearer, acl("CRUD_Users"), async (req, res, next) => 
 );
 
 
+
+
+
 module.exports = adminRouters;
