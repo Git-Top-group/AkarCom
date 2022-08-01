@@ -68,4 +68,24 @@ visitorRouters.get('/:model/:process/:city/:owner/:availability/:buildingAge/:fu
     }
 })
 
+
+///search bar 
+
+visitorRouters.post('/hi/search/:model/:term',brearer, async (req, res) => {
+
+
+    let { term } = req.params;
+    term = term.toLowerCase();
+    
+  let result= await  req.model.getSearch(term,Op)
+    if (result) {
+    
+        res.status(200).send(result);
+      } else {
+        res.status(403).send(`Error: your search does not match3333333 any existing data`);
+      }
+})
+    
+
+
 module.exports = visitorRouters;

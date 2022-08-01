@@ -241,6 +241,24 @@ class Collection {
     }
 
   }
+  async getSearch(term,op){
+    if(term){
+    
+      return this.model.findAll({
+        where: {
+          address:{
+            [op.regexp]: `.*${term}.*`
+                } ,
+            }        
+    })
+    }
+    
+      }
+
+
+
+
+
 
 }
 module.exports = Collection;
