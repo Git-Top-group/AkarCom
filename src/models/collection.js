@@ -234,5 +234,26 @@ class Collection {
       console.error("Error in reading filtered model", this.model);
     }
   }
+
+  async getSearch(term,op){
+    if(term){
+    
+      return this.model.findAll({
+        where: {
+          address:{
+            [op.regexp]: `.*${term}.*`
+                } ,
+            }        
+    })
+    }
+    
+      }
+
+
+
+
+
+
+
 }
 module.exports = Collection;
