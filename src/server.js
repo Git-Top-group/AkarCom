@@ -39,20 +39,25 @@ io.on('connection', (socket) => {
         console.log({ payload });
         io.emit('adminNewOrder', (payload)) //(3)
         socket.on("admin-response-after-new-order",(payload)=>{   //(6-b)
-            console.log("!!!!!!!!!!!!!1111111111111")
             io.emit('client-response', (payload)) //(7-b)
         })
         socket.on("admin-to-owner",(payload)=>{   //(6-b)
-            console.log("?????????????????????????????????");
             io.emit('admin-to-owner-public', (payload)) //(7-b)
         })
         socket.on("owner-to-admin",(payload)=>{   //(6-b)
-            console.log("**************************************************");
             io.emit('owner-to-admin-public', (payload)) //(7-b)
         })
+        socket.on("owner-to-admin-reject",(payload)=>{   //(6-b)
+            io.emit('owner-to-admin-reject-public', (payload)) //(7-b)
+        })
         socket.on("admin-to-client-meet",(payload)=>{   //(6-b)
-            console.log(";;;;;;;;;;;;;;;;;;;;;;;;;");
             io.emit('admin-to-client-meet-public', (payload)) //(7-b)
+        })
+        socket.on("client-to-admin",(payload)=>{   //(6-b)
+            io.emit('client-to-admin-public', (payload)) //(7-b)
+        })
+        socket.on("client-to-admin-reject",(payload)=>{   //(6-b)
+            io.emit('client-to-admin-reject-public', (payload)) //(7-b)
         })
     });
   });
