@@ -13,20 +13,22 @@ class OrderCollection {
     }
 
   }
-  getById(postId, orderId) {
+  async getById(postId, orderId) {
     if (postId) {
       if (orderId) {
-        return this.model.findOne({
+        let order = await this.model.findOne({
           where: {
             postId: postId, id: orderId,
           }
         });
+        return order;
       } else {
-        return this.model.findAll({
+        let orders = await this.model.findAll({
           where: {
             postId: postId,
           }
         });
+        return orders;
       }
     } else {
       console.log("sorry , there is no orders on this post");
@@ -122,31 +124,34 @@ class OrderCollection {
       console.log("could'nt create order");
     }
   }
-  async getMyOrders(realId, clientId, model, orderId) {
+  async getMyOrders(realId, clientId, orderId) {
     if (realId === clientId) {
       if (orderId) {
         return this.model.findOne({
           where: {
             clientId: realId,
-            model: model,
             id: orderId
           },
         });
       }
-      if (model && !orderId) {
-        return this.model.findAll({
-          where: {
-            clientId: realId,
-            model: model
-          }
-        });
-      }
-      if (!model && !orderId) {
+      else {
         return this.model.findAll({
           where: {
             clientId: realId
           }})}}
     console.log("id not matching  ");
   }
+
+  async removeRecord(dataID) {
+    if (!dataID) {
+        throw new Error('No id provided for model ', this.model)
+    }
+    try {
+        let deleted = await this.model.destroy({ where: { id: dataID } });
+        return deleted;
+    } catch (e) {
+        console.error('Error in deleting record in model ', this.model);
+    }
+}
 }
 module.exports = OrderCollection;

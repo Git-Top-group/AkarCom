@@ -31,19 +31,31 @@ app.use(cors())
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+const admin = io.of('/admin');
+
 io.on('connection', (socket) => {
     console.log('Server connected to socketio server ', socket.id);
     socket.on('new-order', (payload) => { //(2)
         console.log({ payload });
         io.emit('adminNewOrder', (payload)) //(3)
-        socket.on("rejectOrder",(payload)=>{   //(6-b)
+        socket.on("admin-response-after-new-order",(payload)=>{   //(6-b)
             console.log("!!!!!!!!!!!!!1111111111111")
-            io.emit('clientReject', (payload)) //(7-b)
-
+            io.emit('client-response', (payload)) //(7-b)
         })
-
+        socket.on("admin-to-owner",(payload)=>{   //(6-b)
+            console.log("?????????????????????????????????");
+            io.emit('admin-to-owner-public', (payload)) //(7-b)
+        })
+        socket.on("owner-to-admin",(payload)=>{   //(6-b)
+            console.log("**************************************************");
+            io.emit('owner-to-admin-public', (payload)) //(7-b)
+        })
+        socket.on("admin-to-client-meet",(payload)=>{   //(6-b)
+            console.log(";;;;;;;;;;;;;;;;;;;;;;;;;");
+            io.emit('admin-to-client-meet-public', (payload)) //(7-b)
+        })
     });
-});
+  });
 
 app.use(logger);
 app.get('/', (req, res) => {
