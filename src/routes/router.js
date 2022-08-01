@@ -6,7 +6,7 @@ let host = `http://localhost:${PORT}`;
 const orderConnection = io.connect(host);
 
 const modelFolder = require("../models/index.model");
-const { orders, users } = require("../models/index.model");
+const { users } = require("../models/index.model");
 
 const express = require("express");
 const routers = express.Router();
@@ -29,10 +29,11 @@ routers.param("modelImages", (req, res, next) => {
     next("invalid input");
   }
 });
+// to open user dashboard >> res : welcome to dashboard
 routers.get("/dashboard/:userId/main", bearer, async (req, res) => {
   if (req.user.id == req.params.userId) {
     res.status(200).send("welcome to your dashboard");
-  } else res.status(404).send("you are noy allowed");
+  } else res.status(404).send("you are not allowed");
 });
 //this will allows user to see all his posts in dashboard for specific model 
 routers.get("/dashboard/:userId/:model", bearer, async (req, res) => {
@@ -42,6 +43,7 @@ routers.get("/dashboard/:userId/:model", bearer, async (req, res) => {
   let allData = await req.model.getMyposts(req.user.id, userId, model);
   res.status(200).send(allData);
 });
+//this will allows user to open a specific. post in dashboard in specific model 
 routers.get("/dashboard/:userId/:model/:postId", bearer, async (req, res) => {
   let model = req.params.model;
   let postId = parseInt(req.params.postId);
@@ -69,28 +71,8 @@ routers.get("/dashboard/:userId/:model/:postId/:modelImages", bearer, async (req
       .send("the real user id  not matching the id that you sent by params ");
   }
 });
-//Get specific post (specific image) no need we can get images from postid and model because postid is unique
-/*routers.get("/dashboard/:userId/:model/:postId/:modelImages/:imageId", bearer, async (req, res) => {
-  let postId = parseInt(req.params.postId);
-  let imageId = parseInt(req.params.imageId);
-  let userId = parseInt(req.params.userId);
-  let model = req.params.model;
-  try {
-    let allData = await req.modelImages.getPostImages(req.user.id, userId, model, postId, imageId);
-    if (allData) {
-      res.status(200).send(allData);
-    } else {
-      res
-        .status(200)
-        .send("Please provide your adv. with photos to get more clients. ");
-    }
-  } catch {
-    res
-      .status(403)
-      .send("the real user id  not matching the id that you sent by params ");
-  }
-});*/
-//Create posts ✔✔✔
+
+//how to  Create posts ✔✔✔
 routers.post("/newpost/:userId/:model", bearer, acl("CRUD"), async (req, res) => {
   let userId = parseInt(req.params.userId);
   let newModel = req.body;
@@ -98,15 +80,16 @@ routers.post("/newpost/:userId/:model", bearer, acl("CRUD"), async (req, res) =>
 
   let model = await req.model.createRecord(req.user.id, userId, newModel);
   if (model) {
+
     res.status(201).json(model);
   } else {
     res
       .status(403)
-      .send("the real user id  not matching the id that you sent by params ");
+      .send("something went worng , please try again ");
   }
 }
 );
-// create post images
+// how to create post images
 routers.post("/newpost/:userId/:model/:postId/:modelImages", bearer, acl("CRUD"), async (req, res) => {
   let userId = parseInt(req.params.userId);
   let newModel = req.body;
@@ -121,12 +104,12 @@ routers.post("/newpost/:userId/:model/:postId/:modelImages", bearer, acl("CRUD")
   }
 }
 );
-//Update posts : (step 3)
+// how to Update posts from dashboard 
 routers.put("/dashboard/:userId/:model/:postId",bearer,acl("CRUD"),async (req, res) => {
     const userId = parseInt(req.params.userId);
     const postId = parseInt(req.params.postId);
     let obj = req.body;
-    let updatedModel = await req.model.update(req.user.id, userId, postId, obj);
+    let updatedModel = await req.model.updatePost(req.user.id, userId, postId, obj);
     if (updatedModel) {
       if (updatedModel[0] != 0) {
         res.status(201).json(updatedModel[1]);
@@ -139,7 +122,7 @@ routers.put("/dashboard/:userId/:model/:postId",bearer,acl("CRUD"),async (req, r
   }
 }
 );
-//Update post images : (step 3)
+// how to Update posts images from dashboard
 routers.put("/dashboard/:userId/:model/:postId/:modelImages",bearer,acl("CRUD"),async (req, res) => {
     const userId = parseInt(req.params.userId);
     const postId = parseInt(req.params.postId);
@@ -159,7 +142,7 @@ routers.put("/dashboard/:userId/:model/:postId/:modelImages",bearer,acl("CRUD"),
     }
   }
 );
-//delete posts 
+//how to delete posts from dashboard 
 routers.delete("/dashboard/:userId/:model/:postId",bearer,acl("CRUD"),async (req, res) => {
     const userId = parseInt(req.params.userId);
     const postId = parseInt(req.params.postId);
@@ -177,7 +160,7 @@ routers.delete("/dashboard/:userId/:model/:postId",bearer,acl("CRUD"),async (req
     }
   }
 );
-//delete post images 
+//how to delete post images from dsashboard 
 routers.delete("/dashboard/:userId/:model/:postId/:modelImages",bearer,acl("CRUD"),async (req, res) => {
     const userId = parseInt(req.params.userId);
     const postId = parseInt(req.params.postId);
@@ -193,30 +176,7 @@ routers.delete("/dashboard/:userId/:model/:postId/:modelImages",bearer,acl("CRUD
     }
   }
 );
-routers.get('/null/:model/', async (req, res) => {
-  let oneData = await req.model.getbyNull();
-  res.status(200).send(oneData);
-});
-//user can update his own information
-// routers.put("/updateuser/:userId", bearer, acl("CRUD"), async (req, res) => { //do not change password!
-//   const userId = parseInt(req.params.userId);
-//   const realId = parseInt(req.user.id);
-//   let record = await users.findOne({ where: { id: userId } });
-//   if (record) {
-//     if (realId === userId || req.user.role == "admin") {
-//       try {
-//         let updatedUser = await record.update(req.body);
-//         res.status(201).json(updatedUser);
-//       } catch (e) {
-//         res.send(e.message);
-//       }
-//     } else {
-//       res.status(403).send(`You can not update other users information`);
-//     }
-//   }
-// }
-
-// );
+// how to open users personal profile 
 routers.get('/user/profile/:userId' , bearer ,acl("CRUD"), async (req, res)=>{
   let realId= parseInt(req.user.id) 
   let userId=parseInt(req.params.userId);
@@ -224,8 +184,19 @@ routers.get('/user/profile/:userId' , bearer ,acl("CRUD"), async (req, res)=>{
   
   if(record){
     if(realId=== userId || req.user.role == "admin"){
-  
-      res.status(200).send(record)
+      let obj={
+         id: record.id,
+         username:record.username,
+         name : record.firstName +" "+ record.lastName,
+         dateOfBirth: record.dateOfBirth,
+         city: record.city,
+         img: record.userImage,
+         phone : record.phoneNumber,
+         email: record.email,
+        
+        }
+      
+      res.status(200).send(obj)
   
     }else{
   

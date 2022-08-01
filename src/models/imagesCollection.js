@@ -15,7 +15,7 @@ class ImageCollection {
         let newRecord = await this.model.create(obj);
         return newRecord;
       } catch (e) {
-        console.error("Error in creating a new record in model ", this.model);
+        console.error("Error in creating a new record in model ");
       }
     } else {
 
