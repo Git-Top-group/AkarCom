@@ -48,9 +48,7 @@ authRouter.delete("/delete/:username", bearerAuth, permissions("CRUD_Users"), as
 }
 );
 
-authRouter.get("/secret", bearerAuth, async (req, res, next) => {
-  res.status(200).send("Welcome to the secret area");
-});
+
 
 authRouter.get('/signout', basicAuth, async (req, res, next) => {
   let ntoken = req.user.token;
