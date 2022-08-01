@@ -62,7 +62,8 @@ const messages = messagesModel(sequelize, DataTypes);
 //1-M relationship between users and real estates categories
 users.hasMany(houses, {
     foreignKey: "userId",
-    sourceKey: "id"
+    sourceKey: "id",
+    onDelete:'cascade'
 });
 
 houses.belongsTo(users, {
@@ -72,7 +73,8 @@ houses.belongsTo(users, {
 
 users.hasMany(apartments, {
     foreignKey: "userId",
-    sourceKey: "id"
+    sourceKey: "id",
+    onDelete:'cascade'
 });
 
 apartments.belongsTo(users, {
@@ -82,7 +84,8 @@ apartments.belongsTo(users, {
 
 users.hasMany(chalets, {
     foreignKey: "userId",
-    sourceKey: "id"
+    sourceKey: "id",
+    onDelete:'cascade'
 });
 
 chalets.belongsTo(users, {
@@ -92,7 +95,8 @@ chalets.belongsTo(users, {
 
 users.hasMany(lands, {
     foreignKey: "userId",
-    sourceKey: "id"
+    sourceKey: "id",
+    onDelete:'cascade'
 });
 
 lands.belongsTo(users, {
@@ -102,7 +106,8 @@ lands.belongsTo(users, {
 
 users.hasMany(villas, {
     foreignKey: "userId",
-    sourceKey: "id"
+    sourceKey: "id",
+    onDelete:'cascade'
 });
 
 villas.belongsTo(users, {
@@ -112,7 +117,8 @@ villas.belongsTo(users, {
 
 users.hasMany(warehouses, {
     foreignKey: "userId",
-    sourceKey: "id"
+    sourceKey: "id",
+    onDelete:'cascade'
 });
 
 warehouses.belongsTo(users, {
@@ -125,7 +131,8 @@ warehouses.belongsTo(users, {
 
 houses.hasOne(houseImages, {
     foreignKey: "postId",
-    sourceKey: "id"
+    sourceKey: "id",
+    onDelete:'cascade'
 });
 
 houseImages.belongsTo(houses, {
@@ -135,7 +142,8 @@ houseImages.belongsTo(houses, {
 
 apartments.hasOne(apartmentImages, {
     foreignKey: "postId",
-    sourceKey: "id"
+    sourceKey: "id",
+    onDelete:'cascade'
 });
 
 apartmentImages.belongsTo(apartments, {
@@ -145,7 +153,8 @@ apartmentImages.belongsTo(apartments, {
 
 chalets.hasOne(chaletImages, {
     foreignKey: "postId",
-    sourceKey: "id"
+    sourceKey: "id",
+    onDelete:'cascade'
 });
 
 chaletImages.belongsTo(chalets, {
@@ -155,7 +164,8 @@ chaletImages.belongsTo(chalets, {
 
 lands.hasOne(landImages, {
     foreignKey: "postId",
-    sourceKey: "id"
+    sourceKey: "id",
+    onDelete:'cascade'
 });
 
 landImages.belongsTo(lands, {
@@ -165,7 +175,8 @@ landImages.belongsTo(lands, {
 
 villas.hasOne(villaImages, {
     foreignKey: "postId",
-    sourceKey: "id"
+    sourceKey: "id",
+    onDelete:'cascade'
 });
 
 villaImages.belongsTo(villas, {
@@ -175,7 +186,8 @@ villaImages.belongsTo(villas, {
 
 warehouses.hasOne(warehouseImages, {
     foreignKey: "postId",
-    sourceKey: "id"
+    sourceKey: "id",
+    onDelete:'cascade'
 });
 
 warehouseImages.belongsTo(warehouses, {
@@ -188,6 +200,7 @@ warehouseImages.belongsTo(warehouses, {
 users.hasMany(orders, {
     foreignKey: "clientId",
     sourceKey: "id",
+    onDelete:'cascade'
 });
 orders.belongsTo(users, {
     foreignKey: "clientId",
@@ -197,12 +210,68 @@ orders.belongsTo(users, {
 users.hasMany(messages, {
     foreignKey: "userId",
     sourceKey: "id",
+    onDelete:'cascade'
 
 })
 messages.belongsTo(users, {
     foreignKey: "userId",
     targetKey: "id",
 });
+lands.hasMany(orders, {
+    foreignKey: "postId",
+    sourceKey: "id",
+    onDelete:'cascade'
+});
+orders.belongsTo(lands, {
+    foreignKey: "postId",
+    targetKey: "id",
+});
+villas.hasMany(orders, {
+    foreignKey: "postId",
+    sourceKey: "id",
+    onDelete:'cascade'
+});
+orders.belongsTo(villas, {
+    foreignKey: "postId",
+    targetKey: "id",
+});
+houses.hasMany(orders, {
+    foreignKey: "postId",
+    sourceKey: "id",
+    onDelete:'cascade'
+});
+orders.belongsTo(houses, {
+    foreignKey: "postId",
+    targetKey: "id",
+});
+apartments.hasMany(orders, {
+    foreignKey: "postId",
+    sourceKey: "id",
+    onDelete:'cascade'
+});
+orders.belongsTo(apartments, {
+    foreignKey: "postId",
+    targetKey: "id",
+});
+chalets.hasMany(orders, {
+    foreignKey: "postId",
+    sourceKey: "id",
+    onDelete:'cascade'
+});
+orders.belongsTo(chalets, {
+    foreignKey: "postId",
+    targetKey: "id",
+});
+warehouses.hasMany(orders, {
+    foreignKey: "postId",
+    sourceKey: "id",
+    onDelete:'cascade'
+});
+orders.belongsTo(warehouses, {
+    foreignKey: "postId",
+    targetKey: "id",
+});
+
 
 module.exports = {
     sequelize: sequelize,

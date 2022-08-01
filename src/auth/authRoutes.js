@@ -22,53 +22,14 @@ authRouter.post("/signup", async (req, res, next) => {
     next(e.message);
   }
 });
-// authRouter.post("/userprofile/update/:userId",bearerAuth, async (req, res, next) => {
-//   try {
-//     let userRecord = await users.findOne({where :{id: req.params.userId}});
-//     const output =req.body;
-//     req.user.username = req.body.username;
-//     console.log("❤🔥🔥❤🔥❤");
-//     // const output = {
-//     //   user: userRecord,
-//     //   //token: userRecord.token
-//     // };
-//     let updated =await users.update(req.body.username);
-//     console.log(userRecord);
-//     console.log(userRecord.username);
-//     res.status(201).json(updated);
-//   } catch (e) {
-//     next(e.message);
-//   }
-// });
-authRouter.put("/profile/:userId/update", bearerAuth,
-  async (req, res) => {
-    let updated = null;
-    const userId = parseInt(req.params.userId);
-    // const postId = parseInt(req.params.postId);
-    let obj = req.body;
-    let realId = req.user.id
-    // let updatedModel = await users.update(req.user.id, userId,  obj);
-    if (realId = userId) {
-      try {
-        updated = await users.update(obj, {
-          where: { id: userId },
-          returning: true,
-        });
-        res.status(201).json(updated);
-        return updated;
 
-      } catch (e) {
-        console.error("Error in updating record in model ");
-      }
-    }
-  });
 
 authRouter.post("/signin", basicAuth, (req, res, next) => {
-  console.log(req.user.token, "///////////////////");
+
 
   const user = {
     user: req.user,
-    //token: req.user.token
+
   };
 
   res.status(200).json(user);
@@ -91,11 +52,11 @@ authRouter.get("/secret", bearerAuth, async (req, res, next) => {
   res.status(200).send("Welcome to the secret area");
 });
 
-authRouter.post('/logout', basicAuth, async (req, res, next) => {
+authRouter.get('/signout', basicAuth, async (req, res, next) => {
   let ntoken = req.user.token;
   res.clearCookie(ntoken);
-  return res.json("logout")
-  //  return res.redirect('/signin'); 
+  // return res.status(200).send("logout")
+   return res.redirect('/'); 
 })
 
 
@@ -106,25 +67,27 @@ authRouter.put('/user/profile/:id/update', bearerAuth,permissions('CRUD'), async
     
     let newhashedPass = await bcrypt.hash(newPassword, 10);
     let obj = {
-      // username: req.body.username,
+      username: req.body.username,
       password: newhashedPass,
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       phoneNumber: req.body.phoneNumber,
-      // email: req.body.email,
+      email: req.body.email,
       city: req.body.city,
-      // dataOfBirth: req.body.dataOfBirth,
-      // userImage: req.body.userImage,
+      dataOfBirth: req.body.dataOfBirth,
+      userImage: req.body.userImage,
     }
     let updated = await users.update(obj, { where: { id: id }, returning: true, })
     if (updated) {
       console.log(updated);
       // return updated;
-      res.status(201).send("user updated sucssesfully")
+      // res.status(201).send("user updated sucssesfully")
     }
   }else{
     res.send("you can't update other users profiles");
   }
 })
+
+
 
 module.exports = authRouter;
