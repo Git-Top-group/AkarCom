@@ -37,7 +37,7 @@ let sequelizeOptions =
             },
         }
         : {};
-
+        
 let sequelize = new Sequelize(POSTGRES_URI, sequelizeOptions);
 
 const users = userModel(sequelize, DataTypes);
