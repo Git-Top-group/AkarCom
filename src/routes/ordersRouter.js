@@ -90,11 +90,11 @@ orderConnection.on("adminNewOrder", (payload) => //(4)
     payload.event='admin-new-order';
    // let message = req.body.message;
     if (action) {
-      orderConnection.emit("admin-response-after-new-order", {order:payload.order,action:action,event:payload.event}) //(5-b)
+      orderConnection.emit("admin-response-after-new-order", {order:payload.order,action:action,event:payload.event}) //(5)
       if (action == "accept") {  
         date = faker.date.future();
         message=`Admin >> We found a client for your order number ${orderId}, will you be available to meet him on ${date} ?`;
-        orderConnection.emit("admin-to-owner", {order:payload.order,message:message,event:payload.event,date:date}) //(5-b)
+        orderConnection.emit("admin-to-owner", {order:payload.order,message:message,event:payload.event,date:date}) //(9)
         res.status(200).send("Admin accepted the order.");
         console.log("this will fire a (socket.emit) to the owner(socket.on) 🔥🔥🔥and  the project🔥🔥🔥")
         /*let data = await orders.findOne({ where: { id: orderId } });
@@ -117,7 +117,7 @@ orderConnection.on("adminNewOrder", (payload) => //(4)
         res.status(200).send("Admin rejected the order.")
         // orders.destroy({ where: { id: orderId } })
       } else {
-        let data = "there are no action ❌❌❌❌"
+        let data = "there are no actions ❌❌❌❌"
         return (data);
       }
     }
@@ -147,7 +147,7 @@ ordersRouter.get("/myorders/:userId/:orderId", bearer, acl("CRUD"), async (req, 
   }}
 )
 
-orderConnection.on("client-response", (payload) => //(8-b)
+orderConnection.on("client-response", (payload) => //(8)
 ordersRouter.get("/myorders/:userId/:orderId/status", bearer, acl("CRUD"), async (req, res) => {
   payload.event='client-response';
   let userId = parseInt(req.params.userId);
@@ -171,8 +171,8 @@ ordersRouter.get("/myorders/:userId/:orderId/status", bearer, acl("CRUD"), async
   res.status(200).send("No response from admin yet.");
 })*/
 
-orderConnection.on("admin-to-owner-public", (payload) => //(8-b)
-ordersRouter.get("/check/:userId/:action", bearer, acl("CRUD"), async (req, res) => {
+orderConnection.on("admin-to-owner-public", (payload) => //(12)
+ordersRouter.get("/check/:userId/:action", bearer, acl("CRUD"), async (req, res) => { 
   payload.event='admin-to-owner-public';
   let userId = parseInt(req.params.userId);
   let action = 'action';
@@ -185,11 +185,11 @@ ordersRouter.get("/check/:userId/:action", bearer, acl("CRUD"), async (req, res)
       res.status(200).send(message);
     }else if(action==='accept'){
       message=`Admin >> We will check if client has no problems with this date and contact you if we need to change the date. `;
-      orderConnection.emit("owner-to-admin", {order:payload.order,message:message,event:payload.event,date:payload.date}) ;//(5-b)
+      orderConnection.emit("owner-to-admin", {order:payload.order,message:message,event:payload.event,date:payload.date}) ;//(13-a)
       res.status(200).send(message);
     }else if(action==='reject'){
       message=`Can you please give me another date ? `;
-      orderConnection.emit("owner-to-admin-reject", {order:payload.order,message:message,event:payload.event}) ;//(5-b)
+      orderConnection.emit("owner-to-admin-reject", {order:payload.order,message:message,event:payload.event}) ;//(13-b)
       res.status(200).send("Admin >> Wait until admin schedule a new date for you and client to meet.");
     }
    // payload.message=`Let's meet on ${date} `;
@@ -203,31 +203,31 @@ ordersRouter.get("/check/:userId/:action", bearer, acl("CRUD"), async (req, res)
 )
 )
 
-orderConnection.on("owner-to-admin-public", (payload) => //(8-b)
+orderConnection.on("owner-to-admin-public", (payload) => //(16-a)
 ordersRouter.get("/checkmeet/owner/accepted", bearer, acl("CRUD_Users"), async (req, res) => {
   payload.event='owner-to-admin-public';
     //message=`Let's meet on ${date}, please be at our office in time.`;
     message=`Admin >> Owner wants to meet at ${date}, is it okay with you ?`
-    orderConnection.emit("admin-to-client-meet", {order:payload.order,message:message,event:payload.event}) ;//(5-b)
+    orderConnection.emit("admin-to-client-meet", {order:payload.order,message:message,event:payload.event}) ;//(17-a)
     res.status(200).send(`Admin >> check if client has no problems with this date ${date}`)
   //res.status(200).send(allData);
 }
 )
 )
 
-orderConnection.on("owner-to-admin-reject-public", (payload) => //(8-b)
+orderConnection.on("owner-to-admin-reject-public", (payload) => //(16-b)
 ordersRouter.get("/checkmeet/owner/rejected", bearer, acl("CRUD_Users"), async (req, res) => {
   payload.event='owner-to-admin-reject-public';
     date = faker.date.future();
-    message=`What about ${date}, will you be available to meet the client ?`;
-    orderConnection.emit("admin-to-owner", {order:payload.order,message:message,event:payload.event,date:date}) ;//(5-b)
+    message=``;
+    orderConnection.emit("admin-to-owner", {order:payload.order,message:message,event:payload.event,date:date}) ;//(17-b) backpoint 
     res.status(200).send("Admin >> Trying to schedule another meeting (A new date has been sent to the owner).")
   //res.status(200).send(allData);
 }
 )
 )
 
-orderConnection.on("admin-to-client-meet-public", (payload) => //(8-b)
+orderConnection.on("admin-to-client-meet-public", (payload) => //(20-a)
 ordersRouter.get("/myorders/:userId/:orderId/status/date/:action", bearer, acl("CRUD"), async (req, res) => {
   let action = 'action';
   payload.event='admin-to-client-meet-public';
@@ -242,11 +242,11 @@ ordersRouter.get("/myorders/:userId/:orderId/status/date/:action", bearer, acl("
       res.status(200).send(message);
     }else if(action==='accept'){
       message=`The meeting is scheduled. `;
-      orderConnection.emit("client-to-admin", {order:payload.order,message:message,event:payload.event,date:payload.date}) ;//(5-b)
+      orderConnection.emit("client-to-admin", {order:payload.order,message:message,event:payload.event,date:payload.date}) ;//(21-a-1)
       res.status(200).send(`Meeting is scheduled, please be at our office on ${date} .`);
     }else if(action==='reject'){
       //message=`Can you please try to give me another date ? `;
-      orderConnection.emit("client-to-admin-reject", {order:payload.order,message:message,event:payload.event}) ;//(5-b)
+      orderConnection.emit("client-to-admin-reject", {order:payload.order,message:message,event:payload.event}) ;//(21-a-2)
       res.status(200).send("Admin >> Wait until admin schedule a new date for you and owner to meet.");
     }
   }else{
@@ -255,7 +255,7 @@ ordersRouter.get("/myorders/:userId/:orderId/status/date/:action", bearer, acl("
 }))
 
 
-orderConnection.on("client-to-admin-public", (payload) => //(8-b)
+orderConnection.on("client-to-admin-public", (payload) => //(24-a-1)
 ordersRouter.get("/checkmeet/client/accepted", bearer, acl("CRUD_Users"), async (req, res) => {
   payload.event='client-to-admin-public';
     message=`Meeting has been scheduled with client and owner, let's meet on ${date}.`;
@@ -265,12 +265,12 @@ ordersRouter.get("/checkmeet/client/accepted", bearer, acl("CRUD_Users"), async 
 )
 )
 
-orderConnection.on("client-to-admin-reject-public", (payload) => //(8-b)
+orderConnection.on("client-to-admin-reject-public", (payload) => //(24-a-2)
 ordersRouter.get("/checkmeet/client/rejected", bearer, acl("CRUD_Users"), async (req, res) => {
   payload.event='client-to-admin-reject-public';
     date = faker.date.future();
     message=`Unfortunately, client is very busy at previous date, will you be available to meet the client on ${date} ?`;
-    orderConnection.emit("admin-to-owner", {order:payload.order,message:message,event:payload.event,date:date}) ;//(5-b)
+    orderConnection.emit("admin-to-owner", {order:payload.order,message:message,event:payload.event,date:date}) ;//(24-a-2) //check event!
     res.status(200).send("Admin >> Trying to schedule another meeting (A new date has been sent to the owner).")
   //res.status(200).send(allData);
 }
