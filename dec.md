@@ -1,7 +1,7 @@
 # sooqcom routs 
 
 
-**POST** /signup
+<!-- **POST** /signup
 
 to signup as new user or admain 
 
@@ -24,7 +24,7 @@ to signinas user or admain
      "username":"string",   
     "password":"string",   
      
-   }
+   } -->
 ```
  **GET**  /signout   
    to signout
