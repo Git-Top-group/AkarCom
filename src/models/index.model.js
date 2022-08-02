@@ -28,16 +28,16 @@ const Collection = require("./collection");
 const ImageCollection = require("./imagesCollection")
 const OrderCollection = require("./orderCollection")
 
-const POSTGRES_URI = "postgres://salma147:0000@localhost:5432/pro3";
-let sequelizeOptions ={}
-    // process.env.NODE_ENV === "production"
-    //     ? {
-    //         dialectOptions: {
-    //             ssl: { require: true, rejectUnauthorized: false }
-    //         },
-    //     }
-    //     : {};
-
+const POSTGRES_URI = process.env.NODE_ENV === 'test' ? 'sqlite:memory:' : process.env.DATABASE_URL;
+let sequelizeOptions =
+    process.env.NODE_ENV === "production"
+        ? {
+            dialectOptions: {
+                ssl: { require: true, rejectUnauthorized: false }
+            },
+        }
+        : {};
+        
 let sequelize = new Sequelize(POSTGRES_URI, sequelizeOptions);
 
 const users = userModel(sequelize, DataTypes);

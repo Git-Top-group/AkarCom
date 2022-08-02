@@ -4,20 +4,22 @@
 
 [GitHub](https://github.com/Git-Top-group/SooqCom/tree/staging)
 
-<!-- [Heroku](https://mid-project-01.herokuapp.com/) not ready -->
+[Heroku](https://akarcom-mid-project.herokuapp.com) 
 
  
 # Fashionable 
 
 ## ✨Team members✨
 
-- mohammad alshraideh  (Team Leader).
-- Esam-Ankir.
+- Mohammad Alshraideh  (Team Leader)
+  
+- Esam Ankir
 
-- Hadeel Saleh .
-- MohammedAlDahleh
-.
-- islam rwashdeh .
+- Hadeel Saleh 
+  
+- Mohammed Aldahleh
+
+- Islam Rwashdeh 
 
 
 ---
@@ -56,8 +58,6 @@ Configure the root of your repository with the following files and directories. 
 
 -   bcrypt
 
--   cors
-
 -   dotenv
 
 -   express
@@ -68,12 +68,19 @@ Configure the root of your repository with the following files and directories. 
 
 -   pg
 
-
 -   sequelize
 
 -   http
 
 -   socket.io
+
+-   cookie-parser
+
+-   nodemon 
+  
+-   path
+   
+-   sqlite3
 
 
 ---
@@ -94,7 +101,7 @@ Configure the root of your repository with the following files and directories. 
 |    GET     |  /:model               |    Get specific model  posts|
 |    GET      |  /:model/:postId           |    Get specific posts  |
 |    GET      |  /:model/:postId/:modelImages                |    Get specific post images         |
-|  POST    |   /hi/search/:model/:term'       |   search about specific thing       |
+|  POST    |   /hi/search/:model/:term'       |   search about specific data       |
 |  GET     |  /:model/:process/:city/:owner/:availability/:buildingAge/:furnished/:rooms/:bathRooms/:rentDuration/:floors/:priceFrom/:priceTo             |  Filter one or more at the same time (visitor)            |
 
 
@@ -103,8 +110,8 @@ Configure the root of your repository with the following files and directories. 
 | method      |                    link   |   Description                        |
 | ----------- | --------------------------|--------------------------------------|
 |    GET     |         /dashboard/:userId/main      |    Open user dashboard |
-|    GET      |  /dashboard/:userId/:model          |   Get all posts related with specific modle  |
-|    GET      | /dashboard/:userId/:model/:postId               |    Get specifi  posts from  specifi  modle     |
+|    GET      |  /dashboard/:userId/:model          |   Get all posts related with specific model  |
+|    GET      | /dashboard/:userId/:model/:postId               |    Get specifi  posts from  specifi  model     |
 |  GET |  /dashboard/:userId/:model/:postId/:modelImages         |  Get specific post images        |
 |  POST     |  /newpost/:userId/:model            | Create posts       |
 |  POST      | /newpost/:userId/:model/:postId/:modelImages   |  Create post images          |
@@ -121,7 +128,7 @@ Configure the root of your repository with the following files and directories. 
 | ----------- | --------------------------|--------------------------------------|
 |   POST    |  admin/signin           |   sign in for admin    |
 | GET       | /users        |  Get all users for admin        |
-|    PUT     |   /user/profile/:id/update                       |    Update user recored |
+|    PUT     |   /user/profile/:id/update                       |    Update user record |
 |  DELETE    |   /delete/:username         | Delete user         |
 |   DELETE|  /:model/:userId/:postId          |  Delete any post for any user          |
 
