@@ -85,7 +85,6 @@
 ***Lands***
 {
     "process":"Rent",
-    "model":"lands",
     "price": 250 ,
     "area": 212.5,
     "availability"  :true,
@@ -142,3 +141,12 @@ method `GET` : done except price and area
 
 
  http://localhost:4000/user/messages/send/2/okay to accept a message from admin by owner
+
+
+
+
+/newpost/:userId/:model
+
+/:model/:postId/neworder
+
+/allorders/:postId/:orderId/:action

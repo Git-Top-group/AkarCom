@@ -211,12 +211,12 @@ users.hasMany(messages, {
     foreignKey: "userId",
     sourceKey: "id",
     onDelete:'cascade'
-
 })
 messages.belongsTo(users, {
     foreignKey: "userId",
     targetKey: "id",
 });
+//1-M relationship between real estate and orders:
 lands.hasMany(orders, {
     foreignKey: "postId",
     sourceKey: "id",
