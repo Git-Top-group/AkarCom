@@ -68,18 +68,13 @@ Configure the root of your repository with the following files and directories. 
 
 -   pg
 
--   supertest
 
 -   sequelize
 
 -   http
 
-
 -   socket.io
 
--   socket.io-client
-
--   uuid
 
 ---
 
@@ -144,8 +139,10 @@ Configure the root of your repository with the following files and directories. 
 |     GET   |  /myorders/:userId      | enable user to see all his/her orders       |
 |     GET   |  /myorders/:userId/:orderId     |enable  user to see specific order       |
 |     GET   |  /myorders/:userId/:orderId/status    |  check  ordar status
-|     GET   |  /checkmeet    |  admin can check if the owner accept the order or not      |
+|     GET   |  /check/:userId/:action  |  admin can check if the owner accept the order or not      |
 |     GET   |  /myorders/:userId/:orderId/status/date  |   client can check meeting date  |
+|     GET   |  /checkmeet/owner/accepted  |  check if meeting accepted |
+|     GET   |  /checkmeet/owner/ rejected|  check if meeting rejected|
 
 
 ## UML
@@ -179,5 +176,3 @@ NODE_ENV=production node index
 ## License
 
 MIT
-
-**Free Software, Hell Yeah!**
