@@ -72,7 +72,7 @@ visitorRouters.get('/:model/:process/:city/:owner/:availability/:buildingAge/:fu
 
 ///search bar 
 
-visitorRouters.post('/hi/search/:model/:term',bearer, async (req, res) => {
+visitorRouters.post('/hi/search/:model/:term', async (req, res) => {
 
 
     let { term } = req.params;

@@ -65,7 +65,7 @@ io.on('connection', (socket) => {
 
 app.use(logger);
 app.get('/', (req, res) => {
-    res.send('this is the home page')
+    res.send('welcome to AkarCom home page 🛕⛪🏰🏯⛺🌉')
 })
 
 app.use(authRouter);
