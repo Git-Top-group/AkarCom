@@ -44,11 +44,11 @@ Configure the root of your repository with the following files and directories. 
 
 ## Authrization
 
-- Visitor  - READ
+-  Visitor  - READ
 
--   User - READ/CREATE/UPDATE/DELETE (limmeted)
+-  User - READ/CREATE/UPDATE/DELETE (limmeted)
 
--   Admin - READ/CREATE/UPDATE/DELETE 
+-  Admin - READ/CREATE/UPDATE/DELETE 
 
 ---
 
@@ -154,11 +154,11 @@ Configure the root of your repository with the following files and directories. 
 
 ## UML
 
- ![UML](Images/UML.jpg)
+ ![UML](./assets/UML.jpeg)
 
 ##  ER diagram
 
- ![Database_Diagram](Images/er.jpg)
+ ![Database_Diagram](./assets/ER.jpeg)
 
 
 ## Installation
