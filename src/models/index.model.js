@@ -39,7 +39,7 @@ let sequelizeOptions =
         : {};
 
 let sequelize = new Sequelize(POSTGRES_URI, sequelizeOptions);
-
+            
 const users = userModel(sequelize, DataTypes);
 const houses = housesModel(sequelize, DataTypes);
 const apartments = apartmentsModel(sequelize, DataTypes);
@@ -217,15 +217,21 @@ messages.belongsTo(users, {
     foreignKey: "userId",
     targetKey: "id",
 });
-lands.hasMany(orders, {
-    foreignKey: "postId",
+
+
+
+orders.hasMany(lands, {
+    foreignKey: "orderId",
     sourceKey: "id",
     onDelete:'cascade'
 });
-orders.belongsTo(lands, {
-    foreignKey: "postId",
+lands.belongsTo(orders, {
+    foreignKey: "orderId",
     targetKey: "id",
 });
+
+
+
 villas.hasMany(orders, {
     foreignKey: "postId",
     sourceKey: "id",

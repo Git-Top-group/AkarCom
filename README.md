@@ -83,11 +83,11 @@ Manageability : true
 
 ### Domain Modeling
 
-![](./assets/midDomain.jpeg)
+![](./assets/UML-diagramt.PNG)
 
 ### Using a Database? Make an Database Schema Diagram
 
-![dbSchema](./assets/dbSchema.PNG)
+![dbSchema](./assets/DB-schema.PNG)
 
 
 ![](./assets/db.PNG)
