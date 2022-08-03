@@ -160,6 +160,9 @@ Configure the root of your repository with the following files and directories. 
 
  ![Database_Diagram](./assets/ER.jpeg)
 
+##  Appointment an order
+
+ ![order](./assets/orders.PNG)
 
 ## Installation
 
