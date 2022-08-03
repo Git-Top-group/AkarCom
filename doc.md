@@ -154,7 +154,7 @@ Configure the root of your repository with the following files and directories. 
 
 ## UML
 
- ![UML](./assets/UML.jpeg)
+ ![UML](./assets/UML.png)
 
 ##  ER diagram
 
