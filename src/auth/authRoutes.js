@@ -86,6 +86,15 @@ authRouter.put('/user/profile/:id/update', bearerAuth,permissions('CRUD'), async
   }
 })
 
+authRouter.get("/secret", bearerAuth, (req, res, next) => {
 
+
+  const secretInfo = {
+    secret: "Welcome to the secret area 🔐",
+    user: req.user,
+    token: `📌 ${req.user.token}`,
+  };
+  res.status(200).json(secretInfo);
+});
 
 module.exports = authRouter;
