@@ -1,4 +1,4 @@
-# SooqCom
+# AkarCom
 
 ### GitTop Group :
 
@@ -15,7 +15,7 @@
 
 ### project idea : 
  
- `SooqCom` is webSite that allows users to market `real estate` such as houses, apartments , lands and ...etc . 
+ `AkarCom` is webSite that allows users to market `real estate` such as houses, apartments , lands and ...etc . 
  This website contains users real estate ads created within the website .
 
 

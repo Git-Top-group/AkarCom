@@ -1,4 +1,4 @@
-# ![cf](https://avatars.githubusercontent.com/u/109529854?s=96&v=4) sooqcom
+# ![cf](https://avatars.githubusercontent.com/u/109529854?s=96&v=4) AkarCom
 
 ## _Group-3, mid-project_
 
@@ -54,13 +54,17 @@ Configure the root of your repository with the following files and directories. 
 
 ## Dependencies
 
+-   express
+  
+-   sequelize
+  
+-   socket.io
+  
 -   base-64
 
 -   bcrypt
 
 -   dotenv
-
--   express
 
 -   jest
 
@@ -68,11 +72,7 @@ Configure the root of your repository with the following files and directories. 
 
 -   pg
 
--   sequelize
-
 -   http
-
--   socket.io
 
 -   cookie-parser
 
@@ -166,12 +166,12 @@ Configure the root of your repository with the following files and directories. 
 
 ## Installation
 
- Sooqcom requires [Node.js](https://nodejs.org/) v14+ to run.
+ AkarCom requires [Node.js](https://nodejs.org/) v14+ to run.
 
 Install the dependencies and devDependencies and start the server.
 
 ```sh
-cd Sooqcom
+cd AkarCom
 npm i
 npm start
 ```
