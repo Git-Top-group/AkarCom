@@ -74,6 +74,18 @@ sequelize.define('villas', {
     moreInfo: {
         type: DataTypes.STRING,
         allowNull: true,
+    },
+    url1: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    url2: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    url3: {
+        type: DataTypes.STRING,
+        allowNull: true,
     }
 });
 
