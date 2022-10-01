@@ -76,8 +76,9 @@ routers.get("/dashboard/:userId/:model/:postId/:modelImages", bearer, async (req
 routers.post("/newpost/:userId/:model", bearer, acl("CRUD"), async (req, res) => {
   let userId = parseInt(req.params.userId);
   let newModel = req.body;
+  console.log("newModellllllllllllllll",newModel)
   newModel.model = req.params.model;
-
+  console.log("req.bodyyyyyyyyyyyyyyyyyyy",req.body)
   let model = await req.model.createRecord(req.user.id, userId, newModel);
   if (model) {
 
@@ -105,122 +106,122 @@ routers.post("/newpost/:userId/:model/:postId/:modelImages", bearer, acl("CRUD")
 }
 );
 // how to Update posts from dashboard 
-routers.put("/dashboard/:userId/:model/:postId",bearer,acl("CRUD"),async (req, res) => {
-    const userId = parseInt(req.params.userId);
-    const postId = parseInt(req.params.postId);
-    let obj = req.body;
-    let updatedModel = await req.model.updatePost(req.user.id, userId, postId, obj);
-    if (updatedModel) {
-      if (updatedModel[0] != 0) {
-        res.status(201).json(updatedModel[1]);
-      } else {
-        res.status(403).send(`There is no model with this id: ${id}`);
-      }
-  
+routers.put("/dashboard/:userId/:model/:postId", bearer, acl("CRUD"), async (req, res) => {
+  const userId = parseInt(req.params.userId);
+  const postId = parseInt(req.params.postId);
+  let obj = req.body;
+  let updatedModel = await req.model.updatePost(req.user.id, userId, postId, obj);
+  if (updatedModel) {
+    if (updatedModel[0] != 0) {
+      res.status(201).json(updatedModel[1]);
+    } else {
+      res.status(403).send(`There is no model with this id: ${id}`);
+    }
+
   } else {
     res.status(403).send(`You can not update posts of other users !!`);
   }
 }
 );
 // how to Update posts images from dashboard
-routers.put("/dashboard/:userId/:model/:postId/:modelImages",bearer,acl("CRUD"),async (req, res) => {
-    const userId = parseInt(req.params.userId);
-    const postId = parseInt(req.params.postId);
-    const model = req.params.model;
-    let obj = req.body;
-    obj.model = req.params.model;
-    let updatedModel = await req.modelImages.updateImage(req.user.id, userId, postId, obj,model);
-    if (updatedModel) {
-      if (updatedModel[0] != 0) {
-        res.status(201).json(updatedModel[1]);
-      } else {
-        res.status(403).send(`You don't have post with id: ${postId}`);
-      }
+routers.put("/dashboard/:userId/:model/:postId/:modelImages", bearer, acl("CRUD"), async (req, res) => {
+  const userId = parseInt(req.params.userId);
+  const postId = parseInt(req.params.postId);
+  const model = req.params.model;
+  let obj = req.body;
+  obj.model = req.params.model;
+  let updatedModel = await req.modelImages.updateImage(req.user.id, userId, postId, obj, model);
+  if (updatedModel) {
+    if (updatedModel[0] != 0) {
+      res.status(201).json(updatedModel[1]);
     } else {
-      res.status(403).send(`You can not update posts of other users !!`);
-
+      res.status(403).send(`You don't have post with id: ${postId}`);
     }
+  } else {
+    res.status(403).send(`You can not update posts of other users !!`);
+
   }
+}
 );
 //how to delete posts from dashboard 
-routers.delete("/dashboard/:userId/:model/:postId",bearer,acl("CRUD"),async (req, res) => {
-    const userId = parseInt(req.params.userId);
-    const postId = parseInt(req.params.postId);
-    let deletedModel = await req.model.removeRecord(
-      req.user.id,
-      userId,
-      postId
-    );
-    if (deletedModel) {
-      res.send("Deleted Successfully");
-      res.status(204);
-    } else {
-      res.status(403).send(`You can not delete posts of other users !!`);
+routers.delete("/dashboard/:userId/:model/:postId", bearer, acl("CRUD"), async (req, res) => {
+  const userId = parseInt(req.params.userId);
+  const postId = parseInt(req.params.postId);
+  let deletedModel = await req.model.removeRecord(
+    req.user.id,
+    userId,
+    postId
+  );
+  if (deletedModel) {
+    res.send("Deleted Successfully");
+    res.status(204);
+  } else {
+    res.status(403).send(`You can not delete posts of other users !!`);
 
-    }
   }
+}
 );
 //how to delete post images from dsashboard 
-routers.delete("/dashboard/:userId/:model/:postId/:modelImages",bearer,acl("CRUD"),async (req, res) => {
-    const userId = parseInt(req.params.userId);
-    const postId = parseInt(req.params.postId);
-    const model = req.params.model;
-    let deletedModel = await req.modelImages.deleteImage(
-      req.user.id, userId, postId, model
-    );
-    if (deletedModel) {
-      res.status(204);
-      res.send("Deleted Successfully");
-    } else {
-      res.status(403).send(`You can not delete posts of other users !!`);
-    }
+routers.delete("/dashboard/:userId/:model/:postId/:modelImages", bearer, acl("CRUD"), async (req, res) => {
+  const userId = parseInt(req.params.userId);
+  const postId = parseInt(req.params.postId);
+  const model = req.params.model;
+  let deletedModel = await req.modelImages.deleteImage(
+    req.user.id, userId, postId, model
+  );
+  if (deletedModel) {
+    res.status(204);
+    res.send("Deleted Successfully");
+  } else {
+    res.status(403).send(`You can not delete posts of other users !!`);
   }
+}
 );
 // how to open users personal profile 
-routers.get('/user/profile/:userId' , bearer ,acl("CRUD"), async (req, res)=>{
-  let realId= parseInt(req.user.id) 
-  let userId=parseInt(req.params.userId);
+routers.get('/user/profile/:userId', bearer, acl("CRUD"), async (req, res) => {
+  let realId = parseInt(req.user.id)
+  let userId = parseInt(req.params.userId);
   let record = await users.findOne({ where: { id: userId } });
-  
-  if(record){
-    if(realId=== userId || req.user.role == "admin"){
-      let obj={
-         id: record.id,
-         username:record.username,
-         name : record.firstName +" "+ record.lastName,
-         dateOfBirth: record.dateOfBirth,
-         city: record.city,
-         img: record.userImage,
-         phone : record.phoneNumber,
-         email: record.email,
-        
-        }
-      
+
+  if (record) {
+    if (realId === userId || req.user.role == "admin") {
+      let obj = {
+        id: record.id,
+        username: record.username,
+        name: record.firstName + " " + record.lastName,
+        dateOfBirth: record.dateOfBirth,
+        city: record.city,
+        img: record.userImage,
+        phone: record.phoneNumber,
+        email: record.email,
+
+      }
+
       res.status(200).send(obj)
-  
-    }else{
-  
-  let obj={
-    
-    name : record.firstName +" "+ record.lastName,
-     city: record.city,
-     img: record.userImage,
-     phone : " ***-***-****",
-     email: "***************"
-    
+
+    } else {
+
+      let obj = {
+
+        name: record.firstName + " " + record.lastName,
+        city: record.city,
+        img: record.userImage,
+        phone: " ***-***-****",
+        email: "***************"
+
+      }
+      res.status(200).send(obj)
+
     }
-    res.status(200).send(obj)
-  
-    }
-  }else{
-  
-  
+  } else {
+
+
     res.status(200).send("user not found")
   }
-  
-  
-  
-  })
-  
+
+
+
+})
+
 module.exports = routers;
 

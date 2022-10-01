@@ -72,10 +72,13 @@ class Collection {
   }
   async createRecord(realId, userId, obj) {
     obj.userId = userId;
+    console.log("objjjjjjjjjjjjjjjjjjjjjjjjjj", obj)
     if (realId == userId) {
       try {
         // users.findOne({where:{id:userId}})
         let newRecord = await this.model.create(obj);
+        console.log("newRecordddddddddddddddddddddd", newRecord)
+
         return newRecord;
       } catch (e) {
         let data = "the body you sent is not correct";
@@ -141,7 +144,7 @@ class Collection {
       console.error(`There is no model with this id: ${id}`);
     }
   }
- 
+
   async removeRecord(realId, userId, postId, role) {
     if (!postId) {
       throw new Error("No id provided for model ", this.model);
@@ -235,19 +238,19 @@ class Collection {
     }
   }
 
-  async getSearch(term,op){
-    if(term){
-    
+  async getSearch(term, op) {
+    if (term) {
+
       return this.model.findAll({
         where: {
-          address:{
+          address: {
             [op.regexp]: `.*${term}.*`
-                } ,
-            }        
-    })
+          },
+        }
+      })
     }
-    
-      }
+
+  }
 
 
 

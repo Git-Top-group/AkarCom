@@ -99,7 +99,7 @@ authRouter.get("/secret", bearerAuth, (req, res, next) => {
   res.status(200).json(secretInfo);
 });
 //api code 
-app.post("/sendEmail", async (req, res) => {
+authRouter.post("/sendEmail", async (req, res) => {
   try {
     const { name, email, message, subject } = req.body;
     EmailSender({ name, email, message, subject });
@@ -107,7 +107,8 @@ app.post("/sendEmail", async (req, res) => {
   } catch (error) {
     res.status(404).json({ msg: "Error ❌" });
   }
-});app.post("/sendEmail", async (req, res) => {
+});
+authRouter.post("/sendEmail", async (req, res) => {
   try {
     const { name, email, message, subject } = req.body;
     EmailSender({ name, email, message, subject });
