@@ -108,15 +108,6 @@ authRouter.post("/sendEmail", async (req, res) => {
     res.status(404).json({ msg: "Error ❌" });
   }
 });
-authRouter.post("/sendEmail", async (req, res) => {
-  try {
-    const { name, email, message, subject } = req.body;
-    EmailSender({ name, email, message, subject });
-    res.json({ msg: "your message sent successfuly" });
-  } catch (error) {
-    res.status(404).json({ msg: "Error ❌" });
-  }
-});
 
 //email sender
 const EmailSender = ({ name, email, message, subject }) => {
