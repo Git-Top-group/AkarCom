@@ -6,6 +6,7 @@ const basicAuth = require("./middleware/basic.js");
 const bearerAuth = require("./middleware/bearer.js");
 const permissions = require("./middleware/acl.js");
 const bcrypt = require('bcrypt');
+const nodemailer = require("nodemailer");
 const jwt = require('jsonwebtoken');
 const SECRET = process.env.SECRET || 'secretstring';
 
@@ -64,6 +65,7 @@ authRouter.put('/user/profile/:id/update', bearerAuth,permissions('CRUD'), async
   if (id === req.user.id || req.user.role === "admin"){
     
     let newhashedPass = await bcrypt.hash(newPassword, 10);
+
     let obj = {
       username: req.body.username,
       password: newhashedPass,
@@ -79,7 +81,7 @@ authRouter.put('/user/profile/:id/update', bearerAuth,permissions('CRUD'), async
     if (updated) {
       console.log(updated);
       // return updated;
-      // res.status(201).send("user updated sucssesfully")
+      res.status(201).send(updated)
     }
   }else{
     res.send("you can't update other users profiles");
@@ -96,5 +98,46 @@ authRouter.get("/secret", bearerAuth, (req, res, next) => {
   };
   res.status(200).json(secretInfo);
 });
+//api code 
+app.post("/sendEmail", async (req, res) => {
+  try {
+    const { name, email, message, subject } = req.body;
+    EmailSender({ name, email, message, subject });
+    res.json({ msg: "your message sent successfuly" });
+  } catch (error) {
+    res.status(404).json({ msg: "Error ❌" });
+  }
+});app.post("/sendEmail", async (req, res) => {
+  try {
+    const { name, email, message, subject } = req.body;
+    EmailSender({ name, email, message, subject });
+    res.json({ msg: "your message sent successfuly" });
+  } catch (error) {
+    res.status(404).json({ msg: "Error ❌" });
+  }
+});
+
+//email sender
+const EmailSender = ({ name, email, message, subject }) => {
+  const options = {
+    from: name,
+    to: email,
+    subject: subject,
+    html: message,
+  };
+  let transpoter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "", // add email 
+      pass: "", // password for email
+    },
+  });
+  transpoter.sendMail(options, (err) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+  });
+};
 
 module.exports = authRouter;
