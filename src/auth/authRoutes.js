@@ -120,8 +120,8 @@ const EmailSender = ({ name, email, message, subject }) => {
   let transpoter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "", // add email 
-      pass: "", // password for email
+      user: "gittopltuc@gmail.com", // add email 
+      pass: "gittop55", // password for email
     },
   });
   transpoter.sendMail(options, (err) => {
