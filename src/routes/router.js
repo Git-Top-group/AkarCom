@@ -76,9 +76,9 @@ routers.get("/dashboard/:userId/:model/:postId/:modelImages", bearer, async (req
 routers.post("/newpost/:userId/:model", bearer, acl("CRUD"), async (req, res) => {
   let userId = parseInt(req.params.userId);
   let newModel = req.body;
-  console.log("newModellllllllllllllll",newModel)
+  // console.log("newModellllllllllllllll",newModel)
   newModel.model = req.params.model;
-  console.log("req.bodyyyyyyyyyyyyyyyyyyy",req.body)
+  // console.log("req.bodyyyyyyyyyyyyyyyyyyy",req.body)
   let model = await req.model.createRecord(req.user.id, userId, newModel);
   if (model) {
 

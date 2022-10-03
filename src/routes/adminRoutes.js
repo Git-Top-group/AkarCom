@@ -31,22 +31,22 @@ adminRouters.post("/admin/signin", basicAuth, (req, res, next) => {
   }
 });
 // admin can access any post for any user and delete it 
-adminRouters.delete("/:model/:userId/:postId",bearer,acl("CRUD_Users"),async (req, res) => {
-    const userId = parseInt(req.params.userId);
-    const postId = parseInt(req.params.postId);
-    let deletedModel = await req.model.removeRecord(
-      req.user.id,
-      userId,
-      postId,
-      req.user.role
-    );
-    if (deletedModel) {
-      res.send("Deleted Successfully");
-      res.status(204);
-    } else {
-      res.status(403).send(`You can not delete posts of other users !!`);
-    }
+adminRouters.delete("/:model/:userId/:postId", bearer, acl("CRUD_Users"), async (req, res) => {
+  const userId = parseInt(req.params.userId);
+  const postId = parseInt(req.params.postId);
+  let deletedModel = await req.model.removeRecord(
+    req.user.id,
+    userId,
+    postId,
+    req.user.role
+  );
+  if (deletedModel) {
+    res.send("Deleted Successfully");
+    res.status(204);
+  } else {
+    res.status(403).send(`You can not delete posts of other users !!`);
   }
+}
 
 )
 //admin can check all users(all data from users table )
@@ -54,6 +54,12 @@ adminRouters.get("/users", bearer, acl("CRUD_Users"), async (req, res, next) => 
   const userRecords = await users.findAll({});
   const list = userRecords.map((user) => user);
   res.status(201).json(list);
+}
+);
+adminRouters.get("/users/:id", bearer, acl("CRUD_Users"), async (req, res, next) => {
+  let id = parseInt(req.params.id);
+  const userRecords = await users.findOne({ where: { id } });
+  res.status(201).json(userRecords);
 }
 );
 
