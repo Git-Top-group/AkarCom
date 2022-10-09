@@ -1,7 +1,7 @@
 "use strict";
 
 
-class OrderCollection {
+class notificationsCollection {
   constructor(model) {
     this.model = model;
   }
@@ -13,7 +13,6 @@ class OrderCollection {
     }
 
   }
-
   async getById(postId, orderId) {
     if (postId) {
       if (orderId) {
@@ -87,6 +86,27 @@ class OrderCollection {
   //  console.error("Invalid path")
   //   }
   // }
+
+  
+async update2(id ,action ){
+
+  // let order =await this.model.findOne({
+  //   where: {id:id}
+  // })
+  let obj = {
+    status: action,
+  
+  }
+  let updated =await this.model.update(obj, { where: { id: id }, returning: true, })
+  if(updated){
+
+    console.log(updated)
+    return updated
+
+  }else return
+
+}
+
   async myMessages(realId, userId, messageId, action) {
     if (realId == userId && messageId && action == "okay") {
 
@@ -155,4 +175,4 @@ class OrderCollection {
     }
 }
 }
-module.exports = OrderCollection;
+module.exports = notificationsCollection;

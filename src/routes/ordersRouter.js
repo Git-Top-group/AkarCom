@@ -7,7 +7,7 @@ let host = `http://localhost:${PORT}`;
 const orderConnection = io.connect(host);
 
 const modelFolder = require("../models/index.model");
-const { orders, messages } = require("../models/index.model");
+const { orders, notifications} = require("../models/index.model");
 
 const express = require("express");
 const ordersRouter = express.Router();
@@ -33,6 +33,7 @@ ordersRouter.post("/:model/:postId/neworder", bearer, acl("CRUD"), async (req, r
   let postId = parseInt(req.params.postId);
   let clientId = parseInt(req.user.id);
   let postData = await req.model.action(postId);
+
   console.log("postData: " + postData);
   let ownerId = postData.userId;
   let newOrder = {
@@ -46,7 +47,13 @@ ordersRouter.post("/:model/:postId/neworder", bearer, acl("CRUD"), async (req, r
   } else {
 
     orderRecord = await orders.createOrder(newOrder);
+  let notificationsRecord = await notifications.createOrder(newOrder);
+console.log("------------------------------------------------")
+console.log(notificationsRecord)
+console.log("------------------------------------------------")
+
     let orderId = orderRecord.id;
+
     console.log({ newOrder });
     let event= "new-order";
     let Order = {
@@ -90,12 +97,24 @@ orderConnection.on("adminNewOrder", (payload) => //(4)
     payload.event='admin-new-order';
    // let message = req.body.message;
     if (action) {
+      console.log("line 100 ++++++++")
       orderConnection.emit("admin-response-after-new-order", {order:payload.order,action:action,event:payload.event}) //(5)
       if (action == "accept") {  
+        console.log("line 100 ++++++++")
+    
+        // let status = "Accepted"
+        let updated = await notifications.update2(orderId ,action)
+        if (updated) {
+          console.log(updated);
+
+          res.status(200).send("Admin accepted the order.");
+
+        }else{
+        res.status(403).send("you can't update other users profiles");
+      }
         date = faker.date.future();
         message=`Admin >> We found a client for your order number ${orderId}, will you be available to meet him on ${date} ?`;
         orderConnection.emit("admin-to-owner", {order:payload.order,message:message,event:payload.event,date:date}) //(9)
-        res.status(200).send("Admin accepted the order.");
         console.log("this will fire a (socket.emit) to the owner(socket.on) 🔥🔥🔥and  the project🔥🔥🔥")
         /*let data = await orders.findOne({ where: { id: orderId } });
         if (data) {
@@ -113,8 +132,17 @@ orderConnection.on("adminNewOrder", (payload) => //(4)
         }
         return data;*/
       } else if (action === "reject") {
-       // orderConnection.emit("admin-response-after-new-order", {orderId:orderId,action:action}) //(5-b)
+        let updated = await notifications.update2(orderId ,action)
+        if (updated) {
+          console.log(updated);
+
         res.status(200).send("Admin rejected the order.")
+          
+        }else{
+        res.status(403).send("you can't update other users profiles");
+      }
+
+       // orderConnection.emit("admin-response-after-new-order", {orderId:orderId,action:action}) //(5-b)
         // orders.destroy({ where: { id: orderId } })
       } else {
         let data = "there are no actions ❌❌❌❌"
@@ -127,7 +155,10 @@ orderConnection.on("adminNewOrder", (payload) => //(4)
 );
 ordersRouter.get("/myorders/:userId", bearer, acl("CRUD"), async (req, res) => {
   let userId = parseInt(req.params.userId);
-  let allData = await orders.getMyOrders(req.user.id, userId);
+  console.log("line 37 orderRouter ++++++++++++++++++++++")
+  console.log("line 37 orderRouter ++++++++++++++++++++++")
+
+  let allData = await notifications.getMyOrders(req.user.id, userId);
   if(allData){
     res.status(200).send(allData);
   }else{
@@ -139,7 +170,7 @@ ordersRouter.get("/myorders/:userId", bearer, acl("CRUD"), async (req, res) => {
 ordersRouter.get("/myorders/:userId/:orderId", bearer, acl("CRUD"), async (req, res) => {
   let orderId = parseInt(req.params.orderId);
   let userId = parseInt(req.params.userId);
-  let allData = await orders.getMyOrders(req.user.id, userId, orderId);
+  let allData = await notifications.getMyOrders(req.user.id, userId, orderId);
   if(allData){
     res.status(200).send(allData);
   }else{

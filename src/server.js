@@ -15,6 +15,8 @@ const routers = require("./routes/router")
 const adminRouters = require("./routes/adminRoutes")
 const visitorRouters = require("./routes/visitorRoutes")
 const ordersRouter =require("./routes/ordersRouter")
+const notificationsRouter =require("./routes/notificationsRouter")
+
 const cookieParser = require('cookie-parser');
 
 const app = express();
@@ -73,6 +75,9 @@ app.use(ordersRouter);
 app.use(adminRouters);
 app.use(routers);
 app.use(visitorRouters);
+app.use(notificationsRouter);
+
+
 app.use(cookieParser());
 
 

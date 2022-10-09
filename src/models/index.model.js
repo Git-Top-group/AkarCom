@@ -3,7 +3,7 @@ require('dotenv').config();
 const { Sequelize, DataTypes } = require('sequelize');
 
 const userModel = require("./users/users");
-
+const notifyModel =require('./orders/notify')
 const ordersModel = require("./orders/orders");
 const messagesModel = require("./orders/messages");
 const housesModel = require("./houses/houses");
@@ -27,6 +27,7 @@ const warehouseImagesModel = require("./warehouses/imgWarehouses");
 const Collection = require("./collection");
 const ImageCollection = require("./imagesCollection")
 const OrderCollection = require("./orderCollection")
+const notificationsCollection =require("./notificationsCollection")
 
 const POSTGRES_URI = process.env.NODE_ENV === 'test' ? 'sqlite:memory:' : process.env.DATABASE_URL;
 let sequelizeOptions =
@@ -55,7 +56,7 @@ const chaletImages = chaletImagesModel(sequelize, DataTypes);
 const landImages = landImagesModel(sequelize, DataTypes);
 const villaImages = villaImagesModel(sequelize, DataTypes);
 const warehouseImages = warehouseImagesModel(sequelize, DataTypes);
-
+const notifications =notifyModel(sequelize, DataTypes);
 const orders = ordersModel(sequelize, DataTypes);
 const messages = messagesModel(sequelize, DataTypes);
 
@@ -207,6 +208,16 @@ orders.belongsTo(users, {
     targetKey: "id",
 });
 
+users.hasMany(notifications, {
+    foreignKey: "clientId",
+    sourceKey: "id",
+    onDelete:'cascade'
+});
+notifications.belongsTo(users, {
+    foreignKey: "clientId",
+    targetKey: "id",
+});
+
 users.hasMany(messages, {
     foreignKey: "userId",
     sourceKey: "id",
@@ -272,6 +283,60 @@ orders.belongsTo(warehouses, {
     targetKey: "id",
 });
 
+lands.hasMany(notifications, {
+    foreignKey: "postId",
+    sourceKey: "id",
+    onDelete:'cascade'
+});
+notifications.belongsTo(lands, {
+    foreignKey: "postId",
+    targetKey: "id",
+});
+villas.hasMany(notifications, {
+    foreignKey: "postId",
+    sourceKey: "id",
+    onDelete:'cascade'
+});
+notifications.belongsTo(villas, {
+    foreignKey: "postId",
+    targetKey: "id",
+});
+houses.hasMany(notifications, {
+    foreignKey: "postId",
+    sourceKey: "id",
+    onDelete:'cascade'
+});
+notifications.belongsTo(houses, {
+    foreignKey: "postId",
+    targetKey: "id",
+});
+apartments.hasMany(notifications, {
+    foreignKey: "postId",
+    sourceKey: "id",
+    onDelete:'cascade'
+});
+notifications.belongsTo(apartments, {
+    foreignKey: "postId",
+    targetKey: "id",
+});
+chalets.hasMany(notifications, {
+    foreignKey: "postId",
+    sourceKey: "id",
+    onDelete:'cascade'
+});
+notifications.belongsTo(chalets, {
+    foreignKey: "postId",
+    targetKey: "id",
+});
+warehouses.hasMany(notifications, {
+    foreignKey: "postId",
+    sourceKey: "id",
+    onDelete:'cascade'
+});
+notifications.belongsTo(warehouses, {
+    foreignKey: "postId",
+    targetKey: "id",
+});
 
 module.exports = {
     sequelize: sequelize,
@@ -291,7 +356,7 @@ module.exports = {
     landImages: new ImageCollection(landImages),
     villaImages: new ImageCollection(villaImages),
     warehouseImages: new ImageCollection(warehouseImages),
-
+    notifications :new notificationsCollection(notifications),
     orders: new OrderCollection(orders),
     messages: new OrderCollection(messages),
 }; 

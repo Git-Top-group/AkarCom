@@ -121,7 +121,7 @@ const EmailSender = ({ name, email, message, subject }) => {
     service: "gmail",
     auth: {
       user: "gittopltuc@gmail.com", // add email 
-      pass: "gittop55", // password for email
+      pass: "hquwyrjewqtxthcv", // password for email
     },
   });
   transpoter.sendMail(options, (err) => {
