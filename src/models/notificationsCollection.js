@@ -106,7 +106,18 @@ async update2(id ,action ){
   }else return
 
 }
-
+async delete2(dataID) {
+  if (!dataID) {
+      throw new Error('No id provided for model ', this.model)
+  }
+  try {
+      let deleted = await this.model.destroy({ where: { id: dataID } });
+      let data={orderID :dataID}
+      return data;
+  } catch (e) {
+      console.error('Error in deleting record in model ', this.model);
+  }
+}
   async myMessages(realId, userId, messageId, action) {
     if (realId == userId && messageId && action == "okay") {
 
